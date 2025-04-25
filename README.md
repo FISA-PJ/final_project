@@ -5,12 +5,6 @@
 <br/>
 <br/>
 
-# 0. Getting Started (시작하기)
-```bash
-$ npm start
-```
-[서비스 링크](https://club-project-one.vercel.app/)
-
 <br/>
 <br/>
 
