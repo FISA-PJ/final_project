@@ -15,18 +15,18 @@ $ npm start
 <br/>
 
 # 1. Project Overview (프로젝트 개요)
-- 프로젝트 이름: 모여봐요 동아리숲!
-- 프로젝트 설명: 전국 대학 동아리 일정관리 및 홍보 커뮤니티
+- 프로젝트 이름: 미정 
+- 프로젝트 설명: 맞춤형 
 
 <br/>
 <br/>
 
 # 2. Team Members (팀원 및 팀 소개)
-| 이동규 | 신유승 | 김나연 | 이승준 |
-|:------:|:------:|:------:|:------:|
-| <img src="https://github.com/user-attachments/assets/c1c2b1e3-656d-4712-98ab-a15e91efa2da" alt="이동규" width="150"> | <img src="https://github.com/user-attachments/assets/78ec4937-81bb-4637-975d-631eb3c4601e" alt="신유승" width="150"> | <img src="https://github.com/user-attachments/assets/78ce1062-80a0-4edb-bf6b-5efac9dd992e" alt="김나연" width="150"> | <img src="https://github.com/user-attachments/assets/beea8c64-19de-4d91-955f-ed24b813a638" alt="이승준" width="150"> |
-| PL | FE | FE | FE |
-| [GitHub](https://github.com/LDK1009) | [GitHub](https://github.com/SinYusi) | [GitHub](https://github.com/nay3on) | [GitHub](https://github.com/conconcc) |
+| 정명희 | 차민재 | 주정우 | 이태민 | 박재림 |
+|:------:|:------:|:------:|:------:|:------:|
+| <img src="https://github.com/user-attachments/assets/c1c2b1e3-656d-4712-98ab-a15e91efa2da" alt="정명희" width="150"> | <img src="https://github.com/user-attachments/assets/78ec4937-81bb-4637-975d-631eb3c4601e" alt="차민재" width="150"> | <img src="https://github.com/user-attachments/assets/78ce1062-80a0-4edb-bf6b-5efac9dd992e" alt="주정우" width="150"> | <img src="https://github.com/user-attachments/assets/beea8c64-19de-4d91-955f-ed24b813a638" alt="이태민" width="150"> | <img src="https://github.com/user-attachments/assets/beea8c64-19de-4d91-955f-ed24b813a638" alt="박재림" width="150"> |
+| PL | AI | BE | DA | TA |
+| [GitHub](https://github.com/RMaeng2) | [GitHub](https://github.com/MINJAEKH) | [GitHub](https://github.com/nay3on) | [GitHub](https://github.com/leojjw) | [GitHub](https://github.com/wofla703) |
 
 <br/>
 <br/>
@@ -38,23 +38,13 @@ $ npm start
 - **로그인**:
   - 사용자 인증 정보를 통해 로그인합니다.
 
-- **내 동아리 일정관리**:
-  - 캘린더 UI를 통해 동아리 관련 일정 추가&삭제가 가능합니다.
+- **공고 찾기**:
+  - 사용자에 조건에 맞는 공고를 필터링
   - 체크박스를 통해 종료되거나 이미 수행한 일정을 표시할 수 있습니다.
 
-- **동아리 찾기**:
-  - 대학 내 동아리를 검색할 수 있습니다.
-  - 검색 시 해당 동아리가 업로드한 홍보글이 보여집니다.
+- **AI로 궁금한점 찾기**:
+  - 조건 유지 ~ 대출상품까지 추천
 
-- **동아리 홍보**:
-  - 홍보글 등록을 통해 동아리를 홍보할 수 있습니다.
-
-- **동아리 만들기**:
-  - 새로운 동아리를 만들어 관리할 수 있습니다.
-
-- **동아리 프로필**:
-  - 동아리 홍보글에서 동아리 이름(링크)를 클릭하면 해당 동아리 프로필로 이동합니다.
-  - 동아리 프로필에서는 동아리 소개, 동아리 활동사진 갤러리, 동아리 홍보글 기록관 등을 볼 수 있습니다.
 
 <br/>
 <br/>
@@ -62,11 +52,11 @@ $ npm start
 # 4. Tasks & Responsibilities (작업 및 역할 분담)
 |  |  |  |
 |-----------------|-----------------|-----------------|
-| 이동규    |  <img src="https://github.com/user-attachments/assets/c1c2b1e3-656d-4712-98ab-a15e91efa2da" alt="이동규" width="100"> | <ul><li>프로젝트 계획 및 관리</li><li>팀 리딩 및 커뮤니케이션</li><li>커스텀훅 개발</li></ul>     |
-| 신유승   |  <img src="https://github.com/user-attachments/assets/78ec4937-81bb-4637-975d-631eb3c4601e" alt="신유승" width="100">| <ul><li>메인 페이지 개발</li><li>동아리 만들기 페이지 개발</li><li>커스텀훅 개발</li></ul> |
-| 김나연   |  <img src="https://github.com/user-attachments/assets/78ce1062-80a0-4edb-bf6b-5efac9dd992e" alt="김나연" width="100">    |<ul><li>홈 페이지 개발</li><li>로그인 페이지 개발</li><li>동아리 찾기 페이지 개발</li><li>동아리 프로필 페이지 개발</li><li>커스텀훅 개발</li></ul>  |
-| 이승준    |  <img src="https://github.com/user-attachments/assets/beea8c64-19de-4d91-955f-ed24b813a638" alt="이승준" width="100">    | <ul><li>회원가입 페이지 개발</li><li>마이 프로필 페이지 개발</li><li>커스텀훅 개발</li></ul>    |
-
+| 정명희    |  <img src="https://github.com/user-attachments/assets/c1c2b1e3-656d-4712-98ab-a15e91efa2da" alt="정명희" width="100"> | <ul><li>1</li><li>2</li><li>3</li></ul>     |
+| 차민재   |  <img src="https://github.com/user-attachments/assets/78ec4937-81bb-4637-975d-631eb3c4601e" alt="차민재" width="100">| <ul><li>1</li><li>2</li><li>3</li></ul> |
+| 주정우   |  <img src="https://github.com/user-attachments/assets/78ce1062-80a0-4edb-bf6b-5efac9dd992e" alt="주정우" width="100">    |<ul><li>13</li><li>0</li><li>1</li><li>2</li><li>3</li></ul>  |
+| 이태민    |  <img src="https://github.com/user-attachments/assets/beea8c64-19de-4d91-955f-ed24b813a638" alt="이태민" width="100">    | <ul><li>1</li><li>2</li><li>3</li></ul>    |
+| 박재림    |  <img src="https://github.com/user-attachments/assets/beea8c64-19de-4d91-955f-ed24b813a638" alt="이태민" width="100">    | <ul><li>1</li><li>2</li><li>3</li></ul>    |
 <br/>
 <br/>
 
@@ -74,7 +64,7 @@ $ npm start
 ## 5.1 Language
 |  |  |
 |-----------------|-----------------|
-| HTML5    |<img src="https://github.com/user-attachments/assets/2e122e74-a28b-4ce7-aff6-382959216d31" alt="HTML5" width="100">| 
+| HTML5    |<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white" alt="HTML5" width="100">| 
 | CSS3    |   <img src="https://github.com/user-attachments/assets/c531b03d-55a3-40bf-9195-9ff8c4688f13" alt="CSS3" width="100">|
 | Javascript    |  <img src="https://github.com/user-attachments/assets/4a7d7074-8c71-48b4-8652-7431477669d1" alt="Javascript" width="100"> | 
 
