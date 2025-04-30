@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+
+  # ✅ MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: appdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./MySQL:/docker-entrypoint-initdb.d
+
+  # ✅ ElasticSearch for Spring
+  elasticsearch-service:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch-service
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+
+  # ✅ ElasticSearch for ML
+  elasticsearch-ml:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch-ml
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9201:9200"
+
+  # ✅ Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch-service:9200"
+    depends_on:
+      - elasticsearch-service
+
+  # ✅ Spring Backend
+  backend:
+    build:
+      context: ./ml-backend
+      dockerfile: Dockerfile
+    container_name: backend
+    working_dir: /app
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+      - elasticsearch-service
+
+  # ✅ ML Backend (FastAPI)
+  ml-backend:
+    build:
+      context: ./ml-backend-fastapi
+      dockerfile: Dockerfile
+    container_name: ml-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - elasticsearch-ml
+
+  # ✅ Nginx (Front-End)
+  nginx:
+    build:
+      context: ./Nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "8082:80"
+    depends_on:
+      - backend
+
+  # ✅ Airflow DB
+  airflow-db:
+    image: postgres:13
+    container_name: airflow-db
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # ✅ Airflow Webserver
+  airflow-webserver:
+    image: apache/airflow:2.7.0
+    container_name: airflow-webserver
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+    command: bash -c "
+      airflow db migrate &&
+      airflow db upgrade &&
+      airflow users create --username admin --password admin --firstname admin --lastname user --role Admin --email admin@example.com &&
+      airflow webserver"
+    volumes:
+      - ./ml-backen-fastapi/airflow/dags:/opt/airflow/dags
+    ports:
+      - "8083:8080"
+    depends_on:
+      - airflow-db
+
+ # ✅ Jenkins (CI/CD 서버)
+  jenkins:
+    build:
+      context: ./ml-backen-fastapi/jenkins_home  # 🔥 여기!!
+      dockerfile: Dockerfile
+    container_name: jenkins
+    ports:
+      - "8085:8080"    # Jenkins 접속 포트
+      - "50000:50000"  # 에이전트 통신 포트
+    volumes:
+      - ./ml-backen-fastapi/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+
+
+  # ✅ Airflow Scheduler
+  airflow-scheduler:
+    image: apache/airflow:2.7.0
+    container_name: airflow-scheduler
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+    command: bash -c "airflow scheduler"
+    volumes:
+      - ./ml-backen-fastapi/airflow/dags:/opt/airflow/dags
+    depends_on:
+      - airflow-db
+      - airflow-webserver
+
+volumes:
+  airflow-db-volume:
+
+
+ 
