@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}"  <!-- 공통 레이아웃 경로로 수정 -->
+>
+
+<head>
+  <th:block layout:fragment="head">
+    <style>
+      .chat-container {
+          max-width: 800px;
+          margin: 2rem auto;
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          height: 600px;
+          display: flex;
+          flex-direction: column;
+      }
+
+      .chat-messages {
+          flex: 1;
+          overflow-y: auto;
+          margin-bottom: 1rem;
+      }
+
+      .message {
+          padding: 0.75rem;
+          border-radius: 10px;
+          margin-bottom: 0.5rem;
+          max-width: 75%;
+          word-wrap: break-word;
+      }
+
+      .user-message {
+          background-color: #dff0ff;
+          align-self: flex-end;
+          text-align: right;
+      }
+
+      .bot-message {
+          background-color: #f1f1f1;
+          align-self: flex-start;
+      }
+
+      .chat-input {
+          display: flex;
+          gap: 0.5rem;
+      }
+
+      .chat-input input {
+          flex: 1;
+          padding: 0.5rem;
+          font-size: 1rem;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+      }
+
+      .chat-input button {
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+      }
+
+      .chat-input button:hover {
+          background-color: #2980b9;
+      }
+    </style>
+  </th:block>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+  <div class="chat-container">
+    <div class="chat-messages" id="chatMessages">
+      <!-- 메시지 출력 영역 -->
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
+      <button onclick="sendMessage()">전송</button>
+    </div>
+  </div>
+</th:block>
+
+<th:block layout:fragment="script">
+  <script>
+    const chatMessages = document.getElementById("chatMessages");
+    const userInput = document.getElementById("userInput");
+
+    function appendMessage(text, sender) {
+        const message = document.createElement("div");
+        message.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+        message.innerText = text;
+        chatMessages.appendChild(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        appendMessage(text, "user");
+        userInput.value = "";
+
+        fetch("/chatbot/api", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text })
+        })
+        .then(res => res.json())
+        .then(data => appendMessage(data.reply, "bot"))
+        .catch(err => {
+            console.error("Error:", err);
+            appendMessage("오류가 발생했습니다.", "bot");
+        });
+    }
+
+
+    userInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</th:block>
+</body>
+</html>
