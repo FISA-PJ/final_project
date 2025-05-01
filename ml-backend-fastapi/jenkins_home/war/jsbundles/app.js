@@ -2,7 +2,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 7807:
+/***/ 7274:
 /***/ (function(__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
 
 
@@ -80,6 +80,7 @@ function dropdown() {
     appendTo: document.body,
     offset: [0, 0],
     animation: "dropdown",
+    duration: 250,
     onShow: instance => {
       const referenceParent = instance.reference.parentNode;
       if (referenceParent.classList.contains("model-link")) {
@@ -248,14 +249,18 @@ function generateDropdown(element, callback, immediate) {
     element._tippy.destroy();
   }
   (0,tippy_esm/* default */.Ay)(element, Object.assign({}, templates.dropdown(), {
-    hideOnClick: element.dataset["hideOnClick"] !== "false",
+    hideOnClick: element.dataset["hideOnClick"] !== "false" ? "toggle" : false,
     onCreate(instance) {
       const onload = () => {
         if (instance.loaded) {
           return;
         }
-        instance.popper.addEventListener("click", () => {
-          instance.hide();
+        document.addEventListener("click", event => {
+          const isClickInAnyDropdown = !!event.target.closest("[data-tippy-root]");
+          const isClickOnReference = instance.reference.contains(event.target);
+          if (!isClickInAnyDropdown && !isClickOnReference) {
+            instance.hide();
+          }
         });
         callback(instance);
       };
@@ -992,15 +997,17 @@ const HELP = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><pat
  * @param {string} params.label
  * @param {'symbol' | 'image'} params.type
  * @param {string} params.url
+ * @param {string | null} params.group
  * @param {boolean | undefined} params.isExternal
  */
 function LinkResult(params) {
   return {
     label: params.label,
     url: params.url,
+    group: params.group,
     render: () => {
       return `<a class="jenkins-command-palette__results__item" href="${xmlEscape(params.url)}">
-        ${params.type === "image" ? `<img alt="${xmlEscape(params.label)}" class="jenkins-command-palette__results__item__icon" src="${params.icon}" />` : ""}
+        ${params.type === "image" ? `<img alt="${xmlEscape(params.label)}" class="jenkins-command-palette__results__item__icon jenkins-avatar" src="${params.icon}" />` : ""}
         ${params.type !== "image" ? `<div class="jenkins-command-palette__results__item__icon">${params.icon}</div>` : ""}
         ${xmlEscape(params.label)}
         ${params.isExternal ? EXTERNAL_LINK : ""}
@@ -1036,7 +1043,8 @@ const JenkinsSearchSource = {
         icon: e.icon,
         type: e.type,
         label: e.name,
-        url: correctAddress(e.url)
+        url: correctAddress(e.url),
+        group: e.group
       }));
     }));
   }
@@ -1044,7 +1052,22 @@ const JenkinsSearchSource = {
 // EXTERNAL MODULE: ./node_modules/lodash/debounce.js
 var lodash_debounce = __webpack_require__(8221);
 var debounce_default = /*#__PURE__*/__webpack_require__.n(lodash_debounce);
+;// ./src/main/js/components/command-palette/utils.js
+/**
+ * Group results by 'group' field into a map
+ */
+function groupResultsByCategory(array) {
+  return array.reduce((hash, obj) => {
+    if (obj.group === undefined) {
+      return hash;
+    }
+    return Object.assign(hash, {
+      [obj.group]: (hash[obj.group] || []).concat(obj)
+    });
+  }, {});
+}
 ;// ./src/main/js/components/command-palette/index.js
+
 
 
 
@@ -1091,20 +1114,31 @@ function command_palette_init() {
         type: "symbol",
         label: i18n.dataset.getHelp,
         url: headerCommandPaletteButton.dataset.searchHelpUrl,
-        isExternal: true
+        isExternal: true,
+        group: null
       })]);
     } else {
       results = Promise.all(datasources.map(ds => ds.execute(query))).then(e => e.flat());
     }
     results.then(results => {
+      results = groupResultsByCategory(results);
+
       // Clear current search results
       searchResults.innerHTML = "";
       if (query.length === 0 || Object.keys(results).length > 0) {
-        results.forEach(function (obj) {
-          const link = createElementFromHtml(obj.render());
-          link.addEventListener("mouseenter", e => itemMouseEnter(e));
-          searchResults.append(link);
-        });
+        for (const [group, items] of Object.entries(results)) {
+          if (group !== "null") {
+            const heading = document.createElement("p");
+            heading.className = "jenkins-command-palette__results__heading";
+            heading.innerText = group;
+            searchResults.append(heading);
+          }
+          items.forEach(function (obj) {
+            const link = createElementFromHtml(obj.render());
+            link.addEventListener("mouseenter", e => itemMouseEnter(e));
+            searchResults.append(link);
+          });
+        }
         updateSelectedItem(0);
       } else {
         const label = document.createElement("p");
@@ -1249,14 +1283,14 @@ function notifications_init() {
 
 
 
-const SELECTED_CLASS = "jenkins-search__results-item--selected";
+const SELECTED_CLASS = "jenkins-dropdown__item--selected";
 function search_bar_init() {
   const searchBarInputs = document.querySelectorAll(".jenkins-search__input");
   Array.from(searchBarInputs).filter(searchBar => searchBar.suggestions).forEach(searchBar => {
     const searchWrapper = searchBar.parentElement.parentElement;
     const searchResultsContainer = createElementFromHtml(`<div class="jenkins-search__results-container"></div>`);
     searchWrapper.appendChild(searchResultsContainer);
-    const searchResults = createElementFromHtml(`<div class="jenkins-search__results"></div>`);
+    const searchResults = createElementFromHtml(`<div class="jenkins-dropdown"></div>`);
     searchResultsContainer.appendChild(searchResults);
     searchBar.addEventListener("input", () => {
       const query = searchBar.value.toLowerCase();
@@ -1269,7 +1303,7 @@ function search_bar_init() {
       showResultsContainer();
       function appendResults(container, results) {
         results.forEach((item, index) => {
-          container.appendChild(createElementFromHtml(`<a class="${index === 0 ? SELECTED_CLASS : ""}" href="${item.url}"><div>${item.icon}</div>${xmlEscape(item.label)}</a>`));
+          container.appendChild(createElementFromHtml(`<a class="jenkins-dropdown__item ${index === 0 ? SELECTED_CLASS : ""}" href="${item.url}"><div class="jenkins-dropdown__item__icon">${item.icon}</div>${xmlEscape(item.label)}</a>`));
         });
         if (results.length === 0 && container === searchResults) {
           container.appendChild(createElementFromHtml(`<p class="jenkins-search__results__no-results-label">No results</p>`));
@@ -1327,7 +1361,8 @@ function search_bar_init() {
 const TOOLTIP_BASE = {
   arrow: false,
   theme: "tooltip",
-  animation: "tooltip"
+  animation: "tooltip",
+  duration: 250
 };
 
 /**
@@ -1342,6 +1377,7 @@ function registerTooltip(element) {
   }
   const tooltip = element.getAttribute("tooltip");
   const htmlTooltip = element.getAttribute("data-html-tooltip");
+  const delay = element.getAttribute("data-tooltip-delay") || 0;
   let appendTo = document.body;
   if (element.hasAttribute("data-tooltip-append-to-parent")) {
     appendTo = "parent";
@@ -1358,7 +1394,8 @@ function registerTooltip(element) {
       onHidden(instance) {
         instance.reference.setAttribute("title", instance.props.content);
       },
-      appendTo: appendTo
+      appendTo: appendTo,
+      delay: [delay, null]
     }, TOOLTIP_BASE));
   }
   if (htmlTooltip !== null && htmlTooltip.trim().length > 0) {
@@ -1368,7 +1405,8 @@ function registerTooltip(element) {
       onCreate(instance) {
         instance.props.interactive = instance.reference.getAttribute("data-tooltip-interactive") === "true";
       },
-      appendTo: appendTo
+      appendTo: appendTo,
+      delay: [delay, null]
     }, TOOLTIP_BASE));
   }
 }
@@ -2120,7 +2158,7 @@ dialogs.init();
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96], function() { return __webpack_require__(7807); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [96], function() { return __webpack_require__(7274); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

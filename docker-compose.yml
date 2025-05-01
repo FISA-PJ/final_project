@@ -117,14 +117,14 @@ services:
  # ✅ Jenkins (CI/CD 서버)
   jenkins:
     build:
-      context: ./ml-backen-fastapi/jenkins_home  # 🔥 여기!!
+      context: ./ml-backend-fastapi/jenkins_home  # 🔥 여기!!
       dockerfile: Dockerfile
     container_name: jenkins
     ports:
       - "8085:8080"    # Jenkins 접속 포트
       - "50000:50000"  # 에이전트 통신 포트
     volumes:
-      - ./ml-backen-fastapi/jenkins_home:/var/jenkins_home
+      - ./ml-backend-fastapi/jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
