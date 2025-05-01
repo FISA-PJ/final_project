@@ -1,18 +1,37 @@
 version: '3.8'
 
 services:
-
-  # ✅ MySQL
+# ✅ MySQL
   mysql:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: appdb
+    container_name: team3-mysql
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
-      - "3307:3306"
+      - "13306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1dlxoals!
+      - TZ=Asia/Seoul
     volumes:
-      - ./MySQL:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql/conf.d/source:ro
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/logs:/var/log/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1dlxoals!"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   # ✅ ElasticSearch for Spring
   elasticsearch-service:
@@ -147,6 +166,8 @@ services:
 
 volumes:
   airflow-db-volume:
+  mysql-data:
+    name: team3-mysql-data
 
 
  
