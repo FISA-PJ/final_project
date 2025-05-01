@@ -89,17 +89,6 @@ services:
     depends_on:
       - elasticsearch-ml
 
-  # ✅ Nginx (Front-End)
-  nginx:
-    build:
-      context: ./Nginx
-      dockerfile: Dockerfile
-    container_name: nginx
-    ports:
-      - "8082:80"
-    depends_on:
-      - backend
-
   # ✅ Airflow DB
   airflow-db:
     image: postgres:13
