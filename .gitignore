@@ -1,1 +1,6 @@
 .\ml-backend-fastapi\jenkins_home\
+
+# Python 바이트 코드 / 최적화 파일
+__pycache__/
+*.py[cod]
+*$py.class
