@@ -39,6 +39,6 @@ public class PersonalProfiles {
     @Column(nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updated_at;
 
-    @Column(nullable = false)
-    private Boolean marriage_status = false;
+    @Column(name = "marriage_status", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean marriageStatus;
 }

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService {
 
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final PersonalProfilesRepository personalProfilesRepository;
 
@@ -24,16 +24,16 @@ public class UserService {
 		users.setUserLoginId(username);
 //		users.setUserRegistrationNumber(residentId);
 
-		PersonalProfiles profile = personalProfilesRepository.findByResidentRegistrationNumber(residentId);
-		users.setPersonalProfiles(profile);
+//		PersonalProfiles profile = personalProfilesRepository.findByResidentRegistrationNumber(residentId);
+//		users.setPersonalProfiles(profile);
 
 		users.setUserPasswordHash(passwordEncoder.encode(password));
-		this.userRepository.save(users);
+		this.usersRepository.save(users);
 		return users;
 	}
 
 	public Users getUser(String username) {
-		Optional<Users> siteUser = this.userRepository.findByUserLoginId(username);
+		Optional<Users> siteUser = this.usersRepository.findByUserLoginId(username);
 		if (siteUser.isPresent()) {
 			return siteUser.get();
 		} else {

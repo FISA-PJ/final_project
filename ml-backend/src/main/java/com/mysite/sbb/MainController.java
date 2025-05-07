@@ -19,7 +19,8 @@ public class MainController {
 
 	@GetMapping("/")
 	public String root() {
-		return "redirect:/question/list";
+		return "main_page";
+//		return "redirect:/question/list";
 	}
 
 	@GetMapping("/map")

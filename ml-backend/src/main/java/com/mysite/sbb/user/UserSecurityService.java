@@ -17,11 +17,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserSecurityService implements UserDetailsService {
 
-	private final UserRepository userRepository;
+	private final UsersRepository usersRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Users> _siteUser = this.userRepository.findByUserLoginId(username);
+		Optional<Users> _siteUser = this.usersRepository.findByUserLoginId(username);
 		if (_siteUser.isEmpty()) {
 			throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
 		}
