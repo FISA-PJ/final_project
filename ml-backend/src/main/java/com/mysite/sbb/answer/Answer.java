@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.mysite.sbb.question.Question;
-import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.Users;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,10 +33,10 @@ public class Answer {
 	private Question question;
 
 	@ManyToOne
-	private SiteUser author;
+	private Users author;
 
 	private LocalDateTime modifyDate;
 	
 	@ManyToMany
-    Set<SiteUser> voter;
+    Set<Users> voter;
 }

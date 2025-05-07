@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mysite.sbb.answer.AnswerForm;
-import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.Users;
 import com.mysite.sbb.user.UserService;
 
 import jakarta.validation.Valid;
@@ -61,8 +61,8 @@ public class QuestionController {
 		if (bindingResult.hasErrors()) {
 			return "question_form";
 		}
-		SiteUser siteUser = this.userService.getUser(principal.getName());
-		this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+		Users users = this.userService.getUser(principal.getName());
+		this.questionService.create(questionForm.getSubject(), questionForm.getContent(), users);
 		return "redirect:/question/list";
 	}
 
@@ -70,7 +70,7 @@ public class QuestionController {
 	@GetMapping("/modify/{id}")
 	public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
 		Question question = this.questionService.getQuestion(id);
-		if (!question.getAuthor().getUsername().equals(principal.getName())) {
+		if (!question.getAuthor().getUserLoginId().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
 		}
 		questionForm.setSubject(question.getSubject());
@@ -86,7 +86,7 @@ public class QuestionController {
 			return "question_form";
 		}
 		Question question = this.questionService.getQuestion(id);
-		if (!question.getAuthor().getUsername().equals(principal.getName())) {
+		if (!question.getAuthor().getUserLoginId().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
 		}
 		this.questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
@@ -97,7 +97,7 @@ public class QuestionController {
 	@GetMapping("/delete/{id}")
 	public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
 		Question question = this.questionService.getQuestion(id);
-		if (!question.getAuthor().getUsername().equals(principal.getName())) {
+		if (!question.getAuthor().getUserLoginId().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
 		}
 		this.questionService.delete(question);
@@ -108,8 +108,8 @@ public class QuestionController {
 	@GetMapping("/vote/{id}")
 	public String questionVote(Principal principal, @PathVariable("id") Integer id) {
 		Question question = this.questionService.getQuestion(id);
-		SiteUser siteUser = this.userService.getUser(principal.getName());
-		this.questionService.vote(question, siteUser);
+		Users users = this.userService.getUser(principal.getName());
+		this.questionService.vote(question, users);
 		return String.format("redirect:/question/detail/%s", id);
 	}
 }

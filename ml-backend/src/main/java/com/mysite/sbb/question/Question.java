@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.mysite.sbb.answer.Answer;
-import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.Users;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,10 +39,10 @@ public class Question {
 	private List<Answer> answerList;
 
 	@ManyToOne
-	private SiteUser author;
+	private Users author;
 
 	private LocalDateTime modifyDate;
 	
 	@ManyToMany
-    Set<SiteUser> voter;
+    Set<Users> voter;
 }

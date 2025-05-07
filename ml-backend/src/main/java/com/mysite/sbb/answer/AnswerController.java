@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionService;
-import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.Users;
 import com.mysite.sbb.user.UserService;
 
 import jakarta.validation.Valid;
@@ -35,12 +35,12 @@ public class AnswerController {
 	public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm,
 			BindingResult bindingResult, Principal principal) {
 		Question question = this.questionService.getQuestion(id);
-		SiteUser siteUser = this.userService.getUser(principal.getName());
+		Users users = this.userService.getUser(principal.getName());
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("question", question);
 			return "question_detail";
 		}
-		Answer answer = this.answerService.create(question, answerForm.getContent(), siteUser);
+		Answer answer = this.answerService.create(question, answerForm.getContent(), users);
 		return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
 	}
 
@@ -48,7 +48,7 @@ public class AnswerController {
 	@GetMapping("/modify/{id}")
 	public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
 		Answer answer = this.answerService.getAnswer(id);
-		if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+		if (!answer.getAuthor().getUserLoginId().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
 		}
 		answerForm.setContent(answer.getContent());
@@ -63,7 +63,7 @@ public class AnswerController {
 			return "answer_form";
 		}
 		Answer answer = this.answerService.getAnswer(id);
-		if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+		if (!answer.getAuthor().getUserLoginId().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
 		}
 		this.answerService.modify(answer, answerForm.getContent());
@@ -74,7 +74,7 @@ public class AnswerController {
 	@GetMapping("/delete/{id}")
 	public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
 		Answer answer = this.answerService.getAnswer(id);
-		if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+		if (!answer.getAuthor().getUserLoginId().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
 		}
 		this.answerService.delete(answer);
@@ -85,8 +85,8 @@ public class AnswerController {
 	@GetMapping("/vote/{id}")
 	public String answerVote(Principal principal, @PathVariable("id") Integer id) {
 		Answer answer = this.answerService.getAnswer(id);
-		SiteUser siteUser = this.userService.getUser(principal.getName());
-		this.answerService.vote(answer, siteUser);
+		Users users = this.userService.getUser(principal.getName());
+		this.answerService.vote(answer, users);
 		return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
 	}
 }

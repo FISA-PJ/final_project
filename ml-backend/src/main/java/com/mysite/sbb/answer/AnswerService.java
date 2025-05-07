@@ -3,11 +3,11 @@ package com.mysite.sbb.answer;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import com.mysite.sbb.user.Users;
 import org.springframework.stereotype.Service;
 
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.question.Question;
-import com.mysite.sbb.user.SiteUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class AnswerService {
 
 	private final AnswerRepository answerRepository;
 
-	public Answer create(Question question, String content, SiteUser author) {
+	public Answer create(Question question, String content, Users author) {
 		Answer answer = new Answer();
 		answer.setContent(content);
 		answer.setCreateDate(LocalDateTime.now());
@@ -46,8 +46,8 @@ public class AnswerService {
 		this.answerRepository.delete(answer);
 	}
 
-	public void vote(Answer answer, SiteUser siteUser) {
-		answer.getVoter().add(siteUser);
+	public void vote(Answer answer, Users users) {
+		answer.getVoter().add(users);
 		this.answerRepository.save(answer);
 	}
 }
