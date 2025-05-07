@@ -1,6 +1,6 @@
 package com.mysite.sbb;
 
-import com.mysite.sbb.question.Question;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
+
+	@Value("${KAKAOMAP_API_KEY}")
+	private String kakaoApiKey;
 
 //	@GetMapping("/sbb")
 //	@ResponseBody
@@ -24,9 +27,15 @@ public class MainController {
 	}
 
 	@GetMapping("/map")
-	public String map() {
+	public String map(Model model) {
+		model.addAttribute("kakaoApiKey", kakaoApiKey);
 		return "map_page";
 	}
+
+//	@GetMapping("/map")
+//	public String map() {
+//		return "map_page";
+//	}
 
 	@GetMapping("/chatbot")
 	public String chatbot() {
