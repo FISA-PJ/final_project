@@ -24,8 +24,8 @@ public class UserService {
 		users.setUserLoginId(username);
 //		users.setUserRegistrationNumber(residentId);
 
-//		PersonalProfiles profile = personalProfilesRepository.findByResidentRegistrationNumber(residentId);
-//		users.setPersonalProfiles(profile);
+		PersonalProfiles profile = personalProfilesRepository.findByResidentRegistrationNumber(residentId);
+		users.setPersonalProfiles(profile);
 
 		users.setUserPasswordHash(passwordEncoder.encode(password));
 		this.usersRepository.save(users);

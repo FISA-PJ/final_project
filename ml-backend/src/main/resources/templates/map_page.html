@@ -12,17 +12,28 @@
 <body>
 <th:block layout:fragment="content">
     <!-- 여기 지도 페이지 내용 작성 -->
-    <div id="map" style="height: 500px;"></div>
+    <div id="map" style="width:500px;height:400px;"></div>
+<!--    <div id="map" style="height: 500px;"></div>-->
 </th:block>
 
 <th:block layout:fragment="script">
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?appkey=ca2f011db29dbeea209f590fbf55f12a"></script>
     <script>
-        const map = L.map('map').setView([37.5551, 126.9707], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.5551, 126.9707),
+            level: 13
+        };
+
+        var map = new kakao.maps.Map(container, options);
     </script>
+<!--    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>-->
+<!--    <script>-->
+<!--        const map = L.map('map').setView([37.5551, 126.9707], 13);-->
+<!--        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {-->
+<!--            attribution: '© OpenStreetMap contributors'-->
+<!--        }).addTo(map);-->
+<!--    </script>-->
 </th:block>
 </body>
 </html>

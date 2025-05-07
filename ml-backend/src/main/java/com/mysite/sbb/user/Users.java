@@ -36,15 +36,15 @@ public class Users {
 //	@Column(name = "user_last_login_date")
 //	private LocalDateTime userLastLoginDate;
 
-//	@OneToOne
-//	@JoinColumn(
-//			name = "resident_registration_number",
-//			referencedColumnName = "resident_registration_number",
-//			nullable = false,
-//			unique = true,
-//			foreignKey = @ForeignKey(name = "FK_Personal_Profiles_TO_Users")
-//	)
-//	private PersonalProfiles personalProfiles;
+	@OneToOne
+	@JoinColumn(
+			name = "resident_registration_number",
+			referencedColumnName = "resident_registration_number",
+			nullable = false,
+			unique = true,
+			foreignKey = @ForeignKey(name = "FK_Personal_Profiles_TO_Users")
+	)
+	private PersonalProfiles personalProfiles;
 
 	// Getters and setters
 }

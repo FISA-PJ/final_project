@@ -5,7 +5,7 @@
 			<h4>회원가입</h4>
 		</div>
 	</div>
-	<form th:action="@{/users/signup}" th:object="${userCreateForm}" method="post">
+	<form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
 		<div th:replace="~{form_errors :: formErrorsFragment}"></div>
 		<div class="mb-3">
 			<label for="username" class="form-label">사용자ID</label>
