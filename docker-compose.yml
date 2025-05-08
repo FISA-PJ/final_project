@@ -8,6 +8,7 @@ x-airflow-common: &airflow-common
     - AIRFLOW__CORE__FERNET_KEY=dUKzfo3fgwa_FDhTv0IiJKpaYpFpPwYney66spo_w2c=
     - AIRFLOW__CORE__SECURITY_KEY=f838224f6da5695e3283e8e0a7e760d6
     - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT=150
     - AIRFLOW_CONN_ELASTICSEARCH_DEFAULT=elasticsearch://test-elasticsearch-ml:9200
     - PYTHONPATH=/opt/airflow
     - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
