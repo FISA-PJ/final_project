@@ -33,11 +33,11 @@ services:
       - MYSQL_ROOT_PASSWORD=1dlxoals!
       - TZ=Asia/Seoul
     volumes:
+      - ./mysql/config:/etc/mysql/conf.d
       - mysql-data:/var/lib/mysql
-      - ./mysql/config:/etc/mysql/conf.d/source:ro
       - ./mysql/init:/docker-entrypoint-initdb.d
       - ./mysql/logs:/var/log/mysql:rw
-    healthcheck:
+    healthcheck:  
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1dlxoals!" ]
       interval: 10s
       timeout: 5s
