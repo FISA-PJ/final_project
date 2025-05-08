@@ -4,7 +4,7 @@
 !Dockerfile
 
 #태민님 잔여물
-.\ml-backend-fastapi\airflow\logs\*.log
+*.log
 .\ml-backend-fastapi\airflow\logs\
 .\ml-backend-fastapi\airflow\downloads\*
 # Python 바이트 코드 \ 최적화 파일
