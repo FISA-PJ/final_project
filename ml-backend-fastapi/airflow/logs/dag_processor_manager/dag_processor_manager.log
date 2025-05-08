@@ -1,0 +1,1493 @@
+[2025-05-08T12:47:20.287+0900] {manager.py:470} INFO - Processing files using up to 2 processes at a time 
+[2025-05-08T12:47:20.289+0900] {manager.py:471} INFO - Process each file at most once every 30 seconds
+[2025-05-08T12:47:20.290+0900] {manager.py:472} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2025-05-08T12:47:20.291+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T12:47:20.327+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T12:47:20.815+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                       PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  ----------
+/opt/airflow/dags/LH_notice_elasticsearch.py    195  0.10s             0           0
+/opt/airflow/dags/process_existing_pdfs.py      198  0.08s             0           0
+================================================================================
+[2025-05-08T12:47:49.405+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.68s           2025-05-08T03:47:21
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.66s           2025-05-08T03:47:21
+================================================================================
+[2025-05-08T12:48:17.182+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.82s           2025-05-08T03:47:52
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.71s           2025-05-08T03:47:52
+================================================================================
+[2025-05-08T12:48:45.035+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.76s           2025-05-08T03:48:23
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.74s           2025-05-08T03:48:23
+================================================================================
+[2025-05-08T12:49:13.414+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.36s           2025-05-08T03:48:53
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T03:48:53
+================================================================================
+[2025-05-08T12:49:41.719+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T03:49:23
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T03:49:23
+================================================================================
+[2025-05-08T12:50:10.084+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T03:49:54
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T03:49:54
+================================================================================
+[2025-05-08T12:50:38.551+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T03:50:24
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T03:50:24
+================================================================================
+[2025-05-08T12:51:06.941+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T03:50:55
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T03:50:55
+================================================================================
+[2025-05-08T12:51:35.197+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T03:51:26
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T03:51:26
+================================================================================
+[2025-05-08T12:52:03.579+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T03:51:56
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T03:51:56
+================================================================================
+[2025-05-08T12:52:20.529+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T12:52:20.585+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T12:52:31.971+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T03:52:26
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T03:52:26
+================================================================================
+[2025-05-08T12:53:00.586+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T03:52:57
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T03:52:57
+================================================================================
+[2025-05-08T12:53:28.884+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T03:53:27
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T03:53:27
+================================================================================
+[2025-05-08T12:53:56.996+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T03:53:27
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T03:53:27
+================================================================================
+[2025-05-08T12:54:25.392+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T03:53:58
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T03:53:58
+================================================================================
+[2025-05-08T12:54:53.897+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.42s           2025-05-08T03:54:28
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.37s           2025-05-08T03:54:28
+================================================================================
+[2025-05-08T12:55:22.014+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T03:54:59
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T03:54:59
+================================================================================
+[2025-05-08T12:55:50.489+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T03:55:29
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T03:55:29
+================================================================================
+[2025-05-08T12:56:19.061+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T03:55:59
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T03:55:59
+================================================================================
+[2025-05-08T12:56:47.403+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T03:56:30
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T03:56:30
+================================================================================
+[2025-05-08T12:57:15.721+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T03:57:00
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T03:57:00
+================================================================================
+[2025-05-08T12:57:20.770+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T12:57:20.818+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T12:57:44.145+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T03:57:31
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T03:57:30
+================================================================================
+[2025-05-08T12:58:12.605+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T03:58:01
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T03:58:01
+================================================================================
+[2025-05-08T12:58:41.080+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.42s           2025-05-08T03:58:32
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.36s           2025-05-08T03:58:31
+================================================================================
+[2025-05-08T12:59:09.325+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T03:59:02
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T03:59:02
+================================================================================
+[2025-05-08T12:59:37.736+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T03:59:32
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T03:59:32
+================================================================================
+[2025-05-08T13:00:06.190+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:00:03
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:00:03
+================================================================================
+[2025-05-08T13:00:34.789+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:00:33
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:00:33
+================================================================================
+[2025-05-08T13:01:02.981+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:00:33
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:00:33
+================================================================================
+[2025-05-08T13:01:31.570+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.42s           2025-05-08T04:01:04
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.35s           2025-05-08T04:01:04
+================================================================================
+[2025-05-08T13:01:59.962+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:01:34
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:01:34
+================================================================================
+[2025-05-08T13:02:21.212+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:02:21.263+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:02:28.358+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T04:02:05
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:02:04
+================================================================================
+[2025-05-08T13:02:57.076+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.71s           2025-05-08T04:02:35
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.58s           2025-05-08T04:02:35
+================================================================================
+[2025-05-08T13:03:24.675+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:03:06
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:03:06
+================================================================================
+[2025-05-08T13:03:51.739+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:03:36
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:03:36
+================================================================================
+[2025-05-08T13:04:20.061+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:04:07
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:04:07
+================================================================================
+[2025-05-08T13:04:48.448+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:04:37
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:04:37
+================================================================================
+[2025-05-08T13:05:16.769+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:05:07
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:05:07
+================================================================================
+[2025-05-08T13:05:45.006+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:05:38
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:05:38
+================================================================================
+[2025-05-08T13:06:13.522+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T04:06:08
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:06:08
+================================================================================
+[2025-05-08T13:06:41.920+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:06:39
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:06:39
+================================================================================
+[2025-05-08T13:07:10.029+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                       PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py    586  0.04s             1           0  0.29s           2025-05-08T04:06:39
+/opt/airflow/dags/process_existing_pdfs.py      589  0.01s             1           0  0.25s           2025-05-08T04:06:39
+================================================================================
+[2025-05-08T13:07:21.351+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:07:21.412+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:07:38.407+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:07:10
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:07:10
+================================================================================
+[2025-05-08T13:08:06.601+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:07:40
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.19s           2025-05-08T04:07:40
+================================================================================
+[2025-05-08T13:08:34.956+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:08:11
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:08:11
+================================================================================
+[2025-05-08T13:09:03.366+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.34s           2025-05-08T04:08:42
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:08:42
+================================================================================
+[2025-05-08T13:09:31.796+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:09:12
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:09:12
+================================================================================
+[2025-05-08T13:10:00.242+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:09:43
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:09:43
+================================================================================
+[2025-05-08T13:10:28.721+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:10:13
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:10:13
+================================================================================
+[2025-05-08T13:10:56.494+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:10:44
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:10:44
+================================================================================
+[2025-05-08T13:11:24.955+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T04:11:15
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:11:15
+================================================================================
+[2025-05-08T13:11:53.383+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T04:11:45
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:11:45
+================================================================================
+[2025-05-08T13:12:21.621+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:12:21.691+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:12:21.713+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:12:15
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:12:15
+================================================================================
+[2025-05-08T13:12:50.143+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.35s           2025-05-08T04:12:46
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:12:46
+================================================================================
+[2025-05-08T13:13:18.415+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:13:16
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:13:16
+================================================================================
+[2025-05-08T13:13:46.564+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                       PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py    716  0.03s             1           0  0.27s           2025-05-08T04:13:16
+/opt/airflow/dags/process_existing_pdfs.py      719  0.01s             1           0  0.21s           2025-05-08T04:13:16
+================================================================================
+[2025-05-08T13:14:15.130+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.59s           2025-05-08T04:13:47
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.47s           2025-05-08T04:13:47
+================================================================================
+[2025-05-08T13:14:43.514+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.37s           2025-05-08T04:14:17
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:14:17
+================================================================================
+[2025-05-08T13:15:11.970+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.38s           2025-05-08T04:14:47
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.32s           2025-05-08T04:14:47
+================================================================================
+[2025-05-08T13:15:40.385+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:15:18
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:15:18
+================================================================================
+[2025-05-08T13:16:08.730+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:15:48
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:15:48
+================================================================================
+[2025-05-08T13:16:37.210+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:16:19
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:16:19
+================================================================================
+[2025-05-08T13:17:05.591+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:16:49
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:16:49
+================================================================================
+[2025-05-08T13:17:21.733+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:17:21.802+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:17:33.967+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:17:20
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:17:20
+================================================================================
+[2025-05-08T13:18:02.340+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:17:51
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:17:51
+================================================================================
+[2025-05-08T13:18:30.622+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:18:21
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:18:21
+================================================================================
+[2025-05-08T13:18:59.111+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:18:52
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:18:52
+================================================================================
+[2025-05-08T13:19:27.467+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:19:22
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:19:22
+================================================================================
+[2025-05-08T13:19:56.055+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:19:53
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.28s           2025-05-08T04:19:53
+================================================================================
+[2025-05-08T13:20:24.445+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:20:23
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:20:23
+================================================================================
+[2025-05-08T13:20:52.497+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:20:23
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:20:23
+================================================================================
+[2025-05-08T13:21:20.905+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:20:53
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:20:53
+================================================================================
+[2025-05-08T13:21:49.232+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:21:24
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:21:24
+================================================================================
+[2025-05-08T13:22:17.644+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:21:54
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:21:54
+================================================================================
+[2025-05-08T13:22:22.697+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:22:22.765+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:22:46.085+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:22:25
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:22:25
+================================================================================
+[2025-05-08T13:23:14.474+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:22:56
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:22:56
+================================================================================
+[2025-05-08T13:23:42.830+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:23:26
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:23:26
+================================================================================
+[2025-05-08T13:24:11.153+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:23:57
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:23:57
+================================================================================
+[2025-05-08T13:24:39.552+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:24:27
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:24:27
+================================================================================
+[2025-05-08T13:25:08.052+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:24:57
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:24:57
+================================================================================
+[2025-05-08T13:25:36.625+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.37s           2025-05-08T04:25:28
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.32s           2025-05-08T04:25:28
+================================================================================
+[2025-05-08T13:26:05.021+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:25:58
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:25:58
+================================================================================
+[2025-05-08T13:26:32.668+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.35s           2025-05-08T04:26:29
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.29s           2025-05-08T04:26:29
+================================================================================
+[2025-05-08T13:26:59.581+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:26:59
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:26:59
+================================================================================
+[2025-05-08T13:27:22.834+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:27:22.880+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:27:27.727+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:26:59
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:26:59
+================================================================================
+[2025-05-08T13:27:56.052+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:27:31
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:27:31
+================================================================================
+[2025-05-08T13:28:24.707+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.57s           2025-05-08T04:28:01
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.54s           2025-05-08T04:28:01
+================================================================================
+[2025-05-08T13:28:53.075+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:28:32
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:28:32
+================================================================================
+[2025-05-08T13:29:21.425+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:29:02
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:29:02
+================================================================================
+[2025-05-08T13:29:49.937+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:29:32
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:29:32
+================================================================================
+[2025-05-08T13:30:18.486+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:30:03
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:30:03
+================================================================================
+[2025-05-08T13:30:46.623+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:30:33
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.28s           2025-05-08T04:30:33
+================================================================================
+[2025-05-08T13:31:15.231+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:31:04
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:31:04
+================================================================================
+[2025-05-08T13:31:43.660+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:31:34
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:31:34
+================================================================================
+[2025-05-08T13:32:12.026+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:32:05
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:32:05
+================================================================================
+[2025-05-08T13:32:23.195+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:32:23.253+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:32:40.524+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:32:35
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:32:35
+================================================================================
+[2025-05-08T13:33:08.875+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:33:06
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:33:05
+================================================================================
+[2025-05-08T13:33:37.236+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:33:36
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:33:36
+================================================================================
+[2025-05-08T13:34:05.292+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:33:36
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:33:36
+================================================================================
+[2025-05-08T13:34:33.629+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:34:06
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:34:06
+================================================================================
+[2025-05-08T13:35:02.011+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:34:37
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:34:36
+================================================================================
+[2025-05-08T13:35:30.401+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:35:07
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:35:07
+================================================================================
+[2025-05-08T13:35:58.780+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:35:37
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:35:37
+================================================================================
+[2025-05-08T13:36:27.148+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.32s           2025-05-08T04:36:08
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:36:08
+================================================================================
+[2025-05-08T13:36:55.555+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:36:38
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:36:38
+================================================================================
+[2025-05-08T13:37:23.923+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:37:24.001+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:37:24.024+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.34s           2025-05-08T04:37:09
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:37:08
+================================================================================
+[2025-05-08T13:37:52.424+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:37:40
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:37:40
+================================================================================
+[2025-05-08T13:38:20.731+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:38:10
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:38:10
+================================================================================
+[2025-05-08T13:38:49.072+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.31s           2025-05-08T04:38:40
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:38:40
+================================================================================
+[2025-05-08T13:39:17.433+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:39:11
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:39:11
+================================================================================
+[2025-05-08T13:39:45.771+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:39:41
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:39:41
+================================================================================
+[2025-05-08T13:40:14.161+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:40:12
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:40:12
+================================================================================
+[2025-05-08T13:40:42.283+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                       PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py   1246  0.05s             1           0  0.28s           2025-05-08T04:40:12
+/opt/airflow/dags/process_existing_pdfs.py     1249  0.02s             1           0  0.24s           2025-05-08T04:40:12
+================================================================================
+[2025-05-08T13:41:10.484+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:40:42
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.20s           2025-05-08T04:40:42
+================================================================================
+[2025-05-08T13:41:38.826+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:41:12
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:41:12
+================================================================================
+[2025-05-08T13:42:07.143+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:41:43
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:41:43
+================================================================================
+[2025-05-08T13:42:24.356+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:42:24.419+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:42:35.569+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T04:42:13
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:42:13
+================================================================================
+[2025-05-08T13:43:03.969+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:42:43
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:42:43
+================================================================================
+[2025-05-08T13:43:32.379+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:43:15
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:43:15
+================================================================================
+[2025-05-08T13:44:00.746+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:43:45
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:43:45
+================================================================================
+[2025-05-08T13:44:29.073+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.30s           2025-05-08T04:44:15
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:44:15
+================================================================================
+[2025-05-08T13:44:57.486+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.34s           2025-05-08T04:44:46
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:44:46
+================================================================================
+[2025-05-08T13:45:25.856+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:45:16
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:45:16
+================================================================================
+[2025-05-08T13:45:54.344+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:45:47
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:45:47
+================================================================================
+[2025-05-08T13:46:22.746+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:46:17
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:46:17
+================================================================================
+[2025-05-08T13:46:51.305+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.34s           2025-05-08T04:46:48
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:46:48
+================================================================================
+[2025-05-08T13:47:20.017+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.35s           2025-05-08T04:47:18
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.30s           2025-05-08T04:47:18
+================================================================================
+[2025-05-08T13:47:24.884+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:47:24.942+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:47:48.229+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.35s           2025-05-08T04:47:18
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.30s           2025-05-08T04:47:18
+================================================================================
+[2025-05-08T13:48:16.591+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  -0.50s          2025-05-08T04:47:48
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  -0.55s          2025-05-08T04:47:48
+================================================================================
+[2025-05-08T13:48:42.804+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:48:19
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.28s           2025-05-08T04:48:19
+================================================================================
+[2025-05-08T13:49:11.119+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T04:48:50
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:48:50
+================================================================================
+[2025-05-08T13:49:39.478+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:49:20
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T04:49:20
+================================================================================
+[2025-05-08T13:50:07.766+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:49:50
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:49:50
+================================================================================
+[2025-05-08T13:50:36.148+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:50:21
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:50:21
+================================================================================
+[2025-05-08T13:51:04.484+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:50:51
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:50:51
+================================================================================
+[2025-05-08T13:51:33.116+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:51:22
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:51:22
+================================================================================
+[2025-05-08T13:52:01.531+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T04:51:52
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:51:52
+================================================================================
+[2025-05-08T13:52:25.112+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:52:25.163+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:52:29.940+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.35s           2025-05-08T04:52:23
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.27s           2025-05-08T04:52:23
+================================================================================
+[2025-05-08T13:52:58.406+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.27s           2025-05-08T04:52:53
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:52:53
+================================================================================
+[2025-05-08T13:53:26.704+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:53:24
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:53:24
+================================================================================
+[2025-05-08T13:53:54.854+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                       PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py   1506  0.05s             1           0  0.30s           2025-05-08T04:53:24
+/opt/airflow/dags/process_existing_pdfs.py     1509  0.01s             1           0  0.24s           2025-05-08T04:53:24
+================================================================================
+[2025-05-08T13:54:23.141+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.34s           2025-05-08T04:53:55
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T04:53:55
+================================================================================
+[2025-05-08T13:54:51.449+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:54:25
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:54:25
+================================================================================
+[2025-05-08T13:55:20.028+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.46s           2025-05-08T04:54:55
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.42s           2025-05-08T04:54:55
+================================================================================
+[2025-05-08T13:55:48.102+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:55:26
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.29s           2025-05-08T04:55:26
+================================================================================
+[2025-05-08T13:56:16.566+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.32s           2025-05-08T04:55:57
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T04:55:57
+================================================================================
+[2025-05-08T13:56:44.864+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.30s           2025-05-08T04:56:28
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:56:27
+================================================================================
+[2025-05-08T13:57:13.092+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.45s           2025-05-08T04:56:58
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.41s           2025-05-08T04:56:58
+================================================================================
+[2025-05-08T13:57:25.237+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T13:57:25.292+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T13:57:41.738+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.31s           2025-05-08T04:57:28
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.24s           2025-05-08T04:57:28
+================================================================================
+[2025-05-08T13:58:10.323+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  -0.41s          2025-05-08T04:57:58
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  -0.49s          2025-05-08T04:57:58
+================================================================================
+[2025-05-08T13:58:38.693+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T04:58:29
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.21s           2025-05-08T04:58:29
+================================================================================
+[2025-05-08T13:59:06.977+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.28s           2025-05-08T04:58:59
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T04:58:59
+================================================================================
+[2025-05-08T13:59:34.812+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.78s           2025-05-08T04:59:30
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.77s           2025-05-08T04:59:30
+================================================================================
+[2025-05-08T14:00:02.948+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                       PID  Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py   1626  2.07s             1           0  0.78s           2025-05-08T04:59:30
+/opt/airflow/dags/process_existing_pdfs.py     1629  2.04s             1           0  0.77s           2025-05-08T04:59:30
+================================================================================
+[2025-05-08T14:00:31.523+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  2.57s           2025-05-08T05:00:03
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  2.51s           2025-05-08T05:00:03
+================================================================================
+[2025-05-08T14:01:00.073+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.34s           2025-05-08T05:00:33
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.26s           2025-05-08T05:00:33
+================================================================================
+[2025-05-08T14:01:28.541+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T05:01:04
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T05:01:04
+================================================================================
+[2025-05-08T14:01:57.044+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.29s           2025-05-08T05:01:34
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.23s           2025-05-08T05:01:34
+================================================================================
+[2025-05-08T14:02:25.504+0900] {manager.py:737} INFO - Searching for files in /opt/airflow/dags
+[2025-05-08T14:02:25.557+0900] {manager.py:740} INFO - There are 2 files in /opt/airflow/dags
+[2025-05-08T14:02:25.577+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.33s           2025-05-08T05:02:05
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.25s           2025-05-08T05:02:05
+================================================================================
+[2025-05-08T14:02:53.996+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T05:02:36
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T05:02:36
+================================================================================
+[2025-05-08T14:03:22.304+0900] {manager.py:878} INFO - 
+================================================================================
+DAG File Processing Stats
+
+File Path                                     PID    Runtime      # DAGs    # Errors  Last Runtime    Last Run
+--------------------------------------------  -----  ---------  --------  ----------  --------------  -------------------
+/opt/airflow/dags/LH_notice_elasticsearch.py                           1           0  0.26s           2025-05-08T05:03:07
+/opt/airflow/dags/process_existing_pdfs.py                             1           0  0.22s           2025-05-08T05:03:07
+================================================================================
