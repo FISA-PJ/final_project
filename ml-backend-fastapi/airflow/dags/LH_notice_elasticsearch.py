@@ -9,9 +9,6 @@ from airflow.hooks.base import BaseHook
 # 모듈 임포트
 from plugins.utils.file_helpers import ensure_directory
 from plugins.crawlers.lh_crawler import collect_lh_file_urls
-from plugins.processors.pdf_processors import PDFProcessor
-from plugins.processors.es_uploaders import process_single_pdf
-from plugins.processors.es_uploaders import get_elasticsearch_client
 
 # 환경 설정 - 변수 정의
 BASE_URL = "https://apply.lh.or.kr"
@@ -51,7 +48,10 @@ def process_pdfs_wrapper(**kwargs):
     """
     from concurrent.futures import ThreadPoolExecutor
     from elasticsearch import Elasticsearch
-    
+    from plugins.processors.pdf_processors import PDFProcessor
+    from plugins.processors.es_uploaders import process_single_pdf
+    from plugins.processors.es_uploaders import get_elasticsearch_client
+     
     ti = kwargs['ti']
     collected_urls = ti.xcom_pull(task_ids='collect_urls')
     

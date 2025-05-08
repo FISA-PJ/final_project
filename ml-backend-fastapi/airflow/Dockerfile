@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir \
     PyPDF2 \
     scikit-learn \
     elasticsearch \
-    torch==2.7.0 \
+    torch         \
     transformers \
     langchain \
     openparse
