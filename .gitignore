@@ -1,4 +1,6 @@
+.\ml-backend-fastapi\jenkins_home\*
 .\ml-backend-fastapi\jenkins_home\
+
 !Dockerfile
 
 #태민님 잔여물
