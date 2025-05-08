@@ -1,0 +1,140 @@
+[2025-05-08T15:03:25.548+0900] {processor.py:161} INFO - Started process (PID=196) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:03:25.549+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:03:25.552+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:03:25.551+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:03:25.633+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:03:26.116+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:03:26.116+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:03:26.154+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:03:26.153+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:03:26.241+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.702 seconds
+[2025-05-08T15:03:56.977+0900] {processor.py:161} INFO - Started process (PID=206) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:03:56.980+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:03:56.985+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:03:56.985+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:03:57.078+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:03:57.112+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:03:57.112+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:03:57.153+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:03:57.153+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:03:57.205+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.245 seconds
+[2025-05-08T15:04:28.216+0900] {processor.py:161} INFO - Started process (PID=216) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:04:28.218+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:04:28.222+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:04:28.221+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:04:28.312+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:04:28.339+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:04:28.339+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:04:28.378+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:04:28.378+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:04:28.455+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.251 seconds
+[2025-05-08T15:04:58.589+0900] {processor.py:161} INFO - Started process (PID=229) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:04:58.590+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:04:58.594+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:04:58.593+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:04:58.684+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:04:58.712+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:04:58.712+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:04:58.757+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:04:58.756+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:04:59.076+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.499 seconds
+[2025-05-08T15:05:29.383+0900] {processor.py:161} INFO - Started process (PID=241) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:05:29.385+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:05:29.388+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:05:29.388+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:05:29.487+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:05:29.515+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:05:29.514+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:05:29.550+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:05:29.550+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:05:29.601+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.231 seconds
+[2025-05-08T15:06:00.427+0900] {processor.py:161} INFO - Started process (PID=251) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:06:00.429+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:06:00.432+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:06:00.432+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:06:00.528+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:06:00.556+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:06:00.556+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:06:00.596+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:06:00.596+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:06:00.659+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.249 seconds
+[2025-05-08T15:06:30.931+0900] {processor.py:161} INFO - Started process (PID=261) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:06:30.933+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:06:30.936+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:06:30.936+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:06:31.030+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:06:31.059+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:06:31.058+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:06:31.098+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:06:31.097+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:06:31.147+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.226 seconds
+[2025-05-08T15:07:01.363+0900] {processor.py:161} INFO - Started process (PID=271) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:07:01.364+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:07:01.368+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:07:01.367+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:07:01.456+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:07:01.487+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:07:01.486+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:07:01.525+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:07:01.525+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:07:01.601+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.249 seconds
+[2025-05-08T15:07:31.702+0900] {processor.py:161} INFO - Started process (PID=281) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:07:31.704+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:07:31.707+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:07:31.706+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:07:31.799+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:07:31.826+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:07:31.826+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:07:31.866+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:07:31.865+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:07:31.915+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.222 seconds
+[2025-05-08T15:08:02.187+0900] {processor.py:161} INFO - Started process (PID=291) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:08:02.189+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:08:02.192+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:08:02.191+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:08:02.281+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:08:02.312+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:08:02.312+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:08:02.354+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:08:02.354+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:08:02.409+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.231 seconds
+[2025-05-08T15:08:32.986+0900] {processor.py:161} INFO - Started process (PID=296) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:08:32.988+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:08:32.993+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:08:32.992+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:08:33.090+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:08:33.138+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:08:33.138+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:08:33.183+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:08:33.183+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:08:33.236+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.268 seconds
+[2025-05-08T15:09:04.316+0900] {processor.py:161} INFO - Started process (PID=306) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:09:04.318+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:09:04.321+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:09:04.321+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:09:04.418+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:09:04.447+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:09:04.446+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:09:04.496+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:09:04.495+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:09:04.551+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.245 seconds
+[2025-05-08T15:09:35.576+0900] {processor.py:161} INFO - Started process (PID=316) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:09:35.577+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:09:35.581+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:09:35.580+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:09:35.662+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:09:35.690+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:09:35.690+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:09:35.729+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:09:35.729+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:09:35.818+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.253 seconds
+[2025-05-08T15:10:06.797+0900] {processor.py:161} INFO - Started process (PID=326) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:10:06.798+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:10:06.802+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:10:06.801+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:10:06.896+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:10:06.923+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:10:06.923+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:10:06.964+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:10:06.964+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:10:07.256+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.471 seconds
+[2025-05-08T15:10:37.571+0900] {processor.py:161} INFO - Started process (PID=341) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:10:37.574+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:10:37.579+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:10:37.578+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:10:37.668+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:10:37.694+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:10:37.694+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:10:37.732+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:10:37.731+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:10:37.790+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.236 seconds
+[2025-05-08T15:11:08.040+0900] {processor.py:161} INFO - Started process (PID=351) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:11:08.041+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:11:08.045+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:11:08.044+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:11:08.147+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:11:08.175+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:11:08.175+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:11:08.224+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:11:08.223+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:11:08.276+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.246 seconds
+[2025-05-08T15:11:39.082+0900] {processor.py:161} INFO - Started process (PID=361) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:11:39.084+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:11:39.089+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:11:39.088+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:11:39.182+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:11:39.229+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:11:39.228+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:11:39.285+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:11:39.284+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:11:39.341+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.268 seconds
+[2025-05-08T15:12:09.482+0900] {processor.py:161} INFO - Started process (PID=371) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:12:09.483+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:12:09.486+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:12:09.486+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:12:09.570+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:12:09.597+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:12:09.597+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:12:09.634+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:12:09.634+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:12:09.693+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.221 seconds
+[2025-05-08T15:12:40.158+0900] {processor.py:161} INFO - Started process (PID=376) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:12:40.159+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:12:40.163+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:12:40.162+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:12:40.253+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:12:40.280+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:12:40.279+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:12:40.321+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:12:40.321+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:12:40.613+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.465 seconds
+[2025-05-08T15:13:10.895+0900] {processor.py:161} INFO - Started process (PID=391) to work on /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:13:10.897+0900] {processor.py:830} INFO - Processing file /opt/airflow/dags/LH_notice_elasticsearch.py for tasks to queue
+[2025-05-08T15:13:10.900+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:13:10.900+0900] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:13:10.996+0900] {processor.py:840} INFO - DAG(s) 'lh_notice_elasticsearch_optimized' retrieved from /opt/airflow/dags/LH_notice_elasticsearch.py
+[2025-05-08T15:13:11.025+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:13:11.024+0900] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-05-08T15:13:11.066+0900] {logging_mixin.py:188} INFO - [2025-05-08T15:13:11.066+0900] {dag.py:3954} INFO - Setting next_dagrun for lh_notice_elasticsearch_optimized to 2025-04-27 15:00:00+00:00, run_after=2025-04-28 15:00:00+00:00
+[2025-05-08T15:13:11.146+0900] {processor.py:183} INFO - Processing /opt/airflow/dags/LH_notice_elasticsearch.py took 0.260 seconds
