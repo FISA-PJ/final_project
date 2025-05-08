@@ -70,7 +70,7 @@ BEGIN
   -- 먼저 성씨 데이터 생성
   CALL insert_surnames();
   
-  WHILE i < 1000000 DO
+  WHILE i < 10000 DO
     -- 이름 생성
     SELECT surname INTO @surname FROM temp_surnames ORDER BY RAND() LIMIT 1;
     IF @surname IS NULL OR @surname = '' THEN

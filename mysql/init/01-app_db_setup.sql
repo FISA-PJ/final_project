@@ -168,3 +168,10 @@ CREATE TABLE Household_Asset_Info (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '세대 자산 정보';
+
+-- 로그 테이블
+CREATE TABLE IF NOT EXISTS Processing_Log (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  log_message VARCHAR(255) NOT NULL,
+  log_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '처리 로그';

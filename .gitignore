@@ -1,0 +1,51 @@
+.\ml-backend-fastapi\jenkins_home\*
+!Dockerfile
+
+#태민님 잔여물
+ml-backend-fastapi/airflow/logs/*
+ml-backend-fastapi/airflow/downloads/*
+# Python 바이트 코드 / 최적화 파일
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+##정우님 잔여뭎
+.ml-backend/HELP.md
+.ml-backend/.gradle
+.ml-backend/build/
+.ml-backend/!gradle/wrapper/gradle-wrapper.jar
+.ml-backend/!**/src/main/**/build/
+.ml-backend/!**/src/test/**/build/
+.ml-backend/
+.ml-backend/### STS ###
+.ml-backend/.apt_generated
+.ml-backend/.classpath
+.ml-backend/.factorypath
+.ml-backend/.project
+.ml-backend/.settings
+.ml-backend/.springBeans
+.ml-backend/.sts4-cache
+.ml-backend/bin/
+.ml-backend/!**/src/main/**/bin/
+.ml-backend/!**/src/test/**/bin/
+.ml-backend/
+.ml-backend/### IntelliJ IDEA ###
+.ml-backend/.idea
+.ml-backend/*.iws
+.ml-backend/*.iml
+.ml-backend/*.ipr
+.ml-backend/out/
+.ml-backend/!**/src/main/**/out/
+.ml-backend/!**/src/test/**/out/
+.ml-backend/
+.ml-backend/### NetBeans ###
+.ml-backend/nbproject/private/
+.ml-backend/nbbuild/
+.ml-backend/dist/
+.ml-backend/nbdist/
+.ml-backend/nb-gradle/
+.ml-backend/
+.ml-backend/### VS Code ###
+.ml-backend/.vscode/
+.ml-backend/
