@@ -4,10 +4,6 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-# PDFProcessor 클래스 임포트
-from plugins.processors.pdf_processors import PDFProcessor
-from plugins.processors.es_uploaders import get_elasticsearch_client
-from plugins.processors.es_uploaders import process_single_pdf
 
 # process_existing_pdfs 함수 정의
 def process_existing_pdfs(**kwargs):
@@ -19,6 +15,10 @@ def process_existing_pdfs(**kwargs):
     from airflow.models import Variable
     import os
     import re
+    # PDFProcessor 클래스 임포트
+    from plugins.processors.pdf_processors import PDFProcessor
+    from plugins.processors.es_uploaders import get_elasticsearch_client
+    from plugins.processors.es_uploaders import process_single_pdf
     
     # 환경 변수 및 상수 가져오기
     DOWNLOAD_DIR = "/opt/airflow/downloads"
