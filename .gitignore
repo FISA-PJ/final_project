@@ -1,15 +1,14 @@
-.\ml-backend-fastapi\jenkins_home\*
+.\ml-backend-fastapi\jenkins_home\
 !Dockerfile
 
 #태민님 잔여물
 .\ml-backend-fastapi\airflow\logs\*.log
-.\ml-backend-fastapi\airflow\logs\*
+.\ml-backend-fastapi\airflow\logs\
 .\ml-backend-fastapi\airflow\downloads\*
 # Python 바이트 코드 \ 최적화 파일
 __pycache__\
 *.py[cod]
 *$py.class
-
 
 ##정우님 잔여뭎
 .\ml-backend\HELP.md
@@ -18,7 +17,6 @@ __pycache__\
 .\ml-backend\!gradle\wrapper\gradle-wrapper.jar
 .\ml-backend\!**\src\main\**\build\
 .\ml-backend\!**\src\test\**\build\
-.\ml-backend\
 .\ml-backend\### STS ###
 .\ml-backend\.apt_generated
 .\ml-backend\.classpath
@@ -30,7 +28,6 @@ __pycache__\
 .\ml-backend\bin\
 .\ml-backend\!**\src\main\**\bin\
 .\ml-backend\!**\src\test\**\bin\
-.\ml-backend\
 .\ml-backend\### IntelliJ IDEA ###
 .\ml-backend\.idea
 .\ml-backend\*.iws
@@ -39,18 +36,9 @@ __pycache__\
 .\ml-backend\out\
 .\ml-backend\!**\src\main\**\out\
 .\ml-backend\!**\src\test\**\out\
-.\ml-backend\
 .\ml-backend\### NetBeans ###
 .\ml-backend\nbproject\private\
 .\ml-backend\nbbuild\
 .\ml-backend\dist\
 .\ml-backend\nbdist\
 .\ml-backend\nb-gradle\
-.\ml-backend\
-.\ml-backend\### VS Code ###
-.\ml-backend\.vscode\
-<<<<<<< HEAD
-.\ml-backend\
-=======
-.\ml-backend\
->>>>>>> 4ee7f5b2088f6aa23d145942210e00c9798f3230
