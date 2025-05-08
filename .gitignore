@@ -3,6 +3,7 @@
 
 #태민님 잔여물
 .\ml-backend-fastapi\airflow\logs\*.log
+.\ml-backend-fastapi\airflow\logs\*
 .\ml-backend-fastapi\airflow\downloads\*
 # Python 바이트 코드 \ 최적화 파일
 __pycache__\
@@ -48,4 +49,8 @@ __pycache__\
 .\ml-backend\
 .\ml-backend\### VS Code ###
 .\ml-backend\.vscode\
+<<<<<<< HEAD
 .\ml-backend\
+=======
+.\ml-backend\
+>>>>>>> 4ee7f5b2088f6aa23d145942210e00c9798f3230
