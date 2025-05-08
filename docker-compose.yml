@@ -1,7 +1,25 @@
-version: '3.8'
+x-airflow-common: &airflow-common
+  build:
+    context: ./ml-backend-fastapi/airflow
+    dockerfile: Dockerfile
+  environment:
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    - AIRFLOW__CORE__FERNET_KEY=dUKzfo3fgwa_FDhTv0IiJKpaYpFpPwYney66spo_w2c=
+    - AIRFLOW__CORE__SECURITY_KEY=f838224f6da5695e3283e8e0a7e760d6
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW_CONN_ELASTICSEARCH_DEFAULT=elasticsearch://test-elasticsearch-ml:9200
+    - PYTHONPATH=/opt/airflow
+    - AIRFLOW__CORE__DEFAULT_TIMEZONE=Asia/Seoul
+    - TZ=Asia/Seoul
+  volumes:
+    - ./ml-backend-fastapi/airflow/dags:/opt/airflow/dags
+    - ./ml-backend-fastapi/airflow/plugins:/opt/airflow/plugins
+    - ./ml-backend-fastapi/airflow/logs:/opt/airflow/logs
+    - ./ml-backend-fastapi/airflow/downloads:/opt/airflow/downloads
 
 services:
-# ✅ MySQL
+  # ✅ MySQL
   mysql:
     container_name: team3-mysql
     build:
@@ -19,7 +37,7 @@ services:
       - ./mysql/init:/docker-entrypoint-initdb.d
       - ./mysql/logs:/var/log/mysql:rw
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1dlxoals!"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1dlxoals!" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -89,69 +107,137 @@ services:
     depends_on:
       - elasticsearch-ml
 
-  # ✅ Airflow DB
-  airflow-db:
-    image: postgres:13
-    container_name: airflow-db
+  
+  # ✅ ElasticSearch for ML
+  test-elasticsearch-ml:
+    image: elasticsearch:8.8.0
+    container_name: test-elasticsearch-ml
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
-    volumes:
-      - airflow-db-volume:/var/lib/postgresql/data
+      - discovery.type=single-node
+      - xpack.security.enabled=false
     ports:
-      - "5432:5432"
+      - "9202:9200"
+    restart: always
+
+  # ✅ Kibana for Elasticsearch 데이터 시각화
+  test-kibana:
+    image: kibana:8.8.0
+    container_name: test-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://test-elasticsearch-ml:9200
+      - XPACK_SECURITY_ENABLED=false
+    ports:
+      - "5605:5601"
+    depends_on:
+      - test-elasticsearch-ml
+    restart: always
+
+  # ✅ Airflow Metadata Database
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+      - TZ=Asia/Seoul
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    restart: always
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "airflow" ]
+      interval: 5s
+      retries: 5
+
+  # ✅ Airflow Init -> DB 초기화 및 Admin 계정 생성
+  airflow-init:
+    <<: *airflow-common
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: >
+      bash -c "
+        airflow db migrate &&
+        airflow connections create-default-connections &&
+        airflow connections add 'elasticsearch_2' --conn-type 'elasticsearch' --conn-host 'test-elasticsearch-ml' --conn-port '9200' --conn-schema 'http' &&
+        airflow users create --role Admin --username admin --email admin@example.com --firstname Admin --lastname User --password admin
+      "
+    restart: "no"
+    healthcheck:
+      test: [ "CMD", "airflow", "db", "check" ]
+      interval: 10s
+      timeout: 100s
+      retries: 5
 
   # ✅ Airflow Webserver
   airflow-webserver:
-    image: apache/airflow:2.7.0
-    container_name: airflow-webserver
-    environment:
-      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
-      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
-    command: bash -c "
-      airflow db migrate &&
-      airflow db upgrade &&
-      airflow users create --username admin --password admin --firstname admin --lastname user --role Admin --email admin@example.com &&
-      airflow webserver"
-    volumes:
-      - ./ml-backend-fastapi/airflow/dags:/opt/airflow/dags
-    ports:
-      - "8083:8080"
+    <<: *airflow-common
     depends_on:
-      - airflow-db
+      airflow-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      test-elasticsearch-ml:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    command: webserver
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8080/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
- # ✅ Jenkins (CI/CD 서버)
+  # ✅ Airflow Scheduler
+  airflow-scheduler:
+    <<: *airflow-common
+    depends_on:
+      postgres:
+        condition: service_healthy
+      test-elasticsearch-ml:
+        condition: service_started
+    command: scheduler
+    restart: on-failure
+
+  # ✅ Airflow 크롤링을 위한 Selenium
+  selenium:
+    image: selenium/standalone-chrome:114.0
+    ports:
+      - "4444:4444"
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - SE_EVENT_BUS_HOST=selenium
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - TZ=Asia/Seoul
+    restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4444/wd/hub/status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ✅ Jenkins (CI/CD 서버)
   jenkins:
     build:
-      context: ./ml-backend-fastapi/jenkins_home  # 🔥 여기!!
+      context: ./ml-backend-fastapi/jenkins_home # 🔥 여기!!
       dockerfile: Dockerfile
     container_name: jenkins
     ports:
-      - "8085:8080"    # Jenkins 접속 포트
-      - "50000:50000"  # 에이전트 통신 포트
+      - "8085:8080" # Jenkins 접속 포트
+      - "50000:50000" # 에이전트 통신 포트
     volumes:
       - ./ml-backend-fastapi/jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
-  # ✅ Airflow Scheduler
-  airflow-scheduler:
-    image: apache/airflow:2.7.0
-    container_name: airflow-scheduler
-    environment:
-      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
-      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
-    command: bash -c "airflow scheduler"
-    volumes:
-      - ./ml-backend-fastapi/airflow/dags:/opt/airflow/dags
-    depends_on:
-      - airflow-db
-      - airflow-webserver
-
 volumes:
-  airflow-db-volume:
+  # Airflow용 DB 볼륨
+  postgres-db-volume:
+    name: team3-postgres-data
+  # MySQL 데이터 볼륨
   mysql-data:
     name: team3-mysql-data

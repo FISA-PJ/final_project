@@ -3,7 +3,7 @@ START TRANSACTION;
 USE app_db;
 
 -- 데이터 생성 후 자격 평가 수행
-CALL bulk_evaluate_eligibility();
+CALL bulk_evaluate_eligibility_optimized();
 
 -- 데이터 검증 쿼리
 SELECT 'Personal_Profiles' AS table_name, COUNT(*) AS record_count FROM Personal_Profiles UNION ALL
