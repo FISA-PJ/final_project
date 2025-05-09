@@ -33,7 +33,8 @@ def collect_urls_wrapper(**kwargs):
     수집된 PDF 파일은 DOWNLOAD_DIR에 저장됩니다.
     """
     # Airflow의 execution_date 사용 (실행 스케줄 날짜)
-    execution_date = kwargs.get('execution_date', datetime.now()).date()
+    execution_date = kwargs.get('ds')  # ds는 'YYYY-MM-DD' 문자열
+    execution_date = datetime.strptime(execution_date, "%Y-%m-%d").date()
     print(f"🔄 실행 날짜: {execution_date}")
 
     return collect_lh_file_urls(BASE_URL, LIST_URL, DOWNLOAD_URL, DOWNLOAD_DIR, HEADERS, execution_date)
@@ -111,7 +112,7 @@ with DAG(
     'lh_notice_elasticsearch_optimized',
     default_args=default_args,
     description='LH 공고문 크롤링 및 Elasticsearch 저장 (최적화 버전)',
-    schedule_interval="@daily",
+    schedule="@daily",
     start_date=datetime(2025, 4, 28),
     catchup=True,
     tags=['lh', 'elasticsearch', 'pdf'],

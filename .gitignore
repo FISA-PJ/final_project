@@ -5,8 +5,10 @@
 
 #태민님 잔여물
 *.log
-.\ml-backend-fastapi\airflow\logs\
+.\ml-backend-fastapi\airflow\logs\*
 .\ml-backend-fastapi\airflow\downloads\*
+.env
+
 # Python 바이트 코드 \ 최적화 파일
 __pycache__\
 *.py[cod]

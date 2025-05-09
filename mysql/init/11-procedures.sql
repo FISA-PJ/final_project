@@ -12,6 +12,7 @@ DROP PROCEDURE IF EXISTS evaluate_eligibility_optimized;
 
 -- 배치 처리 프로시저 구현
 DELIMITER //
+
 CREATE PROCEDURE bulk_evaluate_eligibility_optimized()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
@@ -23,7 +24,7 @@ BEGIN
     SELECT COUNT(*) INTO total_count FROM Personal_Profiles;
     
     -- 진행 시작 로그
-    INSERT INTO Processing_Log (message, processed_time)
+    INSERT INTO Processing_Log (log_message, log_timestamp)
     VALUES (CONCAT('Starting bulk eligibility evaluation for ', total_count, ' profiles'), NOW());
     
     -- 임시 테이블 생성 (각 유형별 자격 요건을 미리 계산)
@@ -44,7 +45,7 @@ BEGIN
     GROUP BY resident_registration_number;
     
     -- 진행 로그
-    INSERT INTO Processing_Log (message, processed_time)
+    INSERT INTO Processing_Log (log_message, log_timestamp)
     VALUES ('Created temporary table for valid savings', NOW());
     
     -- 배치 처리 시작
@@ -158,49 +159,45 @@ BEGIN
                     AND tsv.is_valid = TRUE
                 THEN 
                     CASE 
-                        WHEN (hmi.is_dual_income = FALSE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
-                                   ELSE hmi.monthly_avg_income_amount <= 11137162
-                               END
-                           ))
+                        WHEN hmi.is_dual_income = FALSE AND 
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
+                               ELSE hmi.monthly_avg_income_amount <= 11137162
+                           END
                            OR
-                           (hmi.is_dual_income = TRUE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
-                                   ELSE hmi.monthly_avg_income_amount <= 13364594
-                               END
-                           ))
+                           hmi.is_dual_income = TRUE AND 
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
+                               ELSE hmi.monthly_avg_income_amount <= 13364594
+                           END
                        THEN '우선공급'
-                       WHEN (hmi.is_dual_income = FALSE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 5764250
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 6862470
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 7224838
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 7786469
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 8348099
-                                   ELSE hmi.monthly_avg_income_amount <= 8909730
-                               END
-                           ))
+                       WHEN hmi.is_dual_income = FALSE AND
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 5764250
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 6862470
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 7224838
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 7786469
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 8348099
+                               ELSE hmi.monthly_avg_income_amount <= 8909730
+                           END
                            OR
-                           (hmi.is_dual_income = TRUE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
-                                   ELSE hmi.monthly_avg_income_amount <= 11137162
-                               END
-                           ))
+                           hmi.is_dual_income = TRUE AND
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
+                               ELSE hmi.monthly_avg_income_amount <= 11137162
+                           END
                        THEN '우선공급(배점)'
                        ELSE '추첨공급'
                     END
@@ -213,27 +210,25 @@ BEGIN
                     AND tsv.is_valid = TRUE
                 THEN
                     CASE
-                        WHEN (hmi.is_dual_income = FALSE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
-                                   ELSE hmi.monthly_avg_income_amount <= 13364594
-                               END
-                           ))
+                        WHEN hmi.is_dual_income = FALSE AND
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
+                               ELSE hmi.monthly_avg_income_amount <= 13364594
+                           END
                            OR
-                           (hmi.is_dual_income = TRUE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
-                                   ELSE hmi.monthly_avg_income_amount <= 14478311
-                               END
-                           ))
+                           hmi.is_dual_income = TRUE AND
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
+                               ELSE hmi.monthly_avg_income_amount <= 14478311
+                           END
                         THEN '우선공급'
                         ELSE '추첨공급'
                     END
@@ -245,27 +240,25 @@ BEGIN
                     AND tsv.is_valid = TRUE
                 THEN
                     CASE
-                        WHEN (hmi.is_dual_income = FALSE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
-                                   ELSE hmi.monthly_avg_income_amount <= 13364594
-                               END
-                           ))
+                        WHEN hmi.is_dual_income = FALSE AND
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
+                               ELSE hmi.monthly_avg_income_amount <= 13364594
+                           END
                            OR
-                           (hmi.is_dual_income = TRUE AND (
-                               CASE
-                                   WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
-                                   WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
-                                   WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
-                                   WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
-                                   WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
-                                   ELSE hmi.monthly_avg_income_amount <= 14478311
-                               END
-                           ))
+                           hmi.is_dual_income = TRUE AND
+                           CASE
+                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
+                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
+                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
+                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
+                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
+                               ELSE hmi.monthly_avg_income_amount <= 14478311
+                           END
                         THEN '우선공급'
                         ELSE '추첨공급'
                     END
@@ -290,7 +283,7 @@ BEGIN
         SET offset_val = offset_val + batch_size;
         
         -- 진행 상황 기록
-        INSERT INTO Processing_Log (message, processed_time)
+        INSERT INTO Processing_Log (log_message, log_timestamp)
         VALUES (CONCAT('Processed batch: ', offset_val, ' of ', total_count), NOW());
         
         -- 각 배치 처리 후 잠시 지연시켜 DB 부하 분산 (선택사항)
@@ -301,24 +294,29 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS temp_savings_valid;
     
     -- 완료 로그
-    INSERT INTO Processing_Log (message, processed_time)
+    INSERT INTO Processing_Log (log_message, log_timestamp)
     VALUES ('Completed eligibility evaluation', NOW());
 END //
+
 DELIMITER ;
 
 -- 청약 자격 평가 프로시저 구현(개인)
 DELIMITER //
-CREATE PROCEDURE evaluate_eligibility_optimized_v2(IN p_rrn VARCHAR(13))
+
+CREATE PROCEDURE evaluate_eligibility_optimized(IN p_rrn VARCHAR(13))
 BEGIN
+    tmp_block: BEGIN
     -- 프로시저 시작 시간 기록용 변수
     DECLARE start_time TIMESTAMP;
-    -- 모든 필요한 데이터를 한 번에 조회하여 변수에 저장 (여러 번 조회 방지)
+    -- 저축 유효성 변수
     DECLARE v_valid_savings BOOLEAN DEFAULT FALSE;
-    
+    DECLARE v_prime_type VARCHAR(50) DEFAULT "특별공급유형 아님";
+    DECLARE v_sub_type VARCHAR(50) DEFAULT '';
+
     SET start_time = NOW();
 
     -- 시작 로그 저장
-    INSERT INTO Processing_Log (message, processed_time)
+    INSERT INTO Processing_Log (log_message, log_timestamp)
     VALUES (CONCAT('Starting individual eligibility evaluation for RRN: ', p_rrn), start_time);
 
     -- 청약 저축 유효성 한 번에 확인
@@ -330,7 +328,7 @@ BEGIN
     LIMIT 1;
     
     -- 저축 조건 확인 로그
-    INSERT INTO Processing_Log (message, processed_time)
+    INSERT INTO Processing_Log (log_message, log_timestamp)
     VALUES (CONCAT('Savings validity check for RRN ', p_rrn, ': ', IF(v_valid_savings, 'Valid', 'Invalid')), NOW());
     
     -- 저축 조건이 충족되지 않으면 일찍 반환
@@ -353,32 +351,22 @@ BEGIN
             last_assessment_date = CURRENT_TIMESTAMP;
             
         -- 조기 종료 로그
-        INSERT INTO Processing_Log (message, processed_time)
+        INSERT INTO Processing_Log (log_message, log_timestamp)
         VALUES (CONCAT('Early return for RRN ', p_rrn, ': Savings condition not met'), NOW());
             
         -- 일찍 종료
-        RETURN;
+        -- RETURN;
+        LEAVE tmp_block;
     END IF;
     
-    -- 개별 자격 평가 수행 로그
-    INSERT INTO Processing_Log (message, processed_time)
-    VALUES (CONCAT('Processing full eligibility evaluation for RRN: ', p_rrn), NOW());
-    
-    -- 개별 자격 평가 수행 - 로직은 동일하게 유지
-    INSERT INTO Housing_Subscription_Eligibility (
-        resident_registration_number, 
-        eligibility_prime_type, 
-        eligibility_sub_type, 
-        last_assessment_date
-    )
     SELECT 
-        pp.resident_registration_number,
-        -- 1차 유형 분류 로직 (변경 없음)
+        -- 1차 유형 분류 로직
         CASE
             WHEN (IFNULL(pmi.marriage_duration, 0) <= 84 OR (pmi.marriage_type = '이혼' AND IFNULL(hci.children_age_1_to_6_count, 0) >= 1))
                 AND hi.is_household_without_housing = TRUE 
                 AND hai.real_estate_amount <= 215500000
                 AND hai.car_value <= 38030000
+                AND v_valid_savings = TRUE
                 AND (
                     CASE
                         WHEN hmi.is_dual_income = TRUE THEN
@@ -407,6 +395,7 @@ BEGIN
                 AND hi.is_household_without_housing = TRUE
                 AND hai.real_estate_amount <= 215500000
                 AND hai.car_value <= 38030000
+                AND v_valid_savings = TRUE
                 AND (
                     CASE
                         WHEN hmi.is_dual_income = TRUE THEN
@@ -434,6 +423,7 @@ BEGIN
                 AND hi.is_household_without_housing = TRUE
                 AND hai.real_estate_amount <= 215500000
                 AND hai.car_value <= 38030000
+                AND v_valid_savings = TRUE
                 AND (
                     CASE
                         WHEN hmi.is_dual_income = TRUE THEN
@@ -458,60 +448,57 @@ BEGIN
                 )
             THEN '다자녀'
             ELSE '특별공급유형 아님'
-        END AS eligibility_prime_type,
+        END,
         
-        -- 2차 유형 로직 (변경 없음)
+        -- 2차 유형 로직
         CASE
             -- 신혼부부 케이스
             WHEN (IFNULL(pmi.marriage_duration, 0) <= 84 OR (pmi.marriage_type = '이혼' AND IFNULL(hci.children_age_1_to_6_count, 0) >= 1))
                 AND hi.is_household_without_housing = TRUE
                 AND hai.real_estate_amount <= 215500000
                 AND hai.car_value <= 38030000
+                AND v_valid_savings = TRUE
             THEN 
                 CASE 
-                    WHEN (hmi.is_dual_income = FALSE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
-                               ELSE hmi.monthly_avg_income_amount <= 11137162
-                           END
-                       ))
+                    WHEN hmi.is_dual_income = FALSE AND 
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
+                           ELSE hmi.monthly_avg_income_amount <= 11137162
+                       END
                        OR
-                       (hmi.is_dual_income = TRUE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
-                               ELSE hmi.monthly_avg_income_amount <= 13364594
-                           END
-                       ))
+                       hmi.is_dual_income = TRUE AND 
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
+                           ELSE hmi.monthly_avg_income_amount <= 13364594
+                       END
                    THEN '우선공급'
-                   WHEN (hmi.is_dual_income = FALSE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 5764250
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 6862470
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 7224838
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 7786469
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 8348099
-                               ELSE hmi.monthly_avg_income_amount <= 8909730
-                           END
-                       ))
+                   WHEN hmi.is_dual_income = FALSE AND
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 5764250
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 6862470
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 7224838
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 7786469
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 8348099
+                           ELSE hmi.monthly_avg_income_amount <= 8909730
+                       END
                        OR
-                       (hmi.is_dual_income = TRUE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
-                               ELSE hmi.monthly_avg_income_amount <= 11137162
-                           END
-                       ))
+                       hmi.is_dual_income = TRUE AND
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 7205312
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 8578088
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 9031048
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 9733086
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 10435124
+                           ELSE hmi.monthly_avg_income_amount <= 11137162
+                       END
                    THEN '우선공급(배점)'
                    ELSE '추첨공급'
                 END
@@ -521,29 +508,28 @@ BEGIN
                 AND hi.is_household_without_housing = TRUE
                 AND hai.real_estate_amount <= 215500000
                 AND hai.car_value <= 38030000
+                AND v_valid_savings = TRUE
             THEN
                 CASE
-                    WHEN (hmi.is_dual_income = FALSE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
-                               ELSE hmi.monthly_avg_income_amount <= 13364594
-                           END
-                       ))
+                    WHEN hmi.is_dual_income = FALSE AND
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
+                           ELSE hmi.monthly_avg_income_amount <= 13364594
+                       END
                        OR
-                       (hmi.is_dual_income = TRUE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
-                               ELSE hmi.monthly_avg_income_amount <= 14478311
-                           END
-                       ))
+                       hmi.is_dual_income = TRUE AND
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
+                           ELSE hmi.monthly_avg_income_amount <= 14478311
+                       END
                     THEN '우선공급'
                     ELSE '추첨공급'
                 END
@@ -552,35 +538,36 @@ BEGIN
                 AND hi.is_household_without_housing = TRUE
                 AND hai.real_estate_amount <= 215500000
                 AND hai.car_value <= 38030000
+                AND v_valid_savings = TRUE
             THEN
                 CASE
-                    WHEN (hmi.is_dual_income = FALSE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
-                               ELSE hmi.monthly_avg_income_amount <= 13364594
-                           END
-                       ))
+                    WHEN hmi.is_dual_income = FALSE AND
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 8646374
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 10293706
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 10837258
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 11679703
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 12522149
+                           ELSE hmi.monthly_avg_income_amount <= 13364594
+                       END
                        OR
-                       (hmi.is_dual_income = TRUE AND (
-                           CASE
-                               WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
-                               WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
-                               WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
-                               WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
-                               WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
-                               ELSE hmi.monthly_avg_income_amount <= 14478311
-                           END
-                       ))
+                       hmi.is_dual_income = TRUE AND
+                       CASE
+                           WHEN hi.household_member_count <= 3 THEN hmi.monthly_avg_income_amount <= 9366906
+                           WHEN hi.household_member_count = 4 THEN hmi.monthly_avg_income_amount <= 11151514
+                           WHEN hi.household_member_count = 5 THEN hmi.monthly_avg_income_amount <= 11740362
+                           WHEN hi.household_member_count = 6 THEN hmi.monthly_avg_income_amount <= 12653012
+                           WHEN hi.household_member_count = 7 THEN hmi.monthly_avg_income_amount <= 13565661
+                           ELSE hmi.monthly_avg_income_amount <= 14478311
+                       END
                     THEN '우선공급'
                     ELSE '추첨공급'
                 END
             ELSE ''
-        END AS eligibility_sub_type,
-        CURRENT_TIMESTAMP AS last_assessment_date
+        END
+    INTO 
+        v_prime_type, 
+        v_sub_type
     FROM Personal_Profiles AS pp
     LEFT JOIN Household_Info AS hi ON pp.resident_registration_number = hi.resident_registration_number
     LEFT JOIN Household_Monthly_Income_Info AS hmi ON hi.household_info_id = hmi.household_info_id
@@ -589,16 +576,34 @@ BEGIN
     LEFT JOIN Household_Ancestor_Info AS haa ON hi.household_info_id = haa.household_info_id
     LEFT JOIN Personal_Marriage_Info AS pmi ON pp.resident_registration_number = pmi.resident_registration_number
     WHERE pp.resident_registration_number = p_rrn
-    LIMIT 1
+    LIMIT 1;
+    
+    -- 결과 저장
+    INSERT INTO Housing_Subscription_Eligibility (
+        resident_registration_number, 
+        eligibility_prime_type, 
+        eligibility_sub_type, 
+        last_assessment_date
+    )
+    VALUES (
+        p_rrn,
+        v_prime_type,
+        v_sub_type,
+        CURRENT_TIMESTAMP
+    )
     ON DUPLICATE KEY UPDATE 
         eligibility_prime_type = VALUES(eligibility_prime_type),
         eligibility_sub_type = VALUES(eligibility_sub_type),
         last_assessment_date = CURRENT_TIMESTAMP;
         
     -- 완료 로그 및 실행 시간 측정
-    INSERT INTO Processing_Log (message, processed_time)
+    INSERT INTO Processing_Log (log_message, log_timestamp)
     VALUES (CONCAT('Completed individual eligibility evaluation for RRN: ', p_rrn, 
-                  ', Duration: ', TIMESTAMPDIFF(MICROSECOND, start_time, NOW()) / 1000000, ' seconds'), 
+                   ', Prime Type: ', v_prime_type,
+                   ', Sub Type: ', v_sub_type,
+                   ', Duration: ', TIMESTAMPDIFF(MICROSECOND, start_time, NOW()) / 1000000, ' seconds'), 
            NOW());
+    END tmp_block;
 END //
+
 DELIMITER ;

@@ -1,0 +1,9 @@
+selenium==4.0.0 
+requests 
+PyPDF2 
+scikit-learn 
+elasticsearch 
+torch 
+transformers 
+langchain 
+openparse

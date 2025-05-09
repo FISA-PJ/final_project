@@ -129,7 +129,7 @@ with DAG(
     'process_existing_pdf_files',
     default_args=default_args,
     description='기존 저장된 PDF 파일 처리 및 Elasticsearch 적재',
-    schedule_interval=None,  # 수동 실행용 (일회성 작업)
+    schedule=None,  # 수동 실행용 (일회성 작업)
     start_date=datetime(2025, 5, 1),
     catchup=False,
     tags=['elasticsearch', 'pdf', 'one-time'],

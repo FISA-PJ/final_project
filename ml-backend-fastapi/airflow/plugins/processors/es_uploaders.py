@@ -22,14 +22,14 @@ def get_elasticsearch_client():
 
     # 여러 호스트 시도
     hosts = [
-        "http://test-elasticsearch-ml:9200",  # Docker 서비스 이름
+        "http://airflow-elasticsearch:9200",  # Docker 서비스 이름
         "http://elasticsearch:9200",          # 일반적인 서비스 이름
         "http://localhost:9200"               # 로컬 테스트용
     ]
     
     # 먼저 Airflow Connection에서 시도
     try:
-        conn = BaseHook.get_connection("elasticsearch_2")
+        conn = BaseHook.get_connection("MY_ELASTICSEARCH")
         es_host = f"http://{conn.host}:{conn.port}"
         logging.info(f"🔍 Elasticsearch 연결 시도 (Airflow Connection): {es_host}")
         es = Elasticsearch(es_host, request_timeout=30)

@@ -1,14 +1,5 @@
-FROM apache/airflow:2.9.2
+FROM apache/airflow:3.0.0
 
 # 필요한 Python 패키지 설치
-USER airflow
-RUN pip install --no-cache-dir \
-    selenium==4.0.0 \
-    requests \
-    PyPDF2 \
-    scikit-learn \
-    elasticsearch \
-    torch         \
-    transformers \
-    langchain \
-    openparse
+COPY requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
