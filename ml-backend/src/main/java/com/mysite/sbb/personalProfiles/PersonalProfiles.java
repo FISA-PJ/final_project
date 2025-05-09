@@ -20,9 +20,9 @@ public class PersonalProfiles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer personal_id;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "personal_name", nullable = false, length = 50)
     @NotBlank(message = "개인 이름은 필수 항목입니다.")
-    private String personal_name;
+    private String personalName;
 
     @Column(nullable = false)
     @NotNull(message = "생년월일은 필수 항목입니다.")
