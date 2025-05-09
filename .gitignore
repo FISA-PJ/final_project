@@ -7,6 +7,7 @@
 *.log
 .\ml-backend-fastapi\airflow\logs\*
 .\ml-backend-fastapi\airflow\downloads\*
+.\ml-backend-fastapi\airflow\logs
 .env
 
 # Python 바이트 코드 \ 최적화 파일
