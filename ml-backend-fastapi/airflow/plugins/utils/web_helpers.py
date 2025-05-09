@@ -21,6 +21,11 @@ def init_driver(headers, remote_url="http://airflow-selenium:4444/wd/hub", max_r
             # 타임아웃 설정을 늘립니다
             capabilities = DesiredCapabilities.CHROME.copy()
             capabilities['pageLoadStrategy'] = 'normal'  # 페이지가 완전히 로드될 때까지 기다림
+            capabilities['timeouts'] = {
+                'implicit': 10,   # 암묵적인 대기 시간 (초)
+                'page load': 30,  # 페이지 로딩 타임아웃 (초)
+                'script': 30      # 스크립트 실행 타임아웃 (초)
+            }
             
             logging.info(f"Selenium 연결 시도 {retry_count + 1}/{max_retries}: {remote_url}")
             
