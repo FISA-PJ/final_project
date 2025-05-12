@@ -11045,6 +11045,18 @@ html {
   background-color: #1a252f;
 }
 
+body {
+  background-color: #f9f9fb;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.card {
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  transform: scale(1.02);
+}
+
+
 /* textarea {
 	width: 100%;
 }

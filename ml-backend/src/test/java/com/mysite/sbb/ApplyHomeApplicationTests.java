@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.mysite.sbb.question.QuestionService;
 
 @SpringBootTest
-class SbbApplicationTests {
+class ApplyHomeApplicationTests {
 
     @Autowired
     private QuestionService questionService;
