@@ -8,7 +8,8 @@ from airflow.hooks.base import BaseHook
 
 # 모듈 임포트
 from plugins.utils.file_helpers import ensure_directory
-from plugins.crawlers.lh_crawler import collect_lh_file_urls
+from plugins.crawlers.lh_crawler import collect_lh_file_urls_and_pdf
+from plugins.crawlers.lh_crawler import collect_lh_notices_with_address
 
 # 환경 설정 - 변수 정의
 BASE_URL = "https://apply.lh.or.kr"
@@ -37,7 +38,23 @@ def collect_urls_wrapper(**kwargs):
     execution_date = datetime.strptime(execution_date, "%Y-%m-%d").date()
     print(f"🔄 실행 날짜: {execution_date}")
 
-    return collect_lh_file_urls(BASE_URL, LIST_URL, DOWNLOAD_URL, DOWNLOAD_DIR, HEADERS, execution_date)
+    return collect_lh_file_urls_and_pdf(BASE_URL, LIST_URL, DOWNLOAD_URL, DOWNLOAD_DIR, HEADERS, execution_date)
+
+# 래퍼 함수 - 공고문 URL 수집 및 공고문 주소 수집
+def collect_urls_wrapper2(**kwargs):
+    """
+    LH 공고문 URL 수집 및 공고문 주소 수집을 위한 래퍼 함수
+    
+    이 함수는 Airflow DAG 내에서 직접 호출되어 LH 공고문 크롤링 작업을 수행합니다.
+    크롤링 모듈에서 정의된 collect_lh_file_urls 함수를 호출하여 실제 크롤링 작업을 위임합니다.
+    수집된 PDF 파일은 DOWNLOAD_DIR에 저장됩니다.
+    """
+    # Airflow의 execution_date 사용 (실행 스케줄 날짜)
+    execution_date = kwargs.get('ds')  # ds는 'YYYY-MM-DD' 문자열
+    execution_date = datetime.strptime(execution_date, "%Y-%m-%d").date()
+    print(f"🔄 실행 날짜: {execution_date}")
+
+    return collect_lh_notices_with_address(BASE_URL, LIST_URL, DOWNLOAD_URL, DOWNLOAD_DIR, HEADERS, execution_date)
 
 # 래퍼 함수 - 저장된 PDF 파일 처리 및 ES 적재
 def process_pdfs_wrapper(**kwargs):
@@ -54,7 +71,7 @@ def process_pdfs_wrapper(**kwargs):
     from plugins.processors.es_uploaders import get_elasticsearch_client
      
     ti = kwargs['ti']
-    collected_urls = ti.xcom_pull(task_ids='collect_urls')
+    collected_urls = ti.xcom_pull(task_ids='collect_urls_and_pdfs')
     
     if not collected_urls:
         print("⚠️ 수집된 공고가 없습니다. 프로그램을 종료합니다.")
@@ -119,15 +136,21 @@ with DAG(
 ) as dag:
     # 공고문 URL 수집 및 PDF 다운로드 태스크
     collect_task = PythonOperator(
-        task_id='collect_urls',
+        task_id='collect_urls_and_pdfs',
         python_callable=collect_urls_wrapper,
     )
     
+    # 공고문 URL 주소 및 수집 태스크
+    collect_task2 = PythonOperator(
+        task_id='collect_urls_and_addresses',
+        python_callable=collect_urls_wrapper2,
+    )
+
     # 저장된 PDF 처리 및 ES 적재 태스크
     process_task = PythonOperator(
-        task_id='process_pdfs',
+        task_id='pdf_processing_and_es_upload',
         python_callable=process_pdfs_wrapper,
     )
     
     # 태스크 의존성 설정
-    collect_task >> process_task
+    collect_task >> collect_task2 >> process_task

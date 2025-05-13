@@ -1,0 +1,13 @@
+# 기본 패키지 (버전 고정)
+urllib3==1.26.18  # selenium 4.9.0이 이 버전대를 필요로 함
+requests==2.31.0  # 현재 사용 중인 버전 유지
+selenium==4.9.0   # 현재 사용 중인 버전 유지
+
+# 데이터 처리 및 PDF 관련
+PyPDF2
+
+# 검색 및 저장
+elasticsearch
+
+# Airflow 관련 패키지
+apache-airflow[celery,postgres,redis]==3.0.0

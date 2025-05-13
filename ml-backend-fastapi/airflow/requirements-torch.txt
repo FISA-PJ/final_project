@@ -1,0 +1,8 @@
+# AI/ML 관련
+torch
+transformers
+langchain
+openparse
+
+# 머신러닝 및 데이터 사이언스
+scikit-learn

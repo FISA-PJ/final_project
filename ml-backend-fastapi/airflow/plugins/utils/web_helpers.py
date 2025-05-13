@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 import logging
 
@@ -17,28 +16,27 @@ def init_driver(headers, remote_url="http://airflow-selenium:4444/wd/hub", max_r
             chrome_opts.add_argument("--no-sandbox")  # 컨테이너 환경에서 중요
             chrome_opts.add_argument("--disable-dev-shm-usage")  # 메모리 문제 방지
             chrome_opts.add_argument(f"user-agent={headers['User-Agent']}")
+
+            # 기본 Capabilities 설정
+            capabilities = webdriver.DesiredCapabilities.CHROME.copy()
+            capabilities['browserName'] = 'chrome'
             
-            # 타임아웃 설정을 늘립니다
-            capabilities = DesiredCapabilities.CHROME.copy()
-            capabilities['pageLoadStrategy'] = 'normal'  # 페이지가 완전히 로드될 때까지 기다림
-            capabilities['timeouts'] = {
-                'implicit': 10,   # 암묵적인 대기 시간 (초)
-                'page load': 30,  # 페이지 로딩 타임아웃 (초)
-                'script': 30      # 스크립트 실행 타임아웃 (초)
-            }
-            
-            logging.info(f"Selenium 연결 시도 {retry_count + 1}/{max_retries}: {remote_url}")
-            
+            # 원격 드라이버 생성
             driver = webdriver.Remote(
                 command_executor=remote_url,
                 options=chrome_opts,
-                desired_capabilities=capabilities,
+                desired_capabilities=capabilities
             )
-            
-            # 타임아웃 시간을 30초로 늘림
-            wait = WebDriverWait(driver, 30)
-            
+
+            # 타임아웃 설정 (WebDriver 객체에 대해 설정)
+            driver.set_page_load_timeout(30)  # 페이지 로드 타임아웃
+            driver.set_script_timeout(30)     # 스크립트 실행 타임아웃
+            driver.implicitly_wait(10)        # 암시적 대기 시간
+
+            # WebDriverWait을 사용하여 명시적 대기 시간 설정
+            wait = WebDriverWait(driver, 30)  # 30초 대기
             logging.info("Selenium 드라이버 초기화 성공")
+            
             return driver, wait
             
         except Exception as e:
