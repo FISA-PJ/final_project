@@ -30,7 +30,7 @@ public class ChatController {
         HttpEntity<Map<String, String>> entity = new HttpEntity<>(request, headers);
 
         // FastAPI 서버 주소
-        String fastApiUrl = "http://ml-backend:8000/api/chatbot";
+        String fastApiUrl = "http://localhost:8000/api/chatbot";
 
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, entity, Map.class);
@@ -40,7 +40,6 @@ public class ChatController {
             result.put("reply", reply);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("reply", "FastAPI 서버와의 연결에 실패했습니다."));
         }

@@ -33,7 +33,7 @@
           word-wrap: break-word;
       }
 
-      .user-message {
+      .users-message {
           background-color: #dff0ff;
           align-self: flex-end;
           text-align: right;
@@ -94,7 +94,7 @@
 
     function appendMessage(text, sender) {
         const message = document.createElement("div");
-        message.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+        message.classList.add("message", sender === "users" ? "users-message" : "bot-message");
         message.innerText = text;
         chatMessages.appendChild(message);
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -104,7 +104,7 @@
         const text = userInput.value.trim();
         if (!text) return;
 
-        appendMessage(text, "user");
+        appendMessage(text, "users");
         userInput.value = "";
 
         fetch("/chatbot/api", {
