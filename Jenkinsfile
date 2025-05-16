@@ -58,7 +58,7 @@ pipeline {
                 sshagent(['jenkins-testkey']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no $DEPLOY_SERVER '
-                      docker pull $IMAGE_NAME &&
+                      docker pull ${IMAGE_NAME} &&
                       docker stop ml-backend || true &&
                       docker rm ml-backend || true &&
                       docker run -d --name ml-backend -p 5000:5000 $IMAGE_NAME
