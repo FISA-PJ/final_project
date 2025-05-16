@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time
 import logging
 
-def init_driver(headers, remote_url="http://airflow-selenium:4444/wd/hub", max_retries=3):
+def init_driver(headers, remote_url="http://airflow-selenium:4444/wd/hub", max_retries=10):
     """Selenium 드라이버 초기화 (원격 연결) - 향상된 안정성과 재시도 로직"""
     retry_count = 0
     

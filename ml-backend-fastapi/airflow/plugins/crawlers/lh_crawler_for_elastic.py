@@ -38,7 +38,8 @@ class CrawlerConfig:
     pdf_files_selector: str = "dd > ul.bbsV_link.file > li"
 
 # LH 공고문 URL 수집 및 PDF 다운로드를 위한 함수 (개선된 버전)
-def collect_lh_file_urls_and_pdf(base_url, list_url, download_url, download_dir, headers, target_date=None) -> List[Tuple[str, str, Dict[str, str]]]:
+def collect_lh_file_urls_and_pdf(base_url, list_url, download_url, 
+        download_dir, headers, target_date=None) -> List[Tuple[str, str, Dict[str, str]]]:
     """
     LH 공고문 URL 수집 및 PDF 다운로드 (개선된 버전)
     

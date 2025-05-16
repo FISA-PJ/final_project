@@ -126,7 +126,7 @@ default_args = {
 }
 
 with DAG(
-    'process_existing_pdf_files',
+    'Process_Existing_Pdf_Files_To_ElasticSearch',
     default_args=default_args,
     description='기존 저장된 PDF 파일 처리 및 Elasticsearch 적재',
     schedule=None,  # 수동 실행용 (일회성 작업)

@@ -9,6 +9,7 @@
 .\ml-backend-fastapi\airflow\downloads\*
 .\ml-backend-fastapi\airflow\logs
 .env
+.pdf
 
 # Python 바이트 코드 \ 최적화 파일
 __pycache__\

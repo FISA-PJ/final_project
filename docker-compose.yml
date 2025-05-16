@@ -19,6 +19,7 @@ x-airflow-common: &airflow-common-config
     PYTHONPATH: '/opt/airflow'
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
     AIRFLOW_CONN_MY_ELASTICSEARCH: 'http://airflow-elasticsearch:9200'
+    AIRFLOW_CONN_NOTICES_DB: 'mysql://admin:admin_password@host.docker.internal:13306/notice_db?charset=utf8mb4&local_infile=true'
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
@@ -112,7 +113,7 @@ services:
         condition: service_healthy
       
   airflow-scheduler:
-    <<: *airflow-light
+    <<: *airflow-worker-full
     command: scheduler
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"']
