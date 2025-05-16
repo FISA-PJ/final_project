@@ -1,13 +1,13 @@
-package com.mysite.sbb.user;
+package com.mysite.applyhome.user;
 
 import java.util.Optional;
 
-import com.mysite.sbb.personalProfiles.PersonalProfiles;
-import com.mysite.sbb.personalProfiles.PersonalProfilesRepository;
+import com.mysite.applyhome.personalProfiles.PersonalProfiles;
+import com.mysite.applyhome.personalProfiles.PersonalProfilesRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mysite.sbb.DataNotFoundException;
+import com.mysite.applyhome.DataNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

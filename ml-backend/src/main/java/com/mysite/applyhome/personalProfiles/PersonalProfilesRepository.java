@@ -1,4 +1,4 @@
-package com.mysite.sbb.personalProfiles;
+package com.mysite.applyhome.personalProfiles;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

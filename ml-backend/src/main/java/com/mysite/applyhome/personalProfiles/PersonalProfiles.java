@@ -1,4 +1,4 @@
-package com.mysite.sbb.personalProfiles;
+package com.mysite.applyhome.personalProfiles;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

@@ -1,4 +1,4 @@
-package com.mysite.sbb.user;
+package com.mysite.applyhome.user;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;

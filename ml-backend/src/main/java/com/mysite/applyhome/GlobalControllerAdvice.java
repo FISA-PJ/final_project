@@ -1,6 +1,6 @@
-package com.mysite.sbb;
+package com.mysite.applyhome;
 
-import com.mysite.sbb.user.SiteUserDetails;
+import com.mysite.applyhome.user.SiteUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;

@@ -1,4 +1,4 @@
-package com.mysite.sbb;
+package com.mysite.applyhome;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

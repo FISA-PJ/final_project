@@ -1,4 +1,4 @@
-package com.mysite.sbb.subscript;
+package com.mysite.applyhome.subscript;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,14 +19,18 @@ import java.util.List;
 @Service
 public class SubscriptService {
 
-    public Page<Subscript> fetchSubscripts(String serviceKey, int pageSize, int pageNum) {
+    public Page<Subscript> fetchSubscripts(String serviceKey, int pageSize, int pageNum, String type) {
         try {
             // URL 생성
             StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552555/lhLeaseNoticeInfo1/lhLeaseNoticeInfo1");
             urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey);
             urlBuilder.append("&" + URLEncoder.encode("PG_SZ", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(pageSize), "UTF-8"));
             urlBuilder.append("&" + URLEncoder.encode("PAGE", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(pageNum), "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("UPP_AIS_TP_CD", "UTF-8") + "=" + URLEncoder.encode("05", "UTF-8"));
+            
+            // type이 존재하고 비어있지 않을 때만 UPP_AIS_TP_CD 파라미터 추가
+            if (type != null && !type.equals("00")) {
+                urlBuilder.append("&" + URLEncoder.encode("UPP_AIS_TP_CD", "UTF-8") + "=" + URLEncoder.encode(type, "UTF-8"));
+            }
 
             // HTTP 요청
             URL url = new URL(urlBuilder.toString());
