@@ -1,0 +1,50 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <table class="table">
+        <thead class="table-dark">
+        <tr class="text-center">
+            <th>순번</th>
+            <th style="width:50%">공고명</th>
+            <th>지역</th>
+            <th>공고게시일</th>
+            <th>공고마감일</th>
+            <th>상태</th>
+            <th>상세보기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="subscript, loop : ${paging}">
+
+            <td th:text="${subscript.RNUM}"></td>
+            <td th:text="${subscript.PAN_NM}"></td>
+            <td th:text="${subscript.CNP_CD_NM}"></td>
+            <td th:text="${subscript.PAN_NT_ST_DT}"></td>
+            <td th:text="${subscript.CLSG_DT}"></td>
+            <td th:text="${subscript.PAN_SS}"></td>
+            <td><a th:href="${subscript.DTL_URL}" th:text="[링크]" target="_blank"></a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
+                th:if="${page >= paging.number-1 and page <= paging.number+3}"
+                th:classappend="${page == paging.number+1} ? 'active'" class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number+2}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>
+

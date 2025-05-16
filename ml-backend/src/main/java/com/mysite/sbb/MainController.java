@@ -14,16 +14,9 @@ public class MainController {
 	@Value("${KAKAOMAP_API_KEY}")
 	private String kakaoApiKey;
 
-//	@GetMapping("/sbb")
-//	@ResponseBody
-//	public String index() {
-//		return "안녕하세요 sbb에 오신것을 환영합니다.";
-//	}
-
 	@GetMapping("/")
 	public String root() {
 		return "main_page";
-//		return "redirect:/question/list";
 	}
 
 	@GetMapping("/map")
@@ -31,11 +24,6 @@ public class MainController {
 		model.addAttribute("kakaoApiKey", kakaoApiKey);
 		return "map_page";
 	}
-
-//	@GetMapping("/map")
-//	public String map() {
-//		return "map_page";
-//	}
 
 	@GetMapping("/chatbot")
 	public String chatbot() {
