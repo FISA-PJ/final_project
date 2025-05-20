@@ -60,13 +60,11 @@ def crawl_lh_notices_task(**context):
             target_date=execution_date
         )
         
-        logger.info(f"크롤링 완료: {len(notices_data)}개 공고 수집")
-        
         # XCom으로 결과 전달 -> 다음 Task에서 사용
         return notices_data
         
     except Exception as e:
-        logger.error(f"크롤링 실패: {str(e)}")
+        logger.error(f"❌ 크롤링 중 실패: {str(e)}")
         raise
 
 def process_and_save_notices_task(**context):
@@ -113,9 +111,9 @@ def process_and_save_notices_task(**context):
         # 연결 정보 로깅
         conn_info = mysql_hook.get_connection('notices_db')
         logger.info("✅ MySQL 연결 성공!")
-        logger.info(f"Host: {conn_info.host}")
-        logger.info(f"Port: {conn_info.port}")
-        logger.info(f"Database: {conn_info.schema}")
+        logger.info(f"🏠 Host: {conn_info.host}")
+        logger.info(f"🔌 Port: {conn_info.port}")
+        logger.info(f"💾 Database: {conn_info.schema}")
         
     except Exception as e:
         logger.error(f"❌ MySQL 연결 실패: {str(e)}")
@@ -159,12 +157,12 @@ def process_and_save_notices_task(**context):
                             notice.get('is_correction')
                         )
                     )
-                logger.info(f"신규 공고 DB 적재 완료: {notice['notice_number']}")
+                logger.info(f"🟢 신규 공고 DB 적재 완료: {notice['notice_number']}")
             
             db_saved_count += 1
             
         except Exception as e:
-            logger.error(f"DB 저장 실패: {notice['notice_number']}, 오류: {e}")
+            logger.error(f"🔴 DB 저장 실패: {notice['notice_number']}, 오류: {e}")
             error_count += 1
     
     # 결과 요약

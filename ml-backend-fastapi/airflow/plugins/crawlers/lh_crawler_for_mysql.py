@@ -439,9 +439,10 @@ def extract_supply_schedule(driver) -> Optional[str]:
         logger.info(f"❌ 공급일정 추출 전체 오류: {e}")
         return None
 
-def save_notices_to_csv(notices_data: List[Dict], csv_file_path: str) -> Tuple[List[Dict], List[Dict]]:
+def classify_notices_by_location(notices_data: List[Dict], csv_file_path: str) -> Tuple[List[Dict], List[Dict]]:
     """
-    주소 없는 공고를 CSV에 저장하고, DB용과 CSV용 데이터를 분리하여 반환
+    소재지 없는 공고는 CSV에 저장
+    DB용과 CSV용 데이터를 분리하여 반환
     
     Args:
         notices_data: 크롤링된 공고 데이터
@@ -455,9 +456,9 @@ def save_notices_to_csv(notices_data: List[Dict], csv_file_path: str) -> Tuple[L
     
     # 주소 유무에 따라 데이터 분리
     for notice in notices_data:
-        if notice.get('location') != '없음' and notice.get('location'): # 주소가 있으면 DB용
+        if notice.get('location') != '없음' and notice.get('location'):  # 주소가 있으면 DB용
             db_notices.append(notice)
-        else:                               # 주소가 없으면 CSV에 저장
+        else:                                                           # 주소가 없으면 CSV에 저장
             csv_notices.append(notice)
     
     # CSV 저장
@@ -488,52 +489,92 @@ def save_notices_to_csv(notices_data: List[Dict], csv_file_path: str) -> Tuple[L
 
 def detect_correction_notice(title: str) -> bool:
     """제목에서 정정공고 여부 판별"""
-    correction_keywords = ['정정', '변경', '수정', '재공고', '추가', '취소', '연기']
-    logger.info(f"공고명에서 정정공고 감지 시작: {title}")
     if not title:
-        logger.info("공고명 없음")
+        logger.info("❓ 공고명 없음")
         return False
+    
+    # 정정공고 키워드 목록
+    correction_keywords = ['정정', '변경', '수정', '재공고', '추가', '취소', '연기']
+    
+    logger.info(f"🔍 공고 제목 분석: \"{title}\"")
+    
+    # 키워드 검색 (각 키워드마다 개별 로깅)
+    detected_keywords = []
+    for keyword in correction_keywords:
+        if keyword in title:
+            detected_keywords.append(keyword)
+            logger.info(f"- '{keyword}' 키워드 발견")
+    
+    # 결과 로깅
+    if detected_keywords:
+        keywords_str = "', '".join(detected_keywords)
+        logger.info(f"🔄 정정공고 감지됨 - 키워드: '{keywords_str}'")
+        return True
     else:
-        logger.info(f"공고명: {title} 에서 정정공고 감지")
-        return any(keyword in title for keyword in correction_keywords)
+        logger.info(f"✅ 일반 공고 (정정공고 아님)")
+        return False
 
 def parse_contract_period(text: str) -> Optional[dict]:
     """계약기간 텍스트를 시작일과 종료일로 분리"""
     import re
     from datetime import datetime
     
+    if not text:
+        logger.warning("❓ 계약기간 텍스트가 비어있음")
+        return None
+    
     try:
-        # 다양한 패턴 처리
+        logger.info(f"📅 계약기간 분석: \"{text}\"")
+        
+        # 패턴 정의 및 설명
         patterns = [
-            # 2025.12.31 ~ 2025.12.31 형태
-            r'(\d{4}\.\d{2}\.\d{2})\s*~\s*(\d{4}\.\d{2}\.\d{2})',
-            # 2025-12-31 ~ 2025-12-31 형태  
-            r'(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})',
-            # 2025년 12월 31일 ~ 2025년 12월 31일 형태
-            r'(\d{4}년\s*\d{1,2}월\s*\d{1,2}일)\s*~\s*(\d{4}년\s*\d{1,2}월\s*\d{1,2}일)',
-            # 12.31 ~ 12.31 (같은 년도) 형태
-            r'(\d{1,2}\.\d{1,2})\s*~\s*(\d{1,2}\.\d{1,2})'
+            (r'(\d{4}\.\d{2}\.\d{2})\s*~\s*(\d{4}\.\d{2}\.\d{2})', "연.월.일 형태"),
+            (r'(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})', "연-월-일 형태"),
+            (r'(\d{4}년\s*\d{1,2}월\s*\d{1,2}일)\s*~\s*(\d{4}년\s*\d{1,2}월\s*\d{1,2}일)', "한글 형태"),
+            (r'(\d{1,2}\.\d{1,2})\s*~\s*(\d{1,2}\.\d{1,2})', "월.일 형태")
         ]
         
-        for pattern in patterns:
+        for i, (pattern, desc) in enumerate(patterns):
             match = re.search(pattern, text)
             if match:
                 start_str = match.group(1).strip()
                 end_str = match.group(2).strip()
+                
+                logger.debug(f"🔍 패턴 #{i+1} ({desc}) 매칭: '{start_str}' ~ '{end_str}'")
                 
                 # 날짜 표준화 (YYYY-MM-DD 형태로)
                 start_date = normalize_date(start_str)
                 end_date = normalize_date(end_str)
                 
                 if start_date and end_date:
-                    return {
+                    result = {
                         'start_date': start_date,
                         'end_date': end_date,
-                        'original_text': text
+                        'original_text': text,
+                        'pattern_matched': desc
                     }
+                    logger.info(f"✅ 계약기간 추출 성공: {start_date} ~ {end_date}")
+                    return result
+                else:
+                    logger.warning(f"⚠️ 날짜 변환 실패: '{start_str}' ~ '{end_str}'")
         
-        # 패턴 매칭 실패시 로그
-        logger.warning(f"계약기간 파싱 실패: {text}")
+        # 텍스트가 숫자나 날짜 형식을 포함하는지 확인 (디버깅용)
+        has_numbers = bool(re.search(r'\d', text))
+        has_tilde = '~' in text
+        
+        if has_numbers and has_tilde:
+            logger.warning(f"❗ 날짜 형식 오류: \"{text}\" - 숫자와 물결표는 있으나 패턴 매칭 실패")
+        elif has_numbers:
+            logger.warning(f"❗ 날짜 형식 오류: \"{text}\" - 숫자는 있으나 물결표(~) 없음")
+        else:
+            logger.warning(f"❌ 계약기간 형식 아님: \"{text}\"")
+        
+        return None
+        
+    except Exception as e:
+        logger.error(f"💥 계약기간 파싱 오류: {str(e)}, 입력: \"{text}\"")
+        import traceback
+        logger.debug(f"🔬 상세 오류: {traceback.format_exc()}")
         return None
         
     except Exception as e:
@@ -542,22 +583,43 @@ def parse_contract_period(text: str) -> Optional[dict]:
 
 def normalize_date(date_str: str) -> Optional[str]:
     """다양한 날짜 형식을 YYYY-MM-DD로 표준화"""
-    from datetime import datetime
+    from datetime import datetime, date
+    
+    if not date_str or not isinstance(date_str, str):
+        logger.warning(f"⚠️ 유효하지 않은 날짜 입력: {date_str}")
+        return None
     
     try:
+        logger.debug(f"🗓️ 날짜 표준화: \"{date_str}\"")
+        
         # 2025.12.31 형태
         if '.' in date_str and len(date_str.split('.')) == 3:
             parts = date_str.split('.')
             if len(parts[0]) == 4:  # 년도 포함
-                return f"{parts[0]}-{parts[1].zfill(2)}-{parts[2].zfill(2)}"
+                result = f"{parts[0]}-{parts[1].zfill(2)}-{parts[2].zfill(2)}"
+                if validate_date(result):
+                    logger.debug(f"✅ 연.월.일 형식 변환 성공: \"{result}\"")
+                    return result
+                else:
+                    logger.warning(f"⚠️ 유효하지 않은 날짜: \"{result}\"")
             else:  # 년도 없음 (현재 년도 사용)
                 current_year = datetime.now().year
-                return f"{current_year}-{parts[0].zfill(2)}-{parts[1].zfill(2)}"
+                result = f"{current_year}-{parts[0].zfill(2)}-{parts[1].zfill(2)}"
+                if validate_date(result):
+                    logger.debug(f"✅ 현재 연도 추가: \"{result}\"")
+                    return result
+                else:
+                    logger.warning(f"⚠️ 유효하지 않은 날짜: \"{result}\"")
         
         # 2025-12-31 형태 (이미 표준화됨)
         elif '-' in date_str and len(date_str.split('-')) == 3:
             parts = date_str.split('-')
-            return f"{parts[0]}-{parts[1].zfill(2)}-{parts[2].zfill(2)}"
+            result = f"{parts[0]}-{parts[1].zfill(2)}-{parts[2].zfill(2)}"
+            if validate_date(result):
+                logger.debug(f"✅ 표준 형식 확인: \"{result}\"")
+                return result
+            else:
+                logger.warning(f"⚠️ 유효하지 않은 날짜: \"{result}\"")
         
         # 2025년 12월 31일 형태
         elif '년' in date_str and '월' in date_str and '일' in date_str:
@@ -565,16 +627,50 @@ def normalize_date(date_str: str) -> Optional[str]:
             match = re.search(r'(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일', date_str)
             if match:
                 year, month, day = match.groups()
-                return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+                result = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+                if validate_date(result):
+                    logger.debug(f"✅ 한글 날짜 변환 성공: \"{result}\"")
+                    return result
+                else:
+                    logger.warning(f"⚠️ 유효하지 않은 날짜: \"{result}\"")
+            else:
+                logger.warning(f"❌ 한글 날짜 패턴 불일치: \"{date_str}\"")
         
         # 12.31 형태 (년도 없음)
         elif '.' in date_str and len(date_str.split('.')) == 2:
             parts = date_str.split('.')
             current_year = datetime.now().year
-            return f"{current_year}-{parts[0].zfill(2)}-{parts[1].zfill(2)}"
-            
+            result = f"{current_year}-{parts[0].zfill(2)}-{parts[1].zfill(2)}"
+            if validate_date(result):
+                logger.debug(f"✅ 월.일에 현재 연도 추가: \"{result}\"")
+                return result
+            else:
+                logger.warning(f"⚠️ 유효하지 않은 날짜: \"{result}\"")
+        
+        logger.warning(f"❓ 인식할 수 없는 날짜 형식: \"{date_str}\"")
         return None
         
     except Exception as e:
-        logger.error(f"날짜 표준화 오류: {e}, 입력: {date_str}")
+        logger.error(f"💥 날짜 표준화 오류: {e}, 입력: \"{date_str}\"")
         return None
+
+def validate_date(date_str: str) -> bool:
+    """날짜 문자열의 유효성 검사 (YYYY-MM-DD 형식)"""
+    from datetime import datetime
+    try:
+        if not date_str:
+            return False
+        
+        # YYYY-MM-DD 형식인지 확인
+        if not isinstance(date_str, str) or len(date_str.split('-')) != 3:
+            return False
+        
+        # 실제 날짜로 변환 가능한지 확인
+        year, month, day = map(int, date_str.split('-'))
+        datetime(year, month, day)
+        
+        return True
+    except ValueError:
+        return False
+    except Exception:
+        return False
