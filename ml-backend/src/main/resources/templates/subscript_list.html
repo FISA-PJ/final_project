@@ -1,16 +1,68 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
-    <div class="mb-3">
-        <select id="uppAisType" class="form-select" onchange="changeType()" style="width: 200px;">
-            <option value="00">전체</option>
-            <option value="05" selected>분양주택</option>
-            <option value="06">임대주택</option>
-            <option value="13">주거복지</option>
-            <option value="01">토지</option>
-            <option value="22">상가</option>
-        </select>
+    <!-- 검색 필터 영역 추가 -->
+    <div class="row mb-3">
+        <!-- 유형 선택 -->
+        <div class="col-md-3 mb-2">
+            <label for="uppAisType" class="form-label text-primary">• 유형</label>
+            <select id="uppAisType" class="form-select" onchange="applyFilters()">
+                <option value="00">전체</option>
+                <option value="05">분양주택</option>
+                <option value="06">임대주택</option>
+                <option value="13">주거복지</option>
+                <option value="01">토지</option>
+                <option value="22">상가</option>
+            </select>
+        </div>
+        
+        <!-- 지역 선택 -->
+        <div class="col-md-3 mb-2">
+            <label for="region" class="form-label text-primary">• 지역</label>
+            <select id="region" class="form-select" onchange="applyFilters()">
+                <option value="">전국</option>
+                <option value="11">서울특별시</option>
+                <option value="26">부산광역시</option>
+                <option value="41">경기</option>
+                <option value="28">인천</option>
+                <!-- 필요한 지역 옵션 추가 -->
+            </select>
+        </div>
+
+        <!-- 상태 선택 -->
+        <div class="col-md-3 mb-2">
+            <label for="status" class="form-label text-primary">• 상태</label>
+            <select id="status" class="form-select" onchange="applyFilters()">
+                <option value="">전체</option>
+                <option value="공고중">공고중</option>
+                <option value="접수중">접수중</option>
+                <option value="마감">접수마감</option>
+            </select>
+        </div>
     </div>
-    
+
+    <!-- 기간 선택 영역 -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <label class="form-label text-primary">• 기간</label>
+            <div class="d-flex align-items-center">
+                <select id="dateType" class="form-select me-2" style="width: 120px;">
+                    <option value="게시일">게시일</option>
+                    <option value="마감일">마감일</option>
+                </select>
+                <input type="date" id="startDate" class="form-control me-2" style="width: 200px;">
+                <span class="me-2">~</span>
+                <input type="date" id="endDate" class="form-control me-2" style="width: 200px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- 검색 버튼 -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <button onclick="applyFilters()" class="btn btn-primary float-end">검색</button>
+        </div>
+    </div>
+
     <table class="table">
         <thead class="table-dark">
         <tr class="text-center">
@@ -88,27 +140,64 @@
     </div>
 
     <script>
-        function changeType() {
-            const selectedType = document.getElementById('uppAisType').value;
-            // 현재 URL에서 파라미터를 가져옴
+        function applyFilters() {
+            const type = document.getElementById('uppAisType').value;
+            const region = document.getElementById('region').value;
+            const status = document.getElementById('status').value;
+            const dateType = document.getElementById('dateType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            // URL 파라미터 설정
             const urlParams = new URLSearchParams(window.location.search);
-            // type 파라미터 설정
-            urlParams.set('type', selectedType);
-            // page를 1로 리셋
+            if (type) urlParams.set('type', type);
+            if (region) urlParams.set('region', region);
+            if (status) urlParams.set('status', status);
+            if (startDate) urlParams.set('startDate', startDate);
+            if (endDate) urlParams.set('endDate', endDate);
+            if (dateType) urlParams.set('dateType', dateType);
+            
+            // 페이지를 1로 리셋
             urlParams.set('page', '1');
+            
             // 페이지 이동
             window.location.href = '?' + urlParams.toString();
         }
 
-        // 페이지 로드 시 선택된 타입 유지
+        // 페이지 로드 시 선택된 값들 유지
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // 각 필터값 복원
             const type = urlParams.get('type');
-            if (type) {
-                document.getElementById('uppAisType').value = type;
-            }
+            const region = urlParams.get('region');
+            const status = urlParams.get('status');
+            const dateType = urlParams.get('dateType');
+            const startDate = urlParams.get('startDate');
+            const endDate = urlParams.get('endDate');
+
+            if (type) document.getElementById('uppAisType').value = type;
+            if (region) document.getElementById('region').value = region;
+            if (status) document.getElementById('status').value = status;
+            if (dateType) document.getElementById('dateType').value = dateType;
+            if (startDate) document.getElementById('startDate').value = startDate;
+            if (endDate) document.getElementById('endDate').value = endDate;
         }
     </script>
+
+    <style>
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .form-select, .form-control {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        .btn-primary {
+            padding: 8px 24px;
+        }
+    </style>
 </div>
 </html>
 

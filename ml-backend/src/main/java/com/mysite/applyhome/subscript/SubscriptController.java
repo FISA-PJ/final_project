@@ -25,14 +25,38 @@ public class SubscriptController {
     public String showSubscripts(
             Model model, 
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "type", defaultValue = "05") String type
+            @RequestParam(value = "type", defaultValue = "05") String type,
+            @RequestParam(value = "region", required = false) String region,
+            @RequestParam(value = "status", required = false) String status,
+             @RequestParam(value = "dateType", required = false) String dateType,
+             @RequestParam(value = "startDate", required = false) String startDate,
+             @RequestParam(value = "endDate", required = false) String endDate
     ) {
         String serviceKey = lhApiKey;
         int pageSize = 10;
-        Page<Subscript> paging = subscriptService.fetchSubscripts(serviceKey, pageSize, page, type);
         
+        // 서비스 호출 시 모든 필터 파라미터 전달
+        Page<Subscript> paging = subscriptService.fetchSubscripts(
+            serviceKey, 
+            pageSize, 
+            page, 
+            type,
+            region,
+            status,
+                dateType,
+             startDate,
+             endDate
+        );
+        
+        // 모든 선택된 필터 값을 모델에 추가
         model.addAttribute("paging", paging);
         model.addAttribute("selectedType", type);
+        model.addAttribute("selectedRegion", region);
+        model.addAttribute("selectedStatus", status);
+        // model.addAttribute("selectedDateType", dateType);
+        // model.addAttribute("selectedStartDate", startDate);
+        // model.addAttribute("selectedEndDate", endDate);
+        
         return "subscript_list";
     }
 }
