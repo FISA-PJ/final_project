@@ -9,7 +9,7 @@ import pytz
 import logging
 
 # 크롤러 모듈 임포트
-from plugins.crawlers.lh_crawler_for_mysql import collect_lh_notices, save_notices_to_csv
+from plugins.crawlers.lh_crawler_for_mysql import collect_lh_notices, classify_notices_by_location
 
 # 로거 설정
 logger = logging.getLogger(__name__)
@@ -76,6 +76,7 @@ def process_and_save_notices_task(**context):
     
     if not notices_data:
         logger.info("크롤링된 데이터가 없습니다.")
+        # 다음 Task로 빈 결과 전달
         return {
             'total_crawled': 0,
             'db_saved': 0,
@@ -89,8 +90,8 @@ def process_and_save_notices_task(**context):
     today_str = context['ds'].replace('-', '')  # YYYYMMDD 형식으로 변환
     csv_file_path = f"{download_dir}/{today_str}.csv"
     
-    # 주소 유무에 따라 데이터 분리 및 CSV 저장
-    db_notices, csv_notices = save_notices_to_csv(notices_data, csv_file_path)
+    # 소재지 유무에 따라 데이터 분리 및 CSV 저장
+    db_notices, csv_notices = classify_notices_by_location(notices_data, csv_file_path)
     
     logger.info(f"데이터 분리 완료 - DB용: {len(db_notices)}개, CSV용: {len(csv_notices)}개")
     
@@ -101,6 +102,8 @@ def process_and_save_notices_task(**context):
         cursor = conn.cursor()
         
         # 쿼리 실행
+        # 연결 확인 쿼리
+        logger.info("MySQL 연결 확인 쿼리 실행")
         cursor.execute("SELECT * FROM notices LIMIT 5;")
         rows = cursor.fetchall()
 
@@ -122,11 +125,11 @@ def process_and_save_notices_task(**context):
     db_saved_count = 0
     error_count = 0
     
-    # DB에 주소 있는 공고 저장 (제공된 프로시저 사용)
+    # DB에 공고 저장 (제공된 프로시저 사용)
     for notice in db_notices:
         try:
             # 정정공고 여부 판별
-            is_correction = notice.get('is_correction', False)
+            is_correction = notice.get('is_correction')
             
             # 정정공고 처리 로직
             if is_correction:
