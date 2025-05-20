@@ -17,9 +17,9 @@ LIST_URL = f"{BASE_URL}/lhapply/apply/wt/wrtanc/selectWrtancList.do?viewType=src
 DOWNLOAD_URL = f"{BASE_URL}/lhapply/lhFile.do"
 DOWNLOAD_DIR = "/opt/airflow/downloads"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
-ES_INDEX_NAME = Variable.get("ES_INDEX_NAME", "rag-test3")
-EMBEDDING_BATCH_SIZE = int(Variable.get("EMBEDDING_BATCH_SIZE", "8"))
-MAX_WORKERS = int(Variable.get("MAX_WORKERS", "3"))
+ES_INDEX_NAME = "rag-test3"
+EMBEDDING_BATCH_SIZE = 8
+MAX_WORKERS = 3
 
 # 디렉토리 생성
 ensure_directory(DOWNLOAD_DIR)
