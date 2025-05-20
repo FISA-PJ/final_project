@@ -1,11 +1,9 @@
-package com.mysite.sbb.user;
+package com.mysite.applyhome.user;
 
-import com.mysite.sbb.personalProfiles.PersonalProfiles;
+import com.mysite.applyhome.personalProfiles.PersonalProfiles;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

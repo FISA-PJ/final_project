@@ -20,6 +20,16 @@
 			<input type="password" th:field="*{password2}" class="form-control">
 		</div>
 		<div class="mb-3">
+			<label for="phoneNumber1" class="form-label">전화번호</label>
+			<div class="d-flex align-items-center">
+				<input type="text" id="phoneNumber1" class="form-control me-2" maxlength="3" pattern="\d{2,3}">
+				<span class="mx-1">-</span>
+				<input type="text" id="phoneNumber2" class="form-control ms-2" maxlength="4" pattern="\d{3,4}">
+				<span class="mx-1">-</span>
+				<input type="text" id="phoneNumber3" class="form-control ms-2" maxlength="4" pattern="\d{4}">
+			</div>
+		</div>
+		<div class="mb-3">
 			<label for="residentId1" class="form-label">주민번호</label>
 			<div class="d-flex align-items-center">
 				<input type="text" th:field="*{residentId1}" id="residentId1" class="form-control me-2" maxlength="6" pattern="\d{6}" placeholder="앞자리(6자리)" title="생년월일 6자리를 입력하세요.">

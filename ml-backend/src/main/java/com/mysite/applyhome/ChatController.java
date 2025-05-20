@@ -1,4 +1,4 @@
-package com.mysite.sbb;
+package com.mysite.applyhome;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;

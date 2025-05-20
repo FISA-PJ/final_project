@@ -1,12 +1,9 @@
-package com.mysite.sbb;
+package com.mysite.applyhome;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
@@ -14,16 +11,9 @@ public class MainController {
 	@Value("${KAKAOMAP_API_KEY}")
 	private String kakaoApiKey;
 
-//	@GetMapping("/sbb")
-//	@ResponseBody
-//	public String index() {
-//		return "안녕하세요 sbb에 오신것을 환영합니다.";
-//	}
-
 	@GetMapping("/")
 	public String root() {
 		return "main_page";
-//		return "redirect:/question/list";
 	}
 
 	@GetMapping("/map")
@@ -31,11 +21,6 @@ public class MainController {
 		model.addAttribute("kakaoApiKey", kakaoApiKey);
 		return "map_page";
 	}
-
-//	@GetMapping("/map")
-//	public String map() {
-//		return "map_page";
-//	}
 
 	@GetMapping("/chatbot")
 	public String chatbot() {

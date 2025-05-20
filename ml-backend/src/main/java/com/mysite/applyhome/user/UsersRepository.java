@@ -1,4 +1,4 @@
-package com.mysite.sbb.user;
+package com.mysite.applyhome.user;
 
 import java.util.Optional;
 
