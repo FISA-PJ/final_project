@@ -9,7 +9,11 @@ import pytz
 import logging
 
 # 크롤러 모듈 임포트
-from plugins.crawlers.lh_crawler_for_mysql import collect_lh_notices, classify_notices_by_location
+from plugins.crawlers.lh_crawler_for_mysql import (
+    collect_lh_notices, 
+    classify_notices_by_location
+)
+ 
 
 # 로거 설정
 logger = logging.getLogger(__name__)
@@ -64,7 +68,7 @@ def crawl_lh_notices_task(**context):
         return notices_data
         
     except Exception as e:
-        logger.error(f"❌ 크롤링 중 실패: {str(e)}")
+        logger.error(f"❌ 크롤링 Task 중 실패: {str(e)}")
         raise
 
 def process_and_save_notices_task(**context):
@@ -86,7 +90,7 @@ def process_and_save_notices_task(**context):
     
     # CSV 파일 경로 설정 (주소 없는 공고용)
     # 다운로드 디렉토리 별도 설정
-    download_dir = "/opt/airflow/downloads"  # 원하는 경로로 변경
+    download_dir = "/opt/airflow/downloads/no_location_notice"  # 원하는 경로로 변경
     today_str = context['ds'].replace('-', '')  # YYYYMMDD 형식으로 변환
     csv_file_path = f"{download_dir}/{today_str}.csv"
     
@@ -124,7 +128,10 @@ def process_and_save_notices_task(**context):
     
     db_saved_count = 0
     error_count = 0
-    
+
+    # 현재 작업 실행 시간 (한국 시간)
+    job_execution_time = datetime.now(pytz.timezone('Asia/Seoul')).strftime('%Y-%m-%d %H:%M:%S')
+
     # DB에 공고 저장 (제공된 프로시저 사용)
     for notice in db_notices:
         try:
@@ -135,21 +142,22 @@ def process_and_save_notices_task(**context):
             if is_correction:
                 # 정정공고 프로시저 호출
                 mysql_hook.run(
-                    sql="CALL ProcessCorrectionNoticeWithHistory(%s, %s, %s, %s, %s, %s)",
+                    sql="CALL ProcessCorrectionNotice(%s, %s, %s, %s, %s, %s, %s)",
                     parameters=(
                         notice['notice_number'],
                         notice['notice_title'],
                         notice['post_date'],
                         notice.get('application_start_date'),
                         notice.get('application_end_date'),
-                        notice.get('location')
+                        notice.get('location'),
+                        job_execution_time
                     )
                 )
                 logger.info(f"정정공고 처리 완료: {notice['notice_number']}")
             else:
                 # 일반 공고 처리
                 mysql_hook.run(
-                        sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s)",
+                        sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s, %s)",
                         parameters=(
                             notice['notice_number'],
                             notice['notice_title'],
@@ -157,7 +165,8 @@ def process_and_save_notices_task(**context):
                             notice.get('application_start_date'),
                             notice.get('application_end_date'),
                             notice.get('location'),
-                            notice.get('is_correction')
+                            notice.get('is_correction'),
+                            job_execution_time
                         )
                     )
                 logger.info(f"🟢 신규 공고 DB 적재 완료: {notice['notice_number']}")
