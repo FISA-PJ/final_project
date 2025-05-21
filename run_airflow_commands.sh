@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Airflow 빌드하기
-# echo "Running: docker compose build airflow-* --no-cache"
-# docker compose build airflow-* --no-cache
+set -euo pipefail
 
-# Airflow 초기화
-echo "Running: docker compose up airflow-init"
-docker compose up airflow-init 
+echo "[INFO] Running airflow-init..."
 
-# 모든 airflow 관련 서비스를 백그라운드에서 실행
-echo "Running: docker compose up airflow-* -d"
+# airflow-init 서비스 실행
+docker compose up airflow-init
+
+echo "[INFO] airflow-init completed (first-time run). Starting other services..."
+
+# 다른 airflow-* 서비스 실행
 docker compose up airflow-* -d
 
-echo "All commands executed successfully!"
+echo "[INFO] All airflow services are now running!"
