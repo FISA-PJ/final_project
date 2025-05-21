@@ -280,7 +280,7 @@ start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> e
 
 # DAG 문서화
 dag.doc_md = """
-## LH 공고문 크롤링 DAG (프로시저 사용)
+## LH 공고문 크롤링 DAG
 
 이 DAG는 LH(한국토지주택공사) 공고문을 크롤링하여 처리합니다.
 
@@ -290,7 +290,7 @@ dag.doc_md = """
    - 주소 있음: MySQL DB에 저장 (프로시저 사용)
    - 주소 없음: CSV 파일로 저장
 3. **프로시저 활용**: 
-   - ProcessCorrectionNoticeWithHistory: 정정공고 처리
+   - ProcessCorrectionNotice: 정정공고 처리
    - InsertNewNotice: 신규공고 삽입
 4. **상태 관리**: 접수기간 기반 자동 상태 업데이트
 
@@ -303,8 +303,12 @@ dag.doc_md = """
 
 ### 정정공고 처리:
 - 제목에서 정정 키워드 자동 감지
-- 기존 공고가 있으면 ProcessCorrectionNoticeWithHistory 호출
+- 기존 공고가 있으면 ProcessCorrectionNotice 호출
 - 없으면 InsertNewNotice로 신규 처리
+
+### 시간 정보:
+- 각 공고의 created_at 필드는 DAG 작업 실행 시간으로 설정됨
+- 이를 통해 어떤 배치 작업에서 해당 공고가 처리되었는지 추적 가능
 
 ### 모니터링:
 - Airflow UI에서 실행 상태 확인
