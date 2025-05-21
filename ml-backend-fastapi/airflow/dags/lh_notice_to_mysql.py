@@ -130,7 +130,8 @@ def process_and_save_notices_task(**context):
     error_count = 0
 
     # 현재 작업 실행 시간 (한국 시간)
-    job_execution_time = datetime.now(pytz.timezone('Asia/Seoul')).strftime('%Y-%m-%d %H:%M:%S')
+    execution_date = context.get('logical_date') or context.get('execution_date')  # Airflow 버전 호환성 고려
+    job_execution_time = execution_date.strftime('%Y-%m-%d %H:%M:%S')
 
     # DB에 공고 저장 (제공된 프로시저 사용)
     for notice in db_notices:
