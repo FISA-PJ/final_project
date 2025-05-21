@@ -8,7 +8,7 @@ SET CHARACTER SET utf8mb4;
 DROP PROCEDURE IF EXISTS InsertNewNotice;
 DROP PROCEDURE IF EXISTS ProcessCorrectionNoticeWithHistory;
 
--- 신규 공고 삽입 프로시저
+-- 신규 공고 삽입 프로시저 (created_at 파라미터 추가)
 DELIMITER //
 CREATE PROCEDURE InsertNewNotice(
     IN p_notice_number VARCHAR(50),
@@ -17,7 +17,8 @@ CREATE PROCEDURE InsertNewNotice(
     IN p_application_start_date DATE,
     IN p_application_end_date DATE,
     IN p_location VARCHAR(255),
-    IN p_is_correction VARCHAR(100)
+    IN p_is_correction BOOLEAN,
+    IN p_job_execution_time TIMESTAMP
 )
 BEGIN
     DECLARE v_new_status ENUM('접수중', '접수마감');
@@ -28,34 +29,34 @@ BEGIN
         ELSE '접수마감'
     END;
     
-    -- 중복 체크 후 삽입
+    -- 중복 체크 후 삽입 (created_at에 작업 실행 시간 삽입)
     INSERT IGNORE INTO notices (
         notice_number, notice_title, post_date,
         application_start_date, application_end_date, location,
-        notice_status, is_correction, correction_count
+        notice_status, is_correction, created_at
     ) VALUES (
         p_notice_number, p_notice_title, p_post_date,
         p_application_start_date, p_application_end_date, p_location,
-        v_new_status, FALSE, 0
+        v_new_status, p_is_correction, p_job_execution_time
     );
 END //
 DELIMITER ;
 
--- 정정공고 처리 프로시저 (히스토리 테이블 버전)
+-- 수정된 정정공고 처리 프로시저 (created_at 파라미터 추가)
 DELIMITER //
-CREATE PROCEDURE ProcessCorrectionNoticeWithHistory(
+CREATE PROCEDURE ProcessCorrectionNotice(
     IN p_notice_number VARCHAR(50),
     IN p_notice_title VARCHAR(500),
     IN p_post_date DATE,
     IN p_application_start_date DATE,
     IN p_application_end_date DATE,
-    IN p_location VARCHAR(255)
+    IN p_location VARCHAR(255),
+    IN p_job_execution_time TIMESTAMP
 )
 BEGIN
     DECLARE v_existing_id BIGINT DEFAULT NULL;    -- 기존 공고 ID 저장
     DECLARE v_base_title VARCHAR(500);            -- 정정공고 키워드 제거한 기본 제목
     DECLARE v_new_status ENUM('접수중', '접수마감'); -- 계산될 공고 상태
-    DECLARE v_max_version INT DEFAULT 1;          -- 최대 버전 번호
     
     -- 제목 정제
     SET v_base_title = TRIM(BOTH ' ' FROM 
@@ -80,36 +81,7 @@ BEGIN
     LIMIT 1;
     
     IF v_existing_id IS NOT NULL THEN
-        -- 1) 기존 공고의 현재 정보를 히스토리 테이블에 저장
-        INSERT INTO notice_history (
-            notice_id, notice_number, notice_title, post_date,
-            application_start_date, application_end_date, location,
-            version_number, is_correction
-        )
-        SELECT 
-            id, notice_number, notice_title, post_date,
-            application_start_date, application_end_date, location,
-            1, is_correction
-        FROM notices
-        WHERE id = v_existing_id;
-        
-        -- 2) 다음 버전 번호 계산
-        SELECT COALESCE(MAX(version_number), 0) + 1 INTO v_max_version
-        FROM notice_history
-        WHERE notice_id = v_existing_id;
-        
-        -- 3) 정정 내용을 히스토리에 새 버전으로 추가
-        INSERT INTO notice_history (
-            notice_id, notice_number, notice_title, post_date,
-            application_start_date, application_end_date, location,
-            version_number, is_correction
-        ) VALUES (
-            v_existing_id, p_notice_number, p_notice_title, p_post_date,
-            p_application_start_date, p_application_end_date, p_location,
-            v_max_version, TRUE
-        );
-        
-        -- 4) 원본 공고 테이블 업데이트
+        -- 기존 공고가 있는 경우, 업데이트
         UPDATE notices
         SET 
             notice_title = p_notice_title,
@@ -119,31 +91,19 @@ BEGIN
             location = p_location,
             notice_status = v_new_status,
             is_correction = TRUE,
-            correction_count = v_max_version - 1,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = v_existing_id;
         
     ELSE
-        -- 1) notices 테이블에 신규 공고로 등록
+        -- 기존 공고가 없는 경우, 신규 공고로 등록 (created_at에 작업 실행 시간 삽입)
         INSERT INTO notices (
             notice_number, notice_title, post_date,
             application_start_date, application_end_date, location,
-            notice_status, is_correction
+            notice_status, is_correction, created_at
         ) VALUES (
             p_notice_number, p_notice_title, p_post_date,
             p_application_start_date, p_application_end_date, p_location,
-            v_new_status, TRUE
-        );
-        
-        -- 2) 히스토리 테이블에도 버전 1로 추가
-        INSERT INTO notice_history (
-            notice_id, notice_number, notice_title, post_date,
-            application_start_date, application_end_date, location,
-            version_number, is_correction
-        ) VALUES (
-            LAST_INSERT_ID(), p_notice_number, p_notice_title, p_post_date,
-            p_application_start_date, p_application_end_date, p_location,
-            1, TRUE
+            v_new_status, TRUE, p_job_execution_time
         );
     END IF;
     

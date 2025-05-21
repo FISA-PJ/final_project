@@ -103,9 +103,9 @@ def collect_lh_notices(list_url, headers, target_date=None) -> List[Dict]:
                     "arguments[0].removeAttribute('readonly'); arguments[0].value = arguments[1];",
                     date_input, date_str
                 )
-                logger.info(f"공고 검색 날짜 설정 완료: {date_field} = {date_str}")
+                logger.info(f"📅 공고 검색 날짜 설정 완료: {date_field} = {date_str}")
             except Exception as e:
-                logger.warning(f"공고 검색 날짜 설정 실패: {date_field}, 오류: {e}")
+                logger.warning(f"📅 공고 검색 날짜 설정 실패: {date_field}, 오류: {e}")
         
         # 검색 실행
         logger.info("🔍 검색 실행 중...")
@@ -126,7 +126,7 @@ def collect_lh_notices(list_url, headers, target_date=None) -> List[Dict]:
                 except:
                     continue
             if not search_button:
-                raise Exception("검색 버튼을 찾을 수 없습니다")
+                raise Exception("⚠️ 검색 버튼을 찾을 수 없습니다")
 
             # 검색 버튼 클릭 전 스크롤
             try:
@@ -208,16 +208,16 @@ def collect_lh_notices(list_url, headers, target_date=None) -> List[Dict]:
                 link = row_links[idx]
                 # 공고 코드 추출
                 wrtan_no = link.get_attribute("data-id1")
-                logger.info(f"📄 [{idx+1}/{len(row_links)}] 공고 처리 시작: {wrtan_no}")
+                logger.info(f"📄 [{idx+1}/{len(row_links)}] 공고 처리 시작: 공고번호 {wrtan_no}")
                 
                 # 상세 페이지로 이동
-                logger.info(f" → 상세 페이지 접속 중...")
+                logger.info(f"→ 상세 페이지 접속 중...")
                 logger.info(f"URL: {link.get_attribute('href')}")
                 link.click()
                 time.sleep(config.detail_page_wait_time)
                 
                 # 공고 정보 추출
-                logger.info(f" → 공고 정보 추출 중...")
+                logger.info(f"→ 공고 정보 추출 중...")
                 notice_data = extract_notice_data(driver, wrtan_no, target_date)
                 if notice_data:
                     notices_data.append(notice_data)
@@ -347,11 +347,26 @@ def extract_notice_data(driver, wrtan_no: str, target_date: datetime.date) -> Op
             'is_correction': detect_correction_notice(title)                # 정정공고 감지 추가
         }
         
-        logger.info(f"✅ 공고 세부 정보 추출 완료: {wrtan_no}")
+        logger.info(f"✅ 공고번호 {wrtan_no} 세부 정보 추출 완료")
         return notice_data
         
     except Exception as e:
-        logger.error(f"❌ 공고 세부 정보 추출 실패 ({wrtan_no}): {e}")
+        error_msg = f"❌ 공고번호 {wrtan_no} 공고 세부 정보 추출 실패: {str(e)}"
+        logger.error(error_msg)
+        
+        # 실패 정보를 CSV 파일에 저장
+        try:
+            current_url = driver.current_url
+        except:
+            current_url = "URL 추출 실패"
+            
+        save_failed_notice_to_csv(
+            wrtan_no, 
+            target_date, 
+            error_msg, 
+            url=current_url
+        )
+        
         return None
 
 def extract_address_from_content(driver) -> Optional[str]:
@@ -487,6 +502,48 @@ def classify_notices_by_location(notices_data: List[Dict], csv_file_path: str) -
     
     return db_notices, csv_notices
 
+def save_failed_notice_to_csv(wrtan_no, target_date, error_msg, url=None):
+    """실패한 공고 정보를 CSV 파일에 저장"""
+    # 기본 디렉토리 설정
+    log_dir = "/opt/airflow/downloads/failed_notices"
+    os.makedirs(log_dir, exist_ok=True)
+    
+    # target_date로 파일 이름 생성
+    csv_file_path = f"{log_dir}/failed_notices_{target_date}.csv"
+    
+    # 실패 정보 준비
+    failed_notice = {
+        "notice_number": wrtan_no,
+        "target_date": target_date.strftime("%Y-%m-%d") if hasattr(target_date, 'strftime') else str(target_date),
+        "error_message": error_msg,
+        "url": url or "URL 없음"
+    }
+    
+    # CSV 파일에 추가
+    try:
+        # 필드 이름 정의
+        fieldnames = ["notice_number", "target_date", "error_message", "url"]
+        
+        # 파일 존재 여부 확인
+        file_exists = os.path.isfile(csv_file_path)
+        
+        # CSV 파일 열기 (추가 모드)
+        with open(csv_file_path, 'a', encoding='utf-8', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            
+            # 파일이 새로 생성된 경우 헤더 작성
+            if not file_exists:
+                writer.writeheader()
+            
+            # 데이터 행 추가
+            writer.writerow(failed_notice)
+        
+        logger.info(f"✅ 실패 공고 {wrtan_no} 정보가 CSV 파일에 저장되었습니다: {csv_file_path}")
+        return csv_file_path
+    except Exception as e:
+        logger.error(f"⚠️ 실패 공고 저장 중 오류 발생: {e}")
+        return None
+    
 def detect_correction_notice(title: str) -> bool:
     """제목에서 정정공고 여부 판별"""
     if not title:

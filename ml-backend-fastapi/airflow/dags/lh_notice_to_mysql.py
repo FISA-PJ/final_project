@@ -9,7 +9,11 @@ import pytz
 import logging
 
 # 크롤러 모듈 임포트
-from plugins.crawlers.lh_crawler_for_mysql import collect_lh_notices, classify_notices_by_location
+from plugins.crawlers.lh_crawler_for_mysql import (
+    collect_lh_notices, 
+    classify_notices_by_location
+)
+ 
 
 # 로거 설정
 logger = logging.getLogger(__name__)
@@ -64,7 +68,7 @@ def crawl_lh_notices_task(**context):
         return notices_data
         
     except Exception as e:
-        logger.error(f"❌ 크롤링 중 실패: {str(e)}")
+        logger.error(f"❌ 크롤링 Task 중 실패: {str(e)}")
         raise
 
 def process_and_save_notices_task(**context):
@@ -86,7 +90,7 @@ def process_and_save_notices_task(**context):
     
     # CSV 파일 경로 설정 (주소 없는 공고용)
     # 다운로드 디렉토리 별도 설정
-    download_dir = "/opt/airflow/downloads"  # 원하는 경로로 변경
+    download_dir = "/opt/airflow/downloads/no_location_notice"  # 원하는 경로로 변경
     today_str = context['ds'].replace('-', '')  # YYYYMMDD 형식으로 변환
     csv_file_path = f"{download_dir}/{today_str}.csv"
     
@@ -124,7 +128,11 @@ def process_and_save_notices_task(**context):
     
     db_saved_count = 0
     error_count = 0
-    
+
+    # 현재 작업 실행 시간 (한국 시간)
+    execution_date = context.get('logical_date') or context.get('execution_date')  # Airflow 버전 호환성 고려
+    job_execution_time = execution_date.strftime('%Y-%m-%d %H:%M:%S')
+
     # DB에 공고 저장 (제공된 프로시저 사용)
     for notice in db_notices:
         try:
@@ -135,21 +143,22 @@ def process_and_save_notices_task(**context):
             if is_correction:
                 # 정정공고 프로시저 호출
                 mysql_hook.run(
-                    sql="CALL ProcessCorrectionNoticeWithHistory(%s, %s, %s, %s, %s, %s)",
+                    sql="CALL ProcessCorrectionNotice(%s, %s, %s, %s, %s, %s, %s)",
                     parameters=(
                         notice['notice_number'],
                         notice['notice_title'],
                         notice['post_date'],
                         notice.get('application_start_date'),
                         notice.get('application_end_date'),
-                        notice.get('location')
+                        notice.get('location'),
+                        job_execution_time
                     )
                 )
                 logger.info(f"정정공고 처리 완료: {notice['notice_number']}")
             else:
                 # 일반 공고 처리
                 mysql_hook.run(
-                        sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s)",
+                        sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s, %s)",
                         parameters=(
                             notice['notice_number'],
                             notice['notice_title'],
@@ -157,7 +166,8 @@ def process_and_save_notices_task(**context):
                             notice.get('application_start_date'),
                             notice.get('application_end_date'),
                             notice.get('location'),
-                            notice.get('is_correction')
+                            notice.get('is_correction'),
+                            job_execution_time
                         )
                     )
                 logger.info(f"🟢 신규 공고 DB 적재 완료: {notice['notice_number']}")
@@ -271,7 +281,7 @@ start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> e
 
 # DAG 문서화
 dag.doc_md = """
-## LH 공고문 크롤링 DAG (프로시저 사용)
+## LH 공고문 크롤링 DAG
 
 이 DAG는 LH(한국토지주택공사) 공고문을 크롤링하여 처리합니다.
 
@@ -281,7 +291,7 @@ dag.doc_md = """
    - 주소 있음: MySQL DB에 저장 (프로시저 사용)
    - 주소 없음: CSV 파일로 저장
 3. **프로시저 활용**: 
-   - ProcessCorrectionNoticeWithHistory: 정정공고 처리
+   - ProcessCorrectionNotice: 정정공고 처리
    - InsertNewNotice: 신규공고 삽입
 4. **상태 관리**: 접수기간 기반 자동 상태 업데이트
 
@@ -294,8 +304,12 @@ dag.doc_md = """
 
 ### 정정공고 처리:
 - 제목에서 정정 키워드 자동 감지
-- 기존 공고가 있으면 ProcessCorrectionNoticeWithHistory 호출
+- 기존 공고가 있으면 ProcessCorrectionNotice 호출
 - 없으면 InsertNewNotice로 신규 처리
+
+### 시간 정보:
+- 각 공고의 created_at 필드는 DAG 작업 실행 시간으로 설정됨
+- 이를 통해 어떤 배치 작업에서 해당 공고가 처리되었는지 추적 가능
 
 ### 모니터링:
 - Airflow UI에서 실행 상태 확인
