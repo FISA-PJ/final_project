@@ -1,0 +1,91 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+    <div class="container mt-4">
+        <h2>공고 목록</h2>
+        
+        <!-- 검색 폼 -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <form th:action="@{/notice/search/title}" method="get" class="form-inline">
+                    <div class="input-group">
+                        <input type="text" name="keyword" class="form-control" placeholder="제목으로 검색">
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 공고 목록 테이블 -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>공고번호</th>
+                        <th>제목</th>
+                        <th>게시일</th>
+                        <th>접수기간</th>
+                        <th>지역</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${paging != null}" th:each="notice : ${paging}">
+                        <td th:text="${notice.noticeNumber}"></td>
+                        <td>
+                            <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.noticeTitle}"></a>
+                        </td>
+                        <td th:text="${#temporals.format(notice.postDate, 'yyyy-MM-dd')}"></td>
+                        <td>
+                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>
+                            ~
+                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>
+                        </td>
+                        <td th:text="${notice.location}"></td>
+                        <td>
+                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}"
+                                  class="badge bg-success">접수중</span>
+                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}"
+                                  class="badge bg-secondary">접수마감</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${notices != null}" th:each="notice : ${notices}">
+                        <td th:text="${notice.noticeNumber}"></td>
+                        <td>
+                            <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.noticeTitle}"></a>
+                        </td>
+                        <td th:text="${#temporals.format(notice.postDate, 'yyyy-MM-dd')}"></td>
+                        <td>
+                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>
+                            ~
+                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>
+                        </td>
+                        <td th:text="${notice.location}"></td>
+                        <td>
+                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}"
+                                  class="badge bg-success">접수중</span>
+                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}"
+                                  class="badge bg-secondary">접수마감</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 페이징 -->
+        <div th:if="${paging != null}" class="pagination justify-content-center">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/notice/list(page=${paging.number - 1})}">이전</a>
+                </li>
+                <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                    th:classappend="${pageNum == paging.number} ? 'active'">
+                    <a class="page-link" th:href="@{/notice/list(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/notice/list(page=${paging.number + 1})}">다음</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</html> 

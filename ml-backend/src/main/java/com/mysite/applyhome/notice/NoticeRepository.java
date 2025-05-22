@@ -1,0 +1,32 @@
+package com.mysite.applyhome.notice;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public interface NoticeRepository extends JpaRepository<Notice, Long> {
+    // 공고번호로 공고 찾기
+    Notice findByNoticeNumber(String noticeNumber);
+    
+    // 제목으로 공고 검색
+    List<Notice> findByNoticeTitleContaining(String keyword);
+    
+    // 지역으로 공고 검색
+    List<Notice> findByLocationContaining(String location);
+    
+    // 공고 상태로 검색
+    List<Notice> findByNoticeStatus(NoticeStatus status);
+    
+    // 접수 기간 내 공고 검색
+    @Query("SELECT n FROM Notice n WHERE n.applicationStartDate <= :date AND n.applicationEndDate >= :date")
+    List<Notice> findActiveNotices(@Param("date") LocalDate date);
+    
+    // 게시일 기준으로 공고 검색
+    List<Notice> findByPostDateBetween(LocalDate startDate, LocalDate endDate);
+    
+    // 정정 공고 여부로 검색
+    List<Notice> findByIsCorrection(Boolean isCorrection);
+}
