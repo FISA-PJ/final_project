@@ -22,6 +22,10 @@ from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 import pytz
 import logging
+import json
+from typing import Optional
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 
 # 크롤러 모듈 임포트
 from plugins.crawlers.lh_crawler_for_mysql import (
@@ -50,7 +54,7 @@ dag = DAG(
     default_args=default_args,
     description='LH 공고문 크롤링 및 저장 DAG (프로시저 사용)',
     schedule= "@daily",  # 매일 실행
-    start_date=datetime(2025, 5, 19),  # 시작 날짜
+    start_date=datetime(2025, 5, 22),  # 시작 날짜
     catchup=True,  # 과거 날짜에 대한 백필 활성화
     tags=['crawler', 'LH', 'notices']  # DAG 태그
 )
@@ -109,12 +113,6 @@ def process_and_save_notices_task(**context):
             - csv_saved: CSV에 저장된 공고 수
             - errors: 오류 발생 건수
             - csv_file: CSV 파일 경로
-    
-    Note:
-        - 주소 정보 유무에 따라 데이터 분리
-        - 주소 있는 공고는 DB에 저장 (프로시저 사용)
-        - 주소 없는 공고는 CSV 파일로 저장
-        - 정정공고 여부를 확인하여 적절한 프로시저 호출
     """
     logger.info("크롤링 데이터 처리 및 저장 시작")
     
@@ -131,12 +129,12 @@ def process_and_save_notices_task(**context):
         }
     
     # CSV 파일 경로 설정
-    download_dir = "/opt/airflow/downloads/no_location_notice"
+    download_dir = "/opt/airflow/downloads/incomplete_notices"
     today_str = context['ds'].replace('-', '')
     csv_file_path = f"{download_dir}/{today_str}.csv"
     
-    # 주소 정보 유무에 따라 데이터 분리
-    db_notices, csv_notices = classify_notices_by_location(notices_data, csv_file_path)
+    # 데이터 완성도에 따라 분류
+    db_notices, csv_notices = classify_notices_by_completeness(notices_data, csv_file_path)
     logger.info(f"데이터 분리 완료 - DB용: {len(db_notices)}개, CSV용: {len(csv_notices)}개")
     
     try:
@@ -146,12 +144,9 @@ def process_and_save_notices_task(**context):
         cursor = conn.cursor()
         
         # 연결 확인
-        logger.info("MySQL 연결 확인 쿼리 실행")
-        cursor.execute("SELECT * FROM notices LIMIT 5;")
-        rows = cursor.fetchall()
-        for row in rows:
-            print(row)
-
+        logger.info("MySQL 연결 확인")
+        cursor.execute("SELECT 1")
+        
         # 연결 정보 로깅
         conn_info = mysql_hook.get_connection('notices_db')
         logger.info("✅ MySQL 연결 성공!")
@@ -167,53 +162,54 @@ def process_and_save_notices_task(**context):
     db_saved_count = 0
     error_count = 0
 
-    # 작업 실행 시간 설정 (한국 시간)
-    execution_date = context.get('logical_date') or context.get('execution_date')
-    job_execution_time = execution_date.strftime('%Y-%m-%d %H:%M:%S')
-
     # DB에 공고 저장
     for notice in db_notices:
         try:
-            # 정정공고 여부 확인
-            is_correction = notice.get('is_correction')
+            # UpsertNotice 프로시저 호출을 위한 파라미터 준비
+            params = (
+                notice['notice_number'],                   # 공고번호
+                notice['notice_title'],                    # 공고명
+                notice['post_date'],                       # 공고일자
+                notice.get('application_end_date'),        # 공고 마감일
+                notice.get('document_start_date'),         # 당첨자 서류제출 시작일
+                notice.get('document_end_date'),           # 당첨자 서류제출 종료일
+                notice.get('contract_start_date'),         # 계약체결 시작일
+                notice.get('contract_end_date'),           # 계약체결 종료일
+                notice.get('winning_date'),                # 당첨자 발표일
+                notice.get('move_in_date'),                # 입주예정월
+                notice.get('location'),                    # 소재지
+                notice.get('is_correction', False),        # 정정공고 여부
+                json.dumps(notice.get('supply_type', []), ensure_ascii=False),  # 공급유형 (JSON 배열)
+                json.dumps(notice.get('house_types', []), ensure_ascii=False)   # 주택형 정보 (JSON 배열)
+            )
             
-            if is_correction:
-                # 정정공고 처리
-                mysql_hook.run(
-                    sql="CALL ProcessCorrectionNotice(%s, %s, %s, %s, %s, %s, %s)",
-                    parameters=(
-                        notice['notice_number'],
-                        notice['notice_title'],
-                        notice['post_date'],
-                        notice.get('application_start_date'),
-                        notice.get('application_end_date'),
-                        notice.get('location'),
-                        job_execution_time
-                    )
-                )
-                logger.info(f"정정공고 처리 완료: {notice['notice_number']}")
-            else:
-                # 일반 공고 처리
-                mysql_hook.run(
-                    sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s, %s)",
-                    parameters=(
-                        notice['notice_number'],
-                        notice['notice_title'],
-                        notice['post_date'],
-                        notice.get('application_start_date'),
-                        notice.get('application_end_date'),
-                        notice.get('location'),
-                        notice.get('is_correction'),
-                        job_execution_time
-                    )
-                )
-                logger.info(f"🟢 신규 공고 DB 적재 완료: {notice['notice_number']}")
+            # 프로시저 실행
+            cursor.callproc('UpsertNotice', params)
+            conn.commit()
             
+            logger.info(f"✅ 공고 저장 완료: {notice['notice_number']}")
+            if notice.get('is_correction'):
+                logger.info(f"🔄 정정공고 처리 완료: {notice['notice_number']}")
             db_saved_count += 1
             
         except Exception as e:
-            logger.error(f"🔴 DB 저장 실패: {notice['notice_number']}, 오류: {e}")
+            logger.error(f"❌ DB 저장 실패: {notice['notice_number']}, 오류: {str(e)}")
             error_count += 1
+            conn.rollback()
+    
+    try:
+        # 모든 공고의 상태 업데이트
+        cursor.callproc('UpdateAllNoticeStatuses')
+        conn.commit()
+        logger.info("✅ 전체 공고 상태 업데이트 완료")
+    except Exception as e:
+        logger.error(f"❌ 공고 상태 업데이트 실패: {str(e)}")
+        error_count += 1
+        conn.rollback()
+    
+    # 연결 종료
+    cursor.close()
+    conn.close()
     
     # 처리 결과 반환
     result = {
@@ -223,8 +219,13 @@ def process_and_save_notices_task(**context):
         'errors': error_count,
         'csv_file': csv_file_path
     }
+     
+    logger.info(f"📊 처리 완료 통계:")
+    logger.info(f"- 전체 크롤링: {len(notices_data)}건")
+    logger.info(f"- DB 저장 성공: {db_saved_count}건")
+    logger.info(f"- CSV 저장: {len(csv_notices)}건")
+    logger.info(f"- 오류 발생: {error_count}건")
     
-    logger.info(f"저장 완료 - DB: {db_saved_count}건, CSV: {len(csv_notices)}건, 오류: {error_count}건")
     return result
 
 def log_crawl_summary(**context):
@@ -300,6 +301,59 @@ def update_notice_status(**context):
     
     mysql_hook.run(sql, parameters=(today, today))
 
+def extract_address_from_content(driver) -> Optional[str]:
+    """웹페이지에서 공고 소재지 추출"""
+    logger.info("🔍 소재지 정보 검색 중...")
+    
+    try:
+        # 1차 시도: li_w25 클래스를 가진 리스트 아이템에서 검색
+        elements = driver.find_elements(By.CSS_SELECTOR, "li.li_w25")
+        for element in elements:
+            try:
+                text = element.text.strip()
+                # 소재지 키워드가 포함된 요소 찾기
+                if '소재지' in text:
+                    # before 가상 요소의 텍스트를 제외한 실제 내용 추출
+                    address = text.replace('소재지', '').strip()
+                    if address:
+                        logger.info(f"✓ li_w25에서 소재지 발견: {address}")
+                        return address
+            except Exception as e:
+                logger.debug(f"li_w25 요소 처리 중 오류: {e}")
+                continue
+        
+        # 2차 시도: w100 클래스를 가진 요소에서 검색
+        content_items = driver.find_elements(By.CSS_SELECTOR, "li.w100")
+        address_keywords = ["동", "구", "로", "시", "군", "읍", "면"]
+        
+        for item in content_items:
+            try:
+                item_text = item.text.strip()
+                if any(keyword in item_text for keyword in address_keywords):
+                    try:
+                        # strong 태그가 있는 경우 제외
+                        strong_text = item.find_element(By.TAG_NAME, "strong").text.strip()
+                        address = item_text.replace(strong_text, "").strip()
+                        if address.startswith('"') and address.endswith('"'):
+                            address = address[1:-1].strip()
+                    except NoSuchElementException:
+                        # strong 태그가 없는 경우 전체 텍스트 사용
+                        address = item_text
+                    
+                    if address and len(address) > 2:
+                        logger.info(f"✓ w100에서 소재지 발견: {address}")
+                        return address
+            except Exception as e:
+                logger.debug(f"w100 요소 처리 중 오류: {e}")
+                continue
+                
+        logger.warning("⚠️ 소재지 정보를 찾을 수 없습니다")
+        return "없음"
+
+    except Exception as e:
+        logger.error(f"❌ 소재지 추출 중 오류 발생: {str(e)}")
+        return "없음"
+
 # Task 정의
 start_task = EmptyOperator(
     task_id='start',  # DAG 시작 지점
@@ -312,24 +366,24 @@ crawl_task = PythonOperator(
     dag=dag
 )
 
-# save_task = PythonOperator(
-#     task_id='process_and_save_notices',  # 데이터 처리 및 저장
-#     python_callable=process_and_save_notices_task,
-#     dag=dag
-# )
+save_task = PythonOperator(
+    task_id='process_and_save_notices',  # 데이터 처리 및 저장
+    python_callable=process_and_save_notices_task,
+    dag=dag
+)
 
-# update_status_task = PythonOperator(
-#     task_id='update_notice_status',  # 공고 상태 업데이트
-#     python_callable=update_notice_status,
-#     dag=dag
-# )
+update_status_task = PythonOperator(
+    task_id='update_notice_status',  # 공고 상태 업데이트
+    python_callable=update_notice_status,
+    dag=dag
+)
 
-# summary_task = PythonOperator(
-#     task_id='log_crawl_summary',  # 처리 결과 요약
-#     python_callable=log_crawl_summary,
-#     trigger_rule='all_done',  # 이전 태스크 성공/실패 관계없이 실행
-#     dag=dag
-# )
+summary_task = PythonOperator(
+    task_id='log_crawl_summary',  # 처리 결과 요약
+    python_callable=log_crawl_summary,
+    trigger_rule='all_done',  # 이전 태스크 성공/실패 관계없이 실행
+    dag=dag
+)
 
 end_task = EmptyOperator(
     task_id='end',  # DAG 종료 지점
@@ -337,8 +391,8 @@ end_task = EmptyOperator(
 )
 
 # Task 의존성 설정 (실행 순서 정의)
-# start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> end_task
-start_task >> crawl_task >> end_task
+start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> end_task
+# start_task >> crawl_task >> end_task
 
 # DAG 문서화
 dag.doc_md = """
