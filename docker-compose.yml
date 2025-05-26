@@ -5,6 +5,7 @@ x-airflow-common: &airflow-common-config
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres/airflow
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@airflow-postgres/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@airflow-redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
@@ -13,6 +14,15 @@ x-airflow-common: &airflow-common-config
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-apiserver:8080/execution/'
     AIRFLOW__CORE__DEFAULT_TIMEZONE: Asia/Seoul
     AIRFLOW__LOGGING__LOGGING_LEVEL: 'INFO'
+    # 로깅 설정 추가
+    AIRFLOW__LOGGING__BASE_LOG_FOLDER: '/opt/airflow/logs'
+    AIRFLOW__LOGGING__DAG_FILE_PROCESSOR_LOG_TARGET: '/opt/airflow/logs/processor/dag_processor.log'
+    AIRFLOW__LOGGING__WORKER_LOG_TARGET: '/opt/airflow/logs/worker/worker.log'
+    AIRFLOW__LOGGING__SCHEDULER_LOG_TARGET: '/opt/airflow/logs/scheduler/scheduler.log'
+    AIRFLOW__LOGGING__TRIGGERER_LOG_TARGET: '/opt/airflow/logs/triggerer/triggerer.log'
+    AIRFLOW__LOGGING__WEBSERVER_LOG_TARGET: '/opt/airflow/logs/webserver/webserver.log'
+    AIRFLOW__LOGGING__LOG_FORMAT: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    AIRFLOW__LOGGING__SIMPLE_LOG_FORMAT: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     # AIRFLOW__API__AUTH_BACKEND_SECRET_KEY: '1dlxoals!'
     AIRFLOW__API_AUTH__JWT_SECRET: '1dlxoals!'
     TZ: Asia/Seoul
@@ -20,12 +30,6 @@ x-airflow-common: &airflow-common-config
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
     AIRFLOW_CONN_MY_ELASTICSEARCH: 'http://airflow-elasticsearch:9200'
     AIRFLOW_CONN_NOTICES_DB: 'mysql://admin:admin_password@host.docker.internal:13306/notice_db?charset=utf8mb4&local_infile=true'
-  volumes:
-    - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
-    - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
-    - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-    - ${AIRFLOW_PROJ_DIR:-.}/downloads:/opt/airflow/downloads
-    - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config/
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on: &airflow-common-depends-on
     airflow-redis:
@@ -49,10 +53,9 @@ x-airflow-worker-full: &airflow-worker-full
     dockerfile: Dockerfile
     target: airflow-worker-full
 
-
 services:
 
-# ✅ airflow  
+  # ✅ airflow  
   airflow-postgres:
     image: postgres:13
     networks:
@@ -67,7 +70,7 @@ services:
     ports:
       - "5435:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "airflow"]
+      test: [ "CMD", "pg_isready", "-U", "airflow" ]
       interval: 30s
       retries: 5
       start_period: 5s
@@ -82,7 +85,7 @@ services:
     expose:
       - 6379
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -94,12 +97,24 @@ services:
     command: api-server
     ports:
       - "8080:8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+      - ${AIRFLOW_PROJ_DIR:-.}/downloads:/opt/airflow/downloads
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config/
+      - ${AIRFLOW_PROJ_DIR:-.}/logs/apiserver:/opt/airflow/logs/apiserver
     healthcheck:
-        test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/version"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
-        start_period: 30s
+      test: [ "CMD", "curl", "--fail", "http://localhost:8080/api/v2/version" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -111,12 +126,24 @@ services:
         condition: service_healthy
       airflow-triggerer:
         condition: service_healthy
-      
+
   airflow-scheduler:
     <<: *airflow-worker-full
     command: scheduler
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+      - ${AIRFLOW_PROJ_DIR:-.}/downloads:/opt/airflow/downloads
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config/
+      - ${AIRFLOW_PROJ_DIR:-.}/logs/scheduler:/opt/airflow/logs/scheduler
     healthcheck:
-      test: ["CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"']
+      test: [ "CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"' ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -130,8 +157,20 @@ services:
   airflow-triggerer:
     <<: *airflow-light
     command: triggerer
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+      - ${AIRFLOW_PROJ_DIR:-.}/downloads:/opt/airflow/downloads
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config/
+      - ${AIRFLOW_PROJ_DIR:-.}/logs/triggerer:/opt/airflow/logs/triggerer
     healthcheck:
-      test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
+      test: [ "CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"' ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -145,8 +184,20 @@ services:
   airflow-dag-processor:
     <<: *airflow-worker-full
     command: dag-processor
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+      - ${AIRFLOW_PROJ_DIR:-.}/downloads:/opt/airflow/downloads
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config/
+      - ${AIRFLOW_PROJ_DIR:-.}/logs/processor:/opt/airflow/logs/processor
     healthcheck:
-      test: ["CMD-SHELL", 'airflow jobs check --job-type DagProcessorJob --hostname "$${HOSTNAME}"']
+      test: [ "CMD-SHELL", 'airflow jobs check --job-type DagProcessorJob --hostname "$${HOSTNAME}"' ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -160,13 +211,25 @@ services:
   airflow-worker:
     <<: *airflow-worker-full
     command: celery worker
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      # - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+      - ${AIRFLOW_PROJ_DIR:-.}/downloads:/opt/airflow/downloads
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config/
+      - ${AIRFLOW_PROJ_DIR:-.}/logs/worker:/opt/airflow/logs/worker
     healthcheck:
       # yamllint disable rule:line-length
       test:
         - "CMD-SHELL"
         - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
-      interval: 30s     # 상태체크 간격
-      timeout: 10s      # 응답 대기시간
+      interval: 30s # 상태체크 간격
+      timeout: 10s # 응답 대기시간
       retries: 5
       start_period: 30s # 컨테이너 시작 후 대기시간
     environment:
@@ -187,100 +250,100 @@ services:
     entrypoint: /bin/bash
     # yamllint disable rule:line-length
     command:
-    - -c
-    - |
-      if [[ -z "${AIRFLOW_UID}" ]]; then
-        echo
-        echo -e "\033[1;33mWARNING!!!: AIRFLOW_UID not set!\e[0m"
-        echo "If you are on Linux, you SHOULD follow the instructions below to set "
-        echo "AIRFLOW_UID environment variable, otherwise files will be owned by root."
-        echo "For other operating systems you can get rid of the warning with manually created .env file:"
-        echo "See: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#setting-the-right-airflow-user"
-        echo
-        export AIRFLOW_UID=$(id -u)
-      fi
-      one_meg=1048576
-      mem_available=$$(($$(getconf _PHYS_PAGES) * $$(getconf PAGE_SIZE) / one_meg))
-      cpus_available=$$(grep -cE 'cpu[0-9]+' /proc/stat)
-      disk_available=$$(df / | tail -1 | awk '{print $$4}')
-      warning_resources="false"
-      if (( mem_available < 4000 )) ; then
-        echo
-        echo -e "\033[1;33mWARNING!!!: Not enough memory available for Docker.\e[0m"
-        echo "At least 4GB of memory required. You have $$(numfmt --to iec $$((mem_available * one_meg)))"
-        echo
-        warning_resources="true"
-      fi
-      if (( cpus_available < 2 )); then
-        echo
-        echo -e "\033[1;33mWARNING!!!: Not enough CPUS available for Docker.\e[0m"
-        echo "At least 2 CPUs recommended. You have $${cpus_available}"
-        echo
-        warning_resources="true"
-      fi
-      if (( disk_available < one_meg * 10 )); then
-        echo
-        echo -e "\033[1;33mWARNING!!!: Not enough Disk space available for Docker.\e[0m"
-        echo "At least 10 GBs recommended. You have $$(numfmt --to iec $$((disk_available * 1024 )))"
-        echo
-        warning_resources="true"
-      fi
-      if [[ $${warning_resources} == "true" ]]; then
-        echo
-        echo -e "\033[1;33mWARNING!!!: You have not enough resources to run Airflow (see above)!\e[0m"
-        echo "Please follow the instructions to increase amount of resources available:"
-        echo "https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin"
-        echo
-      fi
+      - -c
+      - |
+        if [[ -z "${AIRFLOW_UID}" ]]; then
+          echo
+          echo -e "\033[1;33mWARNING!!!: AIRFLOW_UID not set!\e[0m"
+          echo "If you are on Linux, you SHOULD follow the instructions below to set "
+          echo "AIRFLOW_UID environment variable, otherwise files will be owned by root."
+          echo "For other operating systems you can get rid of the warning with manually created .env file:"
+          echo "See: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#setting-the-right-airflow-user"
+          echo
+          export AIRFLOW_UID=$(id -u)
+        fi
+        one_meg=1048576
+        mem_available=$$(($$(getconf _PHYS_PAGES) * $$(getconf PAGE_SIZE) / one_meg))
+        cpus_available=$$(grep -cE 'cpu[0-9]+' /proc/stat)
+        disk_available=$$(df / | tail -1 | awk '{print $$4}')
+        warning_resources="false"
+        if (( mem_available < 4000 )) ; then
+          echo
+          echo -e "\033[1;33mWARNING!!!: Not enough memory available for Docker.\e[0m"
+          echo "At least 4GB of memory required. You have $$(numfmt --to iec $$((mem_available * one_meg)))"
+          echo
+          warning_resources="true"
+        fi
+        if (( cpus_available < 2 )); then
+          echo
+          echo -e "\033[1;33mWARNING!!!: Not enough CPUS available for Docker.\e[0m"
+          echo "At least 2 CPUs recommended. You have $${cpus_available}"
+          echo
+          warning_resources="true"
+        fi
+        if (( disk_available < one_meg * 10 )); then
+          echo
+          echo -e "\033[1;33mWARNING!!!: Not enough Disk space available for Docker.\e[0m"
+          echo "At least 10 GBs recommended. You have $$(numfmt --to iec $$((disk_available * 1024 )))"
+          echo
+          warning_resources="true"
+        fi
+        if [[ $${warning_resources} == "true" ]]; then
+          echo
+          echo -e "\033[1;33mWARNING!!!: You have not enough resources to run Airflow (see above)!\e[0m"
+          echo "Please follow the instructions to increase amount of resources available:"
+          echo "https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin"
+          echo
+        fi
 
-      echo
-      echo "Waiting for PostgreSQL to be ready..."
-      until pg_isready -h airflow-postgres -p 5432 -U airflow; do
-        echo "PostgreSQL is not ready yet. Waiting 5s..."
-        sleep 5
-      done
-      echo "PostgreSQL is ready!"
+        echo
+        echo "Waiting for PostgreSQL to be ready..."
+        until pg_isready -h airflow-postgres -p 5432 -U airflow; do
+          echo "PostgreSQL is not ready yet. Waiting 5s..."
+          sleep 5
+        done
+        echo "PostgreSQL is ready!"
 
-      echo
-      echo "Creating missing opt dirs if missing:"
-      mkdir -v -p /opt/airflow/{logs,dags,plugins,config}
+        echo
+        echo "Creating missing opt dirs if missing:"
+        mkdir -v -p /opt/airflow/{logs,dags,plugins,config}
 
-      echo
-      echo "Airflow version:"
-      /entrypoint airflow version
+        echo
+        echo "Airflow version:"
+        /entrypoint airflow version
 
-      echo
-      echo "Files in shared volumes:"
-      ls -la /opt/airflow/{logs,dags,plugins,config}
+        echo
+        echo "Files in shared volumes:"
+        ls -la /opt/airflow/{logs,dags,plugins,config}
 
-      echo
-      echo "Running airflow config list to create default config file if missing."
-      /entrypoint airflow config list >/dev/null
+        echo
+        echo "Running airflow config list to create default config file if missing."
+        /entrypoint airflow config list >/dev/null
 
-      echo
-      echo "Files in shared volumes:"
-      ls -la /opt/airflow/{logs,dags,plugins,config}
+        echo
+        echo "Files in shared volumes:"
+        ls -la /opt/airflow/{logs,dags,plugins,config}
 
-      echo
-      echo "Change ownership of files in /opt/airflow to ${AIRFLOW_UID}:0"
-      chown -R "${AIRFLOW_UID}:0" /opt/airflow/
+        echo
+        echo "Change ownership of files in /opt/airflow to ${AIRFLOW_UID}:0"
+        chown -R "${AIRFLOW_UID}:0" /opt/airflow/
 
-      echo
-      echo "Change ownership of files in shared volumes to ${AIRFLOW_UID}:0"
-      chown -v -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins,config}
+        echo
+        echo "Change ownership of files in shared volumes to ${AIRFLOW_UID}:0"
+        chown -v -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins,config}
 
-      echo
-      echo "Files in shared volumes:"
-      ls -la /opt/airflow/{logs,dags,plugins,config}
+        echo
+        echo "Files in shared volumes:"
+        ls -la /opt/airflow/{logs,dags,plugins,config}
     depends_on:
       <<: *airflow-common-depends-on
     # yamllint enable rule:line-length
     environment:
       <<: *airflow-common-env
-      _AIRFLOW_DB_MIGRATE: 'true'                                             # 데이터베이스 마이그레이션을 자동으로 실행
-      _AIRFLOW_WWW_USER_CREATE: 'true'                                        # 웹 사용자 자동 생성
-      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}      # 웹 사용자 이름
-      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}      # 웹 사용자 비밀번호
+      _AIRFLOW_DB_MIGRATE: 'true' # 데이터베이스 마이그레이션을 자동으로 실행
+      _AIRFLOW_WWW_USER_CREATE: 'true' # 웹 사용자 자동 생성
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow} # 웹 사용자 이름
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow} # 웹 사용자 비밀번호
       _PIP_ADDITIONAL_REQUIREMENTS: ''
     user: "0:0"
 
@@ -335,6 +398,11 @@ services:
     <<: *airflow-light
     profiles:
       - debug
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     environment:
       <<: *airflow-common-env
       CONNECTION_CHECK_MAX_COUNT: "0"
@@ -354,10 +422,15 @@ services:
     command: celery flower
     profiles:
       - flower
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     ports:
       - "5555:5555"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:5555/"]
+      test: [ "CMD", "curl", "--fail", "http://localhost:5555/" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -384,7 +457,7 @@ services:
       - mysql-db-volume:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
       - ./mysql/logs:/var/log/mysql:rw
-    healthcheck:  
+    healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1dlxoals!" ]
       interval: 10s
       timeout: 5s
@@ -406,10 +479,10 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ports:
       - "9200:9200"
-  
+
   # ✅ ElasticSearch for ML
   elasticsearch-ml:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
@@ -417,6 +490,10 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      ## 여기 경로 맞추기
+      - ./ml-backend-fastapi/test/data:/usr/share/elasticsearch/data
     ports:
       - "9201:9200"
 
@@ -469,7 +546,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
-
 # 명시적인 네트워크 정의
 networks:
   airflow-network:
@@ -482,4 +558,3 @@ volumes:
   # MySQL 데이터 볼륨
   mysql-db-volume:
     name: team3-mysql-db-volume
-

@@ -7,13 +7,17 @@ __pycache__/
 ml-backend-fastapi/jenkins_home/
 
 # Airflow 로그 및 다운로드
-ml-backend-fastapi/airflow/logs/
-ml-backend-fastapi/airflow/downloads/
+ml-backend-fastapi/airflow/logs/*
+ml-backend-fastapi/airflow/downloads/*
+ml-backend-fastapi/airflow/my_custom_lib/*
 
 # 로그 및 환경 파일
 *.log
 *.env
 *.pdf
+
+# ml-backend-fastapi 관련 제외
+ml-backend-fastapi/test
 
 # ml-backend 관련 제외 파일
 ml-backend/HELP.md

@@ -1,40 +1,80 @@
-# 다중 스테이지 빌드를 사용한 최적화된 Dockerfile
-
-# 기본 이미지
+# --------------------- Base 이미지 ---------------------
 FROM apache/airflow:3.0.0 AS airflow-base
 
 USER root
 
-# 필요한 시스템 패키지 설치
+# 시스템 패키지 설치
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    build-essential \
+    && apt-get install -y --no-install-recommends build-essential \
     && apt-get autoremove -yqq --purge \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /app \
+    && chown -R airflow:root /app
 
 USER airflow
 
-# 호환성 문제를 해결하기 위해 urllib3 특정 버전 설치
-RUN pip install --no-cache-dir urllib3==1.26.18
-
-# 기본 패키지 설치
-COPY requirements-base.txt /requirements-base.txt
-RUN pip install --no-cache-dir -r /requirements-base.txt
-
-# ---- 경량 서비스용 이미지 (스케줄러, 트리거러, API 서버, 웹서버) ----
-FROM airflow-base AS airflow-light
-# 이 컨테이너들은 무거운 ML 라이브러리가 필요하지 않음
-
-# ---- 워커 및 DAG 프로세서용 이미지 ----
-FROM airflow-base AS airflow-worker-full
-# PyTorch 및 AI/ML 관련 패키지 설치
-COPY requirements-torch.txt /requirements-torch.txt
-# 타임아웃 방지를 위한 옵션 추가 및 여러 단계로 분할하여 설치
+# 기본 requirements 설치
+COPY requirements-base.txt /tmp/requirements-base.txt
 RUN pip install --no-cache-dir --timeout=1000 --retries=3 \
-    -r /requirements-torch.txt
+    -r /tmp/requirements-base.txt
 
-# pip 패키지 확인
-RUN pip freeze | grep urllib3 && \
-    pip freeze | grep requests && \
-    pip freeze | grep selenium
+USER root
+# pypdf 라이브러리 커스텀 모듈로 덮어쓰기
+COPY my_custom_lib/pypdf/_writer.py /tmp/custom_pypdf_writer.py
+RUN if [ -f "/tmp/custom_pypdf_writer.py" ]; then \
+    PYPDF_PATH=$(python -c "import pypdf; import os; print(os.path.dirname(pypdf.__file__))" 2>/dev/null || echo ""); \
+    if [ ! -z "$PYPDF_PATH" ] && [ -d "$PYPDF_PATH" ]; then \
+    echo "Found pypdf at: $PYPDF_PATH"; \
+    cp /tmp/custom_pypdf_writer.py $PYPDF_PATH/_writer.py; \
+    chown airflow:root $PYPDF_PATH/_writer.py; \
+    chmod 644 $PYPDF_PATH/_writer.py; \
+    echo "pypdf _writer.py custom module applied successfully"; \
+    else \
+    echo "pypdf not found or path invalid, skipping custom module application"; \
+    fi; \
+    rm -f /tmp/custom_pypdf_writer.py; \
+    else \
+    echo "Custom pypdf _writer.py not found, skipping"; \
+    fi
+
+# --------------------- 경량 서비스 이미지 ---------------------
+FROM airflow-base AS airflow-light
+
+
+# --------------------- 워커 및 DAG 프로세서 이미지 -------------
+FROM airflow-base AS airflow-worker-full
+
+USER airflow
+# heavy requirements 설치
+COPY requirements-torch.txt /tmp/requirements-torch.txt
+RUN pip install --no-cache-dir --timeout=1000 --retries=3 \
+    -r /tmp/requirements-torch.txt
+
+USER root
+# langchain 라이브러리 커스텀 모듈로 덮어쓰기
+COPY my_custom_lib/langchain/retrievers/parent_document_retriever.py /tmp/custom_langchain_retriever.py
+RUN if [ -f "/tmp/custom_langchain_retriever.py" ]; then \
+    LANGCHAIN_PATH=$(python -c "import langchain; import os; print(os.path.dirname(langchain.__file__))" 2>/dev/null || echo ""); \
+    if [ ! -z "$LANGCHAIN_PATH" ] && [ -d "$LANGCHAIN_PATH/retrievers" ]; then \
+    echo "Found langchain at: $LANGCHAIN_PATH"; \
+    cp /tmp/custom_langchain_retriever.py $LANGCHAIN_PATH/retrievers/parent_document_retriever.py; \
+    chown airflow:root $LANGCHAIN_PATH/retrievers/parent_document_retriever.py; \
+    chmod 644 $LANGCHAIN_PATH/retrievers/parent_document_retriever.py; \
+    echo "langchain parent_document_retriever.py custom module applied successfully"; \
+    else \
+    echo "langchain not found or retrievers path invalid, skipping custom module application"; \
+    fi; \
+    rm -f /tmp/custom_langchain_retriever.py; \
+    else \
+    echo "Custom langchain parent_document_retriever.py not found, skipping"; \
+    fi
+
+# 확인용 파이썬 스크립트 복사 및 실행
+COPY verify_modules.py /tmp/verify_modules.py
+RUN python /tmp/verify_modules.py && rm -f /tmp/verify_modules.py
+
+USER airflow
+
+# 작업 디렉토리 설정
+WORKDIR /opt/airflow

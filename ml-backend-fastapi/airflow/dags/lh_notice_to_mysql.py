@@ -1,4 +1,19 @@
-# dags/lh_crawler_dag.py - DAG 파일 (프로시저 사용)
+# -*- coding: utf-8 -*-
+
+"""
+LH 공고문 크롤링 및 MySQL 저장 DAG
+
+이 DAG는 다음과 같은 주요 기능을 수행합니다:
+1. LH 공고 웹사이트에서 새로운 공고문을 크롤링
+2. 주소 정보 유무에 따라 데이터 분리
+3. 주소가 있는 공고는 MySQL DB에 저장 (프로시저 사용)
+4. 주소가 없는 공고는 CSV 파일로 저장
+5. 공고 상태 자동 업데이트 (접수중/접수마감)
+6. 처리 결과 모니터링 및 로깅
+
+실행 주기: 매일 1회
+"""
+
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -11,60 +26,69 @@ import logging
 # 크롤러 모듈 임포트
 from plugins.crawlers.lh_crawler_for_mysql import (
     collect_lh_notices, 
-    classify_notices_by_location
+    classify_notices_by_completeness
 )
- 
 
-# 로거 설정
+# 로깅 설정
+# 로그 레벨을 INFO로 설정하여 중요한 작업 진행 상황을 추적
 logger = logging.getLogger(__name__)
 
-# DAG 정의
+# DAG 기본 설정
 default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-    'execution_timeout': timedelta(hours=1),
+    'owner': 'airflow',  # DAG 소유자
+    'depends_on_past': False,  # 이전 실행 결과에 의존하지 않음
+    'email_on_failure': False,  # 실패 시 이메일 알림 비활성화
+    'email_on_retry': False,  # 재시도 시 이메일 알림 비활성화
+    'retries': 3,  # 실패 시 재시도 횟수
+    'retry_delay': timedelta(minutes=5),  # 재시도 간격
+    'execution_timeout': timedelta(hours=5),  # 최대 실행 시간
 }
 
 # DAG 정의
 dag = DAG(
-    'LH_Notice_To_Mysql',
+    'LH_Notice_To_Mysql',  # DAG ID
     default_args=default_args,
     description='LH 공고문 크롤링 및 저장 DAG (프로시저 사용)',
-    schedule= "@daily",
-    start_date=datetime(2025, 4, 28),
-    catchup=True,
-    tags=['crawler', 'LH', 'notices']
+    schedule= "@daily",  # 매일 실행
+    start_date=datetime(2025, 5, 19),  # 시작 날짜
+    catchup=True,  # 과거 날짜에 대한 백필 활성화
+    tags=['crawler', 'LH', 'notices']  # DAG 태그
 )
 
-# 상수 정의
+# 크롤링 설정
 LH_CONFIG = {
-    'list_url': 'https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancList.do?viewType=srch',
+    'list_url': 'https://apply.lh.or.kr/lhapply/apply/wt/wrtanc/selectWrtancList.do?viewType=srch',  # 공고 목록 페이지
     'headers': {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0'  # 크롤링 시 사용할 User-Agent
     }
 }
 
 def crawl_lh_notices_task(**context):
-    """LH 공고문 크롤링 Task"""
+    """
+    LH 공고문 크롤링 Task
     
-    # Airflow의 execution_date 사용 (실행 스케줄 날짜)
-    execution_date = context.get('ds')  # ds는 'YYYY-MM-DD' 문자열
+    Args:
+        **context: Airflow context 변수들을 포함하는 딕셔너리
+            - ds: 실행 날짜 (YYYY-MM-DD 형식)
+    
+    Returns:
+        list: 수집된 공고 데이터 목록
+    
+    Note:
+        - 실행 날짜를 기준으로 해당 일자의 공고만 수집
+        - DB 연결 없이 순수 크롤링 작업만 수행
+        - 결과는 XCom을 통해 다음 Task로 전달
+    """
+    execution_date = context.get('ds')
     execution_date = datetime.strptime(execution_date, "%Y-%m-%d").date()
     print(f"🔄 실행 날짜: {execution_date}")
 
     try:
-        # 크롤링 실행 (DB 연결 없이 순수 크롤링만)
         notices_data = collect_lh_notices(
             list_url=LH_CONFIG['list_url'],
             headers=LH_CONFIG['headers'],
             target_date=execution_date
         )
-        
-        # XCom으로 결과 전달 -> 다음 Task에서 사용
         return notices_data
         
     except Exception as e:
@@ -72,15 +96,33 @@ def crawl_lh_notices_task(**context):
         raise
 
 def process_and_save_notices_task(**context):
-    """크롤링 데이터 처리 및 저장 Task (프로시저 사용)"""
+    """
+    크롤링 데이터 처리 및 저장 Task
+    
+    Args:
+        **context: Airflow context 변수들
+    
+    Returns:
+        dict: 처리 결과 통계
+            - total_crawled: 전체 크롤링된 공고 수
+            - db_saved: DB에 저장된 공고 수
+            - csv_saved: CSV에 저장된 공고 수
+            - errors: 오류 발생 건수
+            - csv_file: CSV 파일 경로
+    
+    Note:
+        - 주소 정보 유무에 따라 데이터 분리
+        - 주소 있는 공고는 DB에 저장 (프로시저 사용)
+        - 주소 없는 공고는 CSV 파일로 저장
+        - 정정공고 여부를 확인하여 적절한 프로시저 호출
+    """
     logger.info("크롤링 데이터 처리 및 저장 시작")
     
-    # 크롤링 결과 가져오기
+    # 이전 Task에서 크롤링한 데이터 가져오기
     notices_data = context['ti'].xcom_pull(task_ids='crawl_lh_notices')
     
     if not notices_data:
         logger.info("크롤링된 데이터가 없습니다.")
-        # 다음 Task로 빈 결과 전달
         return {
             'total_crawled': 0,
             'db_saved': 0,
@@ -88,30 +130,25 @@ def process_and_save_notices_task(**context):
             'errors': 0
         }
     
-    # CSV 파일 경로 설정 (주소 없는 공고용)
-    # 다운로드 디렉토리 별도 설정
-    download_dir = "/opt/airflow/downloads/no_location_notice"  # 원하는 경로로 변경
-    today_str = context['ds'].replace('-', '')  # YYYYMMDD 형식으로 변환
+    # CSV 파일 경로 설정
+    download_dir = "/opt/airflow/downloads/no_location_notice"
+    today_str = context['ds'].replace('-', '')
     csv_file_path = f"{download_dir}/{today_str}.csv"
     
-    # 소재지 유무에 따라 데이터 분리 및 CSV 저장
+    # 주소 정보 유무에 따라 데이터 분리
     db_notices, csv_notices = classify_notices_by_location(notices_data, csv_file_path)
-    
     logger.info(f"데이터 분리 완료 - DB용: {len(db_notices)}개, CSV용: {len(csv_notices)}개")
     
     try:
-        # MySQLHook 사용, 연결 ID는 환경변수 AIRFLOW_CONN_NOTICES_DB로 설정됨
+        # MySQL 연결 설정
         mysql_hook = MySqlHook(mysql_conn_id='notices_db')
         conn = mysql_hook.get_conn()
         cursor = conn.cursor()
         
-        # 쿼리 실행
-        # 연결 확인 쿼리
+        # 연결 확인
         logger.info("MySQL 연결 확인 쿼리 실행")
         cursor.execute("SELECT * FROM notices LIMIT 5;")
         rows = cursor.fetchall()
-
-        # 결과 출력
         for row in rows:
             print(row)
 
@@ -126,22 +163,22 @@ def process_and_save_notices_task(**context):
         logger.error(f"❌ MySQL 연결 실패: {str(e)}")
         raise   
     
+    # 처리 결과 카운터 초기화
     db_saved_count = 0
     error_count = 0
 
-    # 현재 작업 실행 시간 (한국 시간)
-    execution_date = context.get('logical_date') or context.get('execution_date')  # Airflow 버전 호환성 고려
+    # 작업 실행 시간 설정 (한국 시간)
+    execution_date = context.get('logical_date') or context.get('execution_date')
     job_execution_time = execution_date.strftime('%Y-%m-%d %H:%M:%S')
 
-    # DB에 공고 저장 (제공된 프로시저 사용)
+    # DB에 공고 저장
     for notice in db_notices:
         try:
-            # 정정공고 여부 판별
+            # 정정공고 여부 확인
             is_correction = notice.get('is_correction')
             
-            # 정정공고 처리 로직
             if is_correction:
-                # 정정공고 프로시저 호출
+                # 정정공고 처리
                 mysql_hook.run(
                     sql="CALL ProcessCorrectionNotice(%s, %s, %s, %s, %s, %s, %s)",
                     parameters=(
@@ -158,18 +195,18 @@ def process_and_save_notices_task(**context):
             else:
                 # 일반 공고 처리
                 mysql_hook.run(
-                        sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s, %s)",
-                        parameters=(
-                            notice['notice_number'],
-                            notice['notice_title'],
-                            notice['post_date'],
-                            notice.get('application_start_date'),
-                            notice.get('application_end_date'),
-                            notice.get('location'),
-                            notice.get('is_correction'),
-                            job_execution_time
-                        )
+                    sql="CALL InsertNewNotice(%s, %s, %s, %s, %s, %s, %s, %s)",
+                    parameters=(
+                        notice['notice_number'],
+                        notice['notice_title'],
+                        notice['post_date'],
+                        notice.get('application_start_date'),
+                        notice.get('application_end_date'),
+                        notice.get('location'),
+                        notice.get('is_correction'),
+                        job_execution_time
                     )
+                )
                 logger.info(f"🟢 신규 공고 DB 적재 완료: {notice['notice_number']}")
             
             db_saved_count += 1
@@ -178,7 +215,7 @@ def process_and_save_notices_task(**context):
             logger.error(f"🔴 DB 저장 실패: {notice['notice_number']}, 오류: {e}")
             error_count += 1
     
-    # 결과 요약
+    # 처리 결과 반환
     result = {
         'total_crawled': len(notices_data),
         'db_saved': db_saved_count,
@@ -191,7 +228,17 @@ def process_and_save_notices_task(**context):
     return result
 
 def log_crawl_summary(**context):
-    """크롤링 결과 요약 로그"""
+    """
+    크롤링 결과 요약 로깅
+    
+    Args:
+        **context: Airflow context 변수들
+    
+    Note:
+        - 전체 처리 결과 통계 출력
+        - 성공률 계산 및 표시
+        - CSV 파일 위치 정보 제공
+    """
     result = context['ti'].xcom_pull(task_ids='process_and_save_notices')
     
     if result:
@@ -218,13 +265,27 @@ def log_crawl_summary(**context):
         logger.info(summary)
         print(summary)
 
-def update_notice_status(**context): 
+def update_notice_status(**context):
+    """
+    공고 상태 자동 업데이트
+    
+    Args:
+        **context: Airflow context 변수들
+    
+    Note:
+        - 한국 시간 기준으로 현재 날짜 확인
+        - 접수 기간에 따라 상태 자동 업데이트
+            - 접수기간 중: '접수중'
+            - 접수기간 종료: '접수마감'
+        - 접수 시작일/종료일이 없는 공고는 제외
+    """
     mysql_hook = MySqlHook(mysql_conn_id='notices_db')
     
     # 한국 시간 기준으로 오늘 날짜 계산
     kst = pytz.timezone('Asia/Seoul')
     today = datetime.now(kst).date()
     
+    # 상태 업데이트 쿼리 실행
     sql = """
         UPDATE notices 
         SET notice_status = CASE 
@@ -241,43 +302,43 @@ def update_notice_status(**context):
 
 # Task 정의
 start_task = EmptyOperator(
-    task_id='start',
+    task_id='start',  # DAG 시작 지점
     dag=dag
 )
 
 crawl_task = PythonOperator(
-    task_id='crawl_lh_notices',
+    task_id='crawl_lh_notices',  # 크롤링 작업
     python_callable=crawl_lh_notices_task,
     dag=dag
 )
 
-save_task = PythonOperator(
-    task_id='process_and_save_notices',
-    python_callable=process_and_save_notices_task,
-    dag=dag
-)
+# save_task = PythonOperator(
+#     task_id='process_and_save_notices',  # 데이터 처리 및 저장
+#     python_callable=process_and_save_notices_task,
+#     dag=dag
+# )
 
-update_status_task = PythonOperator(
-    task_id='update_notice_status',
-    python_callable=update_notice_status,
-    dag=dag
-)
+# update_status_task = PythonOperator(
+#     task_id='update_notice_status',  # 공고 상태 업데이트
+#     python_callable=update_notice_status,
+#     dag=dag
+# )
 
-# 요약 로그 Task
-summary_task = PythonOperator(
-    task_id='log_crawl_summary',
-    python_callable=log_crawl_summary,
-    trigger_rule='all_done',  # 성공/실패 관계없이 실행
-    dag=dag
-)
+# summary_task = PythonOperator(
+#     task_id='log_crawl_summary',  # 처리 결과 요약
+#     python_callable=log_crawl_summary,
+#     trigger_rule='all_done',  # 이전 태스크 성공/실패 관계없이 실행
+#     dag=dag
+# )
 
 end_task = EmptyOperator(
-    task_id='end',
+    task_id='end',  # DAG 종료 지점
     dag=dag
 )
 
-# Task 의존성 설정
-start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> end_task
+# Task 의존성 설정 (실행 순서 정의)
+# start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> end_task
+start_task >> crawl_task >> end_task
 
 # DAG 문서화
 dag.doc_md = """
