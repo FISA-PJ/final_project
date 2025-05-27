@@ -426,7 +426,7 @@ with DAG(
     default_args=default_args,
     description='LH 공고문 크롤링 및 Elasticsearch 저장',
     schedule="@daily",  # 매일 실행
-    start_date=datetime(2025, 1, 1),  # 시작 날짜
+    start_date=datetime(2024, 1, 1),  # 시작 날짜
     catchup=True,  # 과거 날짜에 대한 백필 활성화
     tags=['lh', 'elasticsearch', 'pdf'],  # DAG 태그
 ) as dag:

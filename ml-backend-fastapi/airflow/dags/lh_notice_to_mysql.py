@@ -44,7 +44,7 @@ default_args = {
     'email_on_failure': False,  # 실패 시 이메일 알림 비활성화
     'email_on_retry': False,  # 재시도 시 이메일 알림 비활성화
     'retries': 3,  # 실패 시 재시도 횟수
-    'retry_delay': timedelta(minutes=5),  # 재시도 간격
+    'retry_delay': timedelta(minutes=1),  # 재시도 간격
     'execution_timeout': timedelta(hours=5),  # 최대 실행 시간
 }
 
@@ -54,7 +54,7 @@ dag = DAG(
     default_args=default_args,
     description='LH 공고문 크롤링 및 저장 DAG (프로시저 사용)',
     schedule= "@daily",  # 매일 실행
-    start_date=datetime(2025, 5, 22),  # 시작 날짜
+    start_date=datetime(2024, 1, 1),  # 시작 날짜
     catchup=True,  # 과거 날짜에 대한 백필 활성화
     tags=['crawler', 'LH', 'notices']  # DAG 태그
 )
@@ -183,27 +183,63 @@ def process_and_save_notices_task(**context):
                 json.dumps(notice.get('house_types', []), ensure_ascii=False)   # 주택형 정보 (JSON 배열)
             )
             
+            # 파라미터 로깅
+            logger.info(f"📝 공고 상세 정보:")
+            logger.info(f"- 공고번호: {notice['notice_number']}")
+            logger.info(f"- 공고명: {notice['notice_title']}")
+            logger.info(f"- 공고일자: {notice['post_date']}")
+            logger.info(f"- 마감일: {notice.get('application_end_date', 'None')}")
+            logger.info(f"- 서류제출 시작일: {notice.get('document_start_date', 'None')}")
+            logger.info(f"- 서류제출 종료일: {notice.get('document_end_date', 'None')}")
+            logger.info(f"- 계약체결 시작일: {notice.get('contract_start_date', 'None')}")
+            logger.info(f"- 계약체결 종료일: {notice.get('contract_end_date', 'None')}")
+            logger.info(f"- 당첨자 발표일: {notice.get('winning_date', 'None')}")
+            logger.info(f"- 입주예정월: {notice.get('move_in_date', 'None')}")
+            logger.info(f"- 소재지: {notice.get('location', 'None')}")
+            logger.info(f"- 정정공고 여부: {notice.get('is_correction', False)}")
+            logger.info(f"- 공급유형: {notice.get('supply_type', [])}")
+            logger.info(f"- 주택형 정보: {notice.get('house_types', [])}")
+
+            logger.info(f"🔄 프로시저 실행 시작 - UpsertNotice for {notice['notice_number']}")
+            
+            # 프로시저 실행 전에 autocommit 비활성화
+            conn.autocommit = False
+            
             # 프로시저 실행
             cursor.callproc('UpsertNotice', params)
+            
+            # 커밋
             conn.commit()
+            logger.info("✅ commit 완료")
             
-            logger.info(f"✅ 공고 저장 완료: {notice['notice_number']}")
-            if notice.get('is_correction'):
-                logger.info(f"🔄 정정공고 처리 완료: {notice['notice_number']}")
-            db_saved_count += 1
+            # 데이터 확인
+            verify_sql = "SELECT * FROM notices WHERE notice_number = %s"
+            cursor.execute(verify_sql, (notice['notice_number'],))
+            saved_notice = cursor.fetchone()
             
+            if saved_notice:
+                logger.info(f"✅ DB 저장 확인 - 공고번호 {notice['notice_number']}가 실제로 저장되었습니다.")
+                logger.info(f"📊 저장된 데이터: {saved_notice}")
+                if notice.get('is_correction'):
+                    logger.info(f"🔄 정정공고 처리 완료: {notice['notice_number']}")
+                db_saved_count += 1
+            else:
+                logger.error(f"❌ 오류: 공고번호 {notice['notice_number']}가 DB에 저장되지 않았습니다!")
+                error_count += 1
+                
         except Exception as e:
-            logger.error(f"❌ DB 저장 실패: {notice['notice_number']}, 오류: {str(e)}")
-            error_count += 1
+            logger.error(f"❌ 'UpsertNotice' 프로시저 실행 중 오류 발생: {str(e)}")
             conn.rollback()
+            error_count += 1
+            continue
     
     try:
         # 모든 공고의 상태 업데이트
         cursor.callproc('UpdateAllNoticeStatuses')
         conn.commit()
-        logger.info("✅ 전체 공고 상태 업데이트 완료")
+        logger.info("✅ 전체 공고 상태(결과발표/접수중/접수마감) 업데이트 완료")
     except Exception as e:
-        logger.error(f"❌ 공고 상태 업데이트 실패: {str(e)}")
+        logger.error(f"❌ 공고 상태(결과발표/접수중/접수마감) 업데이트 실패: {str(e)}")
         error_count += 1
         conn.rollback()
     
@@ -264,96 +300,7 @@ def log_crawl_summary(**context):
         """
         
         logger.info(summary)
-        print(summary)
-
-def update_notice_status(**context):
-    """
-    공고 상태 자동 업데이트
-    
-    Args:
-        **context: Airflow context 변수들
-    
-    Note:
-        - 한국 시간 기준으로 현재 날짜 확인
-        - 접수 기간에 따라 상태 자동 업데이트
-            - 접수기간 중: '접수중'
-            - 접수기간 종료: '접수마감'
-        - 접수 시작일/종료일이 없는 공고는 제외
-    """
-    mysql_hook = MySqlHook(mysql_conn_id='notices_db')
-    
-    # 한국 시간 기준으로 오늘 날짜 계산
-    kst = pytz.timezone('Asia/Seoul')
-    today = datetime.now(kst).date()
-    
-    # 상태 업데이트 쿼리 실행
-    sql = """
-        UPDATE notices 
-        SET notice_status = CASE 
-                WHEN %s BETWEEN application_start_date AND application_end_date THEN '접수중'
-                WHEN %s > application_end_date THEN '접수마감'
-                ELSE '접수중'
-            END,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE application_start_date IS NOT NULL
-        AND application_end_date IS NOT NULL
-    """
-    
-    mysql_hook.run(sql, parameters=(today, today))
-
-def extract_address_from_content(driver) -> Optional[str]:
-    """웹페이지에서 공고 소재지 추출"""
-    logger.info("🔍 소재지 정보 검색 중...")
-    
-    try:
-        # 1차 시도: li_w25 클래스를 가진 리스트 아이템에서 검색
-        elements = driver.find_elements(By.CSS_SELECTOR, "li.li_w25")
-        for element in elements:
-            try:
-                text = element.text.strip()
-                # 소재지 키워드가 포함된 요소 찾기
-                if '소재지' in text:
-                    # before 가상 요소의 텍스트를 제외한 실제 내용 추출
-                    address = text.replace('소재지', '').strip()
-                    if address:
-                        logger.info(f"✓ li_w25에서 소재지 발견: {address}")
-                        return address
-            except Exception as e:
-                logger.debug(f"li_w25 요소 처리 중 오류: {e}")
-                continue
-        
-        # 2차 시도: w100 클래스를 가진 요소에서 검색
-        content_items = driver.find_elements(By.CSS_SELECTOR, "li.w100")
-        address_keywords = ["동", "구", "로", "시", "군", "읍", "면"]
-        
-        for item in content_items:
-            try:
-                item_text = item.text.strip()
-                if any(keyword in item_text for keyword in address_keywords):
-                    try:
-                        # strong 태그가 있는 경우 제외
-                        strong_text = item.find_element(By.TAG_NAME, "strong").text.strip()
-                        address = item_text.replace(strong_text, "").strip()
-                        if address.startswith('"') and address.endswith('"'):
-                            address = address[1:-1].strip()
-                    except NoSuchElementException:
-                        # strong 태그가 없는 경우 전체 텍스트 사용
-                        address = item_text
-                    
-                    if address and len(address) > 2:
-                        logger.info(f"✓ w100에서 소재지 발견: {address}")
-                        return address
-            except Exception as e:
-                logger.debug(f"w100 요소 처리 중 오류: {e}")
-                continue
-                
-        logger.warning("⚠️ 소재지 정보를 찾을 수 없습니다")
-        return "없음"
-
-    except Exception as e:
-        logger.error(f"❌ 소재지 추출 중 오류 발생: {str(e)}")
-        return "없음"
-
+       
 # Task 정의
 start_task = EmptyOperator(
     task_id='start',  # DAG 시작 지점
@@ -372,12 +319,6 @@ save_task = PythonOperator(
     dag=dag
 )
 
-update_status_task = PythonOperator(
-    task_id='update_notice_status',  # 공고 상태 업데이트
-    python_callable=update_notice_status,
-    dag=dag
-)
-
 summary_task = PythonOperator(
     task_id='log_crawl_summary',  # 처리 결과 요약
     python_callable=log_crawl_summary,
@@ -391,7 +332,7 @@ end_task = EmptyOperator(
 )
 
 # Task 의존성 설정 (실행 순서 정의)
-start_task >> crawl_task >> save_task >> update_status_task >> summary_task >> end_task
+start_task >> crawl_task >> save_task >> summary_task >> end_task
 # start_task >> crawl_task >> end_task
 
 # DAG 문서화

@@ -1,12 +1,17 @@
+-- 문자셋 설정
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET collation_connection = utf8mb4_0900_ai_ci;
+
 -- 데이터베이스 생성 및 선택
-CREATE DATABASE IF NOT EXISTS notice_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS notice_db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 USE notice_db;
 
 CREATE TABLE notices (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    notice_number VARCHAR(50) NOT NULL,
-    notice_title VARCHAR(255) NOT NULL,
+    notice_number VARCHAR(50) NOT NULL UNIQUE,
+    notice_title  VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
     post_date DATE NOT NULL,
     application_end_date DATE,
     document_start_date DATE,

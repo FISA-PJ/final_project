@@ -384,19 +384,6 @@ def extract_notice_data(driver, wrtan_no: str, target_date: datetime.date) -> Op
         error_msg = f"❌ 공고번호 {wrtan_no} 공고 세부 정보 추출 실패: {str(e)}"
         logger.error(error_msg)
         
-        # 실패 정보를 CSV 파일에 저장
-        try:
-            current_url = driver.current_url
-        except:
-            current_url = "URL 추출 실패"
-            
-        save_failed_notice_to_csv(
-            wrtan_no, 
-            target_date, 
-            error_msg, 
-            url=current_url
-        )
-        
         return None
 
 def extract_application_end_date(driver) -> Optional[str]:
@@ -976,48 +963,6 @@ def classify_notices_by_completeness(notices_data: List[Dict], csv_file_path: st
         logger.info(f"📊 분류 결과 - DB 저장 대상: {len(db_notices)}개 공고, CSV 저장 대상: {len(csv_notices)}개 공고")
     
     return db_notices, csv_notices
-
-def save_failed_notice_to_csv(wrtan_no, target_date, error_msg, url=None):
-    """실패한 공고 정보를 CSV 파일에 저장"""
-    # 기본 디렉토리 설정
-    log_dir = "/opt/airflow/downloads/failed_notices"
-    os.makedirs(log_dir, exist_ok=True)
-    
-    # target_date로 파일 이름 생성
-    csv_file_path = f"{log_dir}/failed_notices_{target_date}.csv"
-    
-    # 실패 정보 준비
-    failed_notice = {
-        "notice_number": wrtan_no,
-        "target_date": target_date.strftime("%Y-%m-%d") if hasattr(target_date, 'strftime') else str(target_date),
-        "error_message": error_msg,
-        "url": url or "URL 없음"
-    }
-    
-    # CSV 파일에 추가
-    try:
-        # 필드 이름 정의
-        fieldnames = ["notice_number", "target_date", "error_message", "url"]
-        
-        # 파일 존재 여부 확인
-        file_exists = os.path.isfile(csv_file_path)
-        
-        # CSV 파일 열기 (추가 모드)
-        with open(csv_file_path, 'a', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            
-            # 파일이 새로 생성된 경우 헤더 작성
-            if not file_exists:
-                writer.writeheader()
-            
-            # 데이터 행 추가
-            writer.writerow(failed_notice)
-        
-        logger.info(f"✅ 실패 공고 {wrtan_no} 정보가 CSV 파일에 저장되었습니다: {csv_file_path}")
-        return csv_file_path
-    except Exception as e:
-        logger.error(f"⚠️ 실패 공고 저장 중 오류 발생: {e}")
-        return None
     
 def detect_correction_notice(title: str) -> bool:
     """제목에서 정정공고 여부 판별"""
