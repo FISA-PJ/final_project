@@ -6,69 +6,56 @@
 
 <head>
   <th:block layout:fragment="head">
+    <title>챗봇 - 청약핏</title>
     <style>
       .chat-container {
-          max-width: 800px;
-          margin: 2rem auto;
-          background-color: #ffffff;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          padding: 1.5rem;
-          height: 600px;
+          display: flex;
+          height: calc(100vh - 200px);
+          margin: 20px 0;
+      }
+      .notice-list {
+          width: 300px;
+          padding: 20px;
+          border-right: 1px solid #dee2e6;
+          overflow-y: auto;
+      }
+      .chat-area {
+          flex: 1;
           display: flex;
           flex-direction: column;
+          padding: 20px;
       }
-
       .chat-messages {
           flex: 1;
           overflow-y: auto;
-          margin-bottom: 1rem;
+          margin-bottom: 20px;
+          padding: 10px;
+          border: 1px solid #dee2e6;
+          border-radius: 5px;
       }
-
       .message {
-          padding: 0.75rem;
-          border-radius: 10px;
-          margin-bottom: 0.5rem;
-          max-width: 75%;
-          word-wrap: break-word;
+          margin-bottom: 10px;
+          padding: 10px;
+          border-radius: 5px;
       }
-
-      .users-message {
-          background-color: #dff0ff;
-          align-self: flex-end;
-          text-align: right;
-      }
-
-      .bot-message {
-          background-color: #f1f1f1;
-          align-self: flex-start;
-      }
-
-      .chat-input {
-          display: flex;
-          gap: 0.5rem;
-      }
-
-      .chat-input input {
-          flex: 1;
-          padding: 0.5rem;
-          font-size: 1rem;
-          border: 1px solid #ccc;
-          border-radius: 6px;
-      }
-
-      .chat-input button {
-          padding: 0.5rem 1rem;
-          font-size: 1rem;
-          background-color: #3498db;
+      .user-message {
+          background-color: #007bff;
           color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
+          margin-left: 20%;
       }
-
-      .chat-input button:hover {
-          background-color: #2980b9;
+      .bot-message {
+          background-color: #f8f9fa;
+          margin-right: 20%;
+      }
+      .input-area {
+          display: flex;
+          gap: 10px;
+      }
+      .input-area select {
+          width: 200px;
+      }
+      .input-area input {
+          flex: 1;
       }
     </style>
   </th:block>
@@ -76,53 +63,99 @@
 
 <body>
 <th:block layout:fragment="content">
-  <div class="chat-container">
-    <div class="chat-messages" id="chatMessages">
-      <!-- 메시지 출력 영역 -->
-    </div>
-    <div class="chat-input">
-      <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
-      <button onclick="sendMessage()">전송</button>
+  <div class="container">
+    <h2 class="text-center mb-4">청약 챗봇</h2>
+    <div class="chat-container">
+      <div class="notice-list">
+        <h5>맞춤 공고 목록</h5>
+        <select id="noticeSelect" class="form-select mb-3">
+          <option value="">공고를 선택하세요</option>
+          <option th:each="notice : ${notices}"
+                  th:value="${notice.noticeNumber}"
+                  th:text="${notice.noticeTitle}"></option>
+        </select>
+      </div>
+      <div class="chat-area">
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="input-area">
+          <select id="noticeSelect" class="form-select">
+            <option value="">공고를 선택하세요</option>
+            <option th:each="notice : ${notices}"
+                    th:value="${notice.noticeNumber}"
+                    th:text="${notice.noticeTitle}"></option>
+          </select>
+          <input type="text" id="userInput" class="form-control" placeholder="질문을 입력하세요...">
+          <button onclick="sendMessage()" class="btn btn-primary">전송</button>
+        </div>
+      </div>
     </div>
   </div>
 </th:block>
 
 <th:block layout:fragment="script">
-  <script>
-    const chatMessages = document.getElementById("chatMessages");
-    const userInput = document.getElementById("userInput");
-
-    function appendMessage(text, sender) {
-        const message = document.createElement("div");
-        message.classList.add("message", sender === "users" ? "users-message" : "bot-message");
-        message.innerText = text;
-        chatMessages.appendChild(message);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
+  <script th:inline="javascript">
+    const userName = /*[[${userName}]]*/ '';
+    const primeType = /*[[${primeType}]]*/ '';
+    
     function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
+      const userInput = document.getElementById('userInput');
+      const noticeSelect = document.getElementById('noticeSelect');
+      const chatMessages = document.getElementById('chatMessages');
+      
+      if (!noticeSelect.value) {
+        alert('공고를 선택해주세요.');
+        return;
+      }
+      
+      if (!userInput.value.trim()) {
+        return;
+      }
 
-        appendMessage(text, "users");
-        userInput.value = "";
+      // 사용자 메시지 표시
+      const userMessageDiv = document.createElement('div');
+      userMessageDiv.className = 'message user-message';
+      userMessageDiv.textContent = userInput.value;
+      chatMessages.appendChild(userMessageDiv);
 
-        fetch("/chatbot/api", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text })
+      // API 요청
+      fetch('/chatbot/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userInput.value,
+          noticeNumber: noticeSelect.value
         })
-        .then(res => res.json())
-        .then(data => appendMessage(data.reply, "bot"))
-        .catch(err => {
-            console.error("Error:", err);
-            appendMessage("오류가 발생했습니다.", "bot");
-        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        // 봇 응답 표시
+        const botMessageDiv = document.createElement('div');
+        botMessageDiv.className = 'message bot-message';
+        botMessageDiv.textContent = data.reply;
+        chatMessages.appendChild(botMessageDiv);
+        
+        // 스크롤을 최하단으로 이동
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        const errorMessageDiv = document.createElement('div');
+        errorMessageDiv.className = 'message bot-message';
+        errorMessageDiv.textContent = '죄송합니다. 오류가 발생했습니다.';
+        chatMessages.appendChild(errorMessageDiv);
+      });
+
+      // 입력창 초기화
+      userInput.value = '';
     }
 
-
-    userInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") sendMessage();
+    // Enter 키로 메시지 전송
+    document.getElementById('userInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
     });
   </script>
 </th:block>

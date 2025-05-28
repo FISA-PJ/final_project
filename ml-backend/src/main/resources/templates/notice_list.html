@@ -1,4 +1,7 @@
 <html layout:decorate="~{layout}">
+<th:block layout:fragment="head">
+    <title>공고 목록 - 청약핏</title>
+</th:block>
 <div layout:fragment="content">
     <div class="container mt-4">
         <h2>공고 목록</h2>
@@ -23,7 +26,7 @@
                         <th>공고번호</th>
                         <th>제목</th>
                         <th>게시일</th>
-                        <th>접수기간</th>
+                        <th>마감일</th>
                         <th>지역</th>
                         <th>상태</th>
                     </tr>
@@ -35,17 +38,23 @@
                             <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.noticeTitle}"></a>
                         </td>
                         <td th:text="${#temporals.format(notice.postDate, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></td>
+<!--                        <td>-->
+<!--                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>-->
+<!--                            ~-->
+<!--                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>-->
+<!--                        </td>-->
                         <td>
-                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>
-                            ~
-                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>
+                            <span th:text="${notice.location}"></span>
+                            <a href="javascript:void(0)" th:data-location="${notice.location}" class="ms-2 location-link">[상세보기]</a>
                         </td>
-                        <td th:text="${notice.location}"></td>
                         <td>
                             <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}"
                                   class="badge bg-success">접수중</span>
                             <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}"
                                   class="badge bg-secondary">접수마감</span>
+                                  <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).결과발표}"
+                                  class="badge bg-light text-dark">결과발표</span>
                         </td>
                     </tr>
                     <tr th:if="${notices != null}" th:each="notice : ${notices}">
@@ -54,17 +63,23 @@
                             <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.noticeTitle}"></a>
                         </td>
                         <td th:text="${#temporals.format(notice.postDate, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></td>
+<!--                        <td>-->
+<!--                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>-->
+<!--                            ~-->
+<!--                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>-->
+<!--                        </td>-->
                         <td>
-                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>
-                            ~
-                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>
+                            <span th:text="${notice.location}"></span>
+                            <a href="javascript:void(0)" th:data-location="${notice.location}" class="ms-2 location-link">[상세보기]</a>
                         </td>
-                        <td th:text="${notice.location}"></td>
                         <td>
                             <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}"
                                   class="badge bg-success">접수중</span>
                             <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}"
                                   class="badge bg-secondary">접수마감</span>
+                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).결과발표}"
+                                  class="badge bg-light text-dark">결과발표</span>
                         </td>
                     </tr>
                 </tbody>
@@ -77,9 +92,13 @@
                 <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
                     <a class="page-link" th:href="@{/notice/list(page=${paging.number - 1})}">이전</a>
                 </li>
-                <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                <li class="page-item" th:if="${paging.totalPages > 0}" th:each="pageNum : ${#numbers.sequence(0, paging.totalPages - 1)}"
                     th:classappend="${pageNum == paging.number} ? 'active'">
                     <a class="page-link" th:href="@{/notice/list(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+                </li>
+                <li class="page-item" th:if="${paging.totalPages == 0}"
+                    th:classappend="${paging.number == 0} ? 'active'">
+                    <a class="page-link" th:href="@{/notice/list(page=0)}" th:text="1"></a>
                 </li>
                 <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
                     <a class="page-link" th:href="@{/notice/list(page=${paging.number + 1})}">다음</a>
@@ -87,5 +106,120 @@
             </ul>
         </div>
     </div>
+
+    <!-- 지도 팝업 모달 -->
+    <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mapModalLabel">지역 상세 지도</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="map" style="width: 100%; height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<th:block layout:fragment="script">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Kakao Map API -->
+    <script type="text/javascript" th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}|}"></script>
+    
+    <!-- 지도 관련 JavaScript -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded 이벤트 발생');
+            // 모든 location-link 클래스를 가진 링크에 이벤트 리스너 추가
+            document.querySelectorAll('.location-link').forEach(function(link) {
+                console.log('링크 찾음:', link);
+                link.addEventListener('click', function(e) {
+                    console.log('링크 클릭됨');
+                    e.preventDefault();
+                    const location = this.getAttribute('data-location');
+                    console.log('위치:', location);
+                    if (location) {
+                        showMapPopup(location);
+                    }
+                });
+            });
+        });
+
+        function showMapPopup(location) {
+            console.log('showMapPopup 함수 호출됨:', location);
+            
+            // 모달 요소 가져오기
+            const modalElement = document.getElementById('mapModal');
+            if (!modalElement) {
+                console.error('모달 요소를 찾을 수 없습니다.');
+                return;
+            }
+            
+            // Bootstrap 5 Modal 초기화
+            const mapModal = new bootstrap.Modal(modalElement);
+            
+            // 모달이 완전히 표시된 후 지도를 초기화
+            modalElement.addEventListener('shown.bs.modal', function () {
+                console.log('모달 표시됨');
+                
+                // 카카오맵 API가 로드되었는지 확인
+                if (typeof kakao === 'undefined' || !kakao.maps) {
+                    console.error('카카오맵 API가 로드되지 않았습니다.');
+                    return;
+                }
+
+                const mapContainer = document.getElementById('map');
+                if (!mapContainer) {
+                    console.error('지도 컨테이너를 찾을 수 없습니다.');
+                    return;
+                }
+                
+                // 지도 초기화
+                const mapOption = {
+                    center: new kakao.maps.LatLng(37.566826, 126.978656), // 기본 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+                
+                const map = new kakao.maps.Map(mapContainer, mapOption);
+                
+                // 주소-좌표 변환 객체 생성
+                const geocoder = new kakao.maps.services.Geocoder();
+                
+                // 주소로 좌표 검색
+                geocoder.addressSearch(location, function(result, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        console.log('주소 검색 성공');
+                        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                        
+                        // 결과값으로 받은 위치를 마커로 표시
+                        const marker = new kakao.maps.Marker({
+                            map: map,
+                            position: coords
+                        });
+                        
+                        // 인포윈도우 생성
+                        const infowindow = new kakao.maps.InfoWindow({
+                            content: `<div style="width:150px;text-align:center;padding:6px 0;">${location}</div>`
+                        });
+                        
+                        // 인포윈도우를 마커 위에 표시
+                        infowindow.open(map, marker);
+                        
+                        // 지도의 중심을 결과값으로 받은 위치로 이동
+                        map.setCenter(coords);
+                    } else {
+                        console.error('주소 검색 실패:', status);
+                        alert('주소를 찾을 수 없습니다.');
+                    }
+                });
+            });
+            
+            // 모달 표시
+            mapModal.show();
+        }
+    </script>
+</th:block>
 </html> 

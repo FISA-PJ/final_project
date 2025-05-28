@@ -22,7 +22,8 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "appEntityManagerFactory",
         transactionManagerRef = "appTransactionManager",
-        basePackages = {"com.mysite.applyhome.user", "com.mysite.applyhome.personalProfiles"}
+        basePackages = {"com.mysite.applyhome.user", "com.mysite.applyhome.personalProfiles",
+        "com.mysite.applyhome.housingSubscriptionEligibility"}
 )
 public class AppDataSourceConfig {
 
@@ -38,14 +39,15 @@ public class AppDataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,
             @Qualifier("appDataSource") DataSource dataSource) {
-        
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        
+
         return builder
                 .dataSource(dataSource)
-                .packages("com.mysite.applyhome.user", "com.mysite.applyhome.personalProfiles")
+                .packages("com.mysite.applyhome.user", "com.mysite.applyhome.personalProfiles",
+                "com.mysite.applyhome.housingSubscriptionEligibility")
                 .persistenceUnit("app")
                 .properties(properties)
                 .build();
@@ -57,4 +59,4 @@ public class AppDataSourceConfig {
             @Qualifier("appEntityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory.getObject());
     }
-} 
+}

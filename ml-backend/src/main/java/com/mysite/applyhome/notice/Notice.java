@@ -24,8 +24,8 @@ public class Notice {
     @Column(name = "post_date", nullable = false)
     private LocalDate postDate;
 
-    @Column(name = "application_start_date", nullable = false)
-    private LocalDate applicationStartDate;
+//    @Column(name = "application_start_date", nullable = false)
+//    private LocalDate applicationStartDate;
 
     @Column(name = "application_end_date", nullable = false)
     private LocalDate applicationEndDate;
@@ -42,5 +42,5 @@ public class Notice {
 }
 
 enum NoticeStatus {
-    접수중, 접수마감
+    접수중, 접수마감, 결과발표
 } 

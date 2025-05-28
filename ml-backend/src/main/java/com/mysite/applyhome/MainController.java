@@ -16,14 +16,16 @@ public class MainController {
 		return "main_page";
 	}
 
+	@GetMapping("/desc")
+	public String landing() {
+		return "landing_page";
+	}
+
 	@GetMapping("/map")
 	public String map(Model model) {
 		model.addAttribute("kakaoApiKey", kakaoApiKey);
 		return "map_page";
 	}
 
-	@GetMapping("/chatbot")
-	public String chatbot() {
-		return "chatbot";
-	}
+
 }

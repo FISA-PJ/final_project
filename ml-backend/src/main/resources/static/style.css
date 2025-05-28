@@ -11056,6 +11056,68 @@ body {
   transform: scale(1.02);
 }
 
+/* 캐러셀 아이템 높이를 300px로 고정 */
+#featureCarousel .carousel-item {
+  height: 500px;
+}
+/* 이미지 크기가 영역에 꽉 차도록 object-fit 적용 */
+#featureCarousel .carousel-item img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* 공통 버튼 색상 */
+.custom-btn {
+  background-color: #002d5a;
+  border-color: #002d5a;
+}
+
+.custom-btn:hover {
+  background-color: #002d5a;
+  border-color: #002d5a;
+}
+
+/* 사이드바 접기 효과 */
+.sidebar {
+  width: 500px;
+  transition: width 0.3s ease;
+}
+.sidebar.collapsed {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 지도 */
+#map {
+  height: 100vh;
+  width: 100%;
+  background-color: #f3f3f3;
+}
+
+/* 챗봇 버튼 */
+.floating-chatbot {
+  position: fixed;
+  bottom: 70px; /* 화면 아래에서 30px */
+  right: 70px; /* 화면 오른쪽에서 30px */
+  z-index: 9999;
+  background-color: #002d5a;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.floating-chatbot img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
 
 /* textarea {
 	width: 100%;

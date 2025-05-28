@@ -35,11 +35,11 @@ public class NoticeDataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,
             @Qualifier("noticeDataSource") DataSource dataSource) {
-        
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        
+
         return builder
                 .dataSource(dataSource)
                 .packages("com.mysite.applyhome.notice")
@@ -53,4 +53,4 @@ public class NoticeDataSourceConfig {
             @Qualifier("noticeEntityManagerFactory") LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory.getObject());
     }
-} 
+}

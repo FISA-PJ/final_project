@@ -8,15 +8,14 @@
     <link rel="icon" type="image/x-icon" th:href="@{/favicon2.ico}">
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
-	<!-- sbb CSS -->
+	<!-- applyhome CSS -->
 	<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 
-	<th:block layout:fragment="head"></th:block>
-
-	<title>청약정보종합제공플랫폼</title>
+	<th:block layout:fragment="head">
+	</th:block>
 </head>
 
-<body>
+<body style="padding-bottom:24px;">
 	<!-- 네비게이션바 -->
 	<nav th:replace="~{navbar :: navbarFragment}"></nav>
 	<!-- 기본 템플릿 안에 삽입될 내용 Start -->
@@ -27,6 +26,7 @@
 	<!-- 자바스크립트 Start -->
 	<th:block layout:fragment="script"></th:block>
 	<!-- 자바스크립트 End -->
-</body>
+	
+	</body>
 
 </html>

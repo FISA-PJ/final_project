@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+    private final SupplyTypeRepository supplyTypeRepository;
 
     // 모든 공고 목록 조회 (페이징 처리)
     public Page<Notice> getList(int page) {
@@ -55,5 +56,23 @@ public class NoticeService {
     // 게시일 기준으로 공고 검색
     public List<Notice> getNoticesByDateRange(LocalDate startDate, LocalDate endDate) {
         return this.noticeRepository.findByPostDateBetween(startDate, endDate);
+    }
+
+    // 사용자 유형에 따른 공고 조회
+    public Page<Notice> getNoticesByPrimeType(String primeType, int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("postDate").descending());
+        
+        List<Long> noticeIds;
+        if ("특별공급유형 아님".equals(primeType)) {
+            noticeIds = supplyTypeRepository.findNoticeIdsForNonSpecialSupply();
+        } else {
+            noticeIds = supplyTypeRepository.findNoticeIdsByPrimeType(primeType);
+        }
+        
+        if (noticeIds.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        
+        return noticeRepository.findByIdIn(noticeIds, pageable);
     }
 }

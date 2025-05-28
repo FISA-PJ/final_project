@@ -6,6 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+import com.mysite.applyhome.housingSubscriptionEligibility.HousingSubscriptionEligibilityService;
+import com.mysite.applyhome.user.SiteUserDetails;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,12 +21,17 @@ import java.util.List;
 public class NoticeController {
 
     private final NoticeService noticeService;
+    private final HousingSubscriptionEligibilityService eligibilityService;
+
+    @Value("${KAKAOMAP_API_KEY}")
+    private String kakaoApiKey;
 
     // 공고 목록 페이지
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Notice> paging = this.noticeService.getList(page);
         model.addAttribute("paging", paging);
+        model.addAttribute("kakaoApiKey", kakaoApiKey);
         return "notice_list";
     }
 
@@ -74,6 +84,23 @@ public class NoticeController {
         LocalDate end = LocalDate.parse(endDate);
         List<Notice> notices = this.noticeService.getNoticesByDateRange(start, end);
         model.addAttribute("notices", notices);
+        return "notice_list";
+    }
+
+    // 사용자 유형에 따른 공고 조회
+    @GetMapping("/custom")
+    public String customNotices(Model model, 
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @AuthenticationPrincipal SiteUserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/user/login";
+        }
+
+        String primeType = eligibilityService.getEligibilityPrimeType(userDetails.getUser());
+        Page<Notice> paging = noticeService.getNoticesByPrimeType(primeType, page);
+        
+        model.addAttribute("paging", paging);
+        model.addAttribute("kakaoApiKey", kakaoApiKey);
         return "notice_list";
     }
 } 

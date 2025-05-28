@@ -25,9 +25,9 @@ public class SubscriptService {
             String type,
             String region,
             String status,
-            String dateType,
-            String startDate,
-            String endDate
+             String dateType,
+             String startDate,
+             String endDate
     ) {
         try {
             StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552555/lhLeaseNoticeInfo1/lhLeaseNoticeInfo1");
@@ -46,15 +46,15 @@ public class SubscriptService {
             }
 
             // 날짜 필터
-            if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-                if ("게시일".equals(dateType)) {
-                    urlBuilder.append("&" + URLEncoder.encode("PAN_NT_ST_DT", "UTF-8") + "=" + URLEncoder.encode(startDate.replaceAll("-", ""), "UTF-8"));
-                    urlBuilder.append("&" + URLEncoder.encode("PAN_NT_ED_DT", "UTF-8") + "=" + URLEncoder.encode(endDate.replaceAll("-", ""), "UTF-8"));
-                } else if ("마감일".equals(dateType)) {
-                    urlBuilder.append("&" + URLEncoder.encode("CLSG_ST_DT", "UTF-8") + "=" + URLEncoder.encode(startDate.replaceAll("-", ""), "UTF-8"));
-                    urlBuilder.append("&" + URLEncoder.encode("CLSG_ED_DT", "UTF-8") + "=" + URLEncoder.encode(endDate.replaceAll("-", ""), "UTF-8"));
-                }
-            }
+            // if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            //     if ("게시일".equals(dateType)) {
+            //         urlBuilder.append("&" + URLEncoder.encode("PAN_NT_ST_DT", "UTF-8") + "=" + URLEncoder.encode(startDate.replaceAll("-", ""), "UTF-8"));
+            //         urlBuilder.append("&" + URLEncoder.encode("PAN_NT_ED_DT", "UTF-8") + "=" + URLEncoder.encode(endDate.replaceAll("-", ""), "UTF-8"));
+            //     } else if ("마감일".equals(dateType)) {
+            //         urlBuilder.append("&" + URLEncoder.encode("CLSG_ST_DT", "UTF-8") + "=" + URLEncoder.encode(startDate.replaceAll("-", ""), "UTF-8"));
+            //         urlBuilder.append("&" + URLEncoder.encode("CLSG_ED_DT", "UTF-8") + "=" + URLEncoder.encode(endDate.replaceAll("-", ""), "UTF-8"));
+            //     }
+            // }
 
             // 상태 필터 (API에서 지원하는 경우)
             if (status != null && !status.isEmpty()) {

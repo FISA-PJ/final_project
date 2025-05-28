@@ -6,17 +6,111 @@
 <head>
     <th:block layout:fragment="head">
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+        <title>청약핏-공고 리스트</title>
     </th:block>
 </head>
 
 <body>
 <th:block layout:fragment="content">
+    <!-- 필터 접기 버튼 -->
+    <div class="px-3 pt-2 bg-light border-end">
+        <button class="btn btn-outline-dark btn-sm" onclick="toggleSidebar()">
+            ⬅️ 필터 접기/펼치기
+        </button>
+    </div>
+
+    <!-- 전체 레이아웃 -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 사이드바 -->
+            <div id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar" style="position: absolute; z-index: 1000; height: 100%; transition: transform 0.3s ease;">
+                <div class="px-3 pt-2 bg-light border-end">
+                    <button class="btn btn-outline-dark btn-sm" onclick="toggleSidebar()">
+                        ⬅️ 필터 접기/펼치기
+                    </button>
+                </div>
+                <form class="p-3">
+                    <!-- 달력 -->
+                    <div class="mb-3">
+                        <label class="form-label">공고 달력</label>
+                        <input type="date" class="form-control" />
+                    </div>
+
+                    <div class="d-flex gap-2 mb-3">
+                        <div class="w-50">
+                            <label class="form-label">공고 정렬</label>
+                            <select class="form-select">
+                                <option>최신 등록순</option>
+                                <option>마감 임박순</option>
+                                <option>조회순</option>
+                                <option>분양가순</option>
+                            </select>
+                        </div>
+                        <div class="w-50">
+                            <label class="form-label">지역별</label>
+                            <select class="form-select">
+                                <option>전체</option>
+                                <option>서울특별시</option>
+                                <option>인천광역시</option>
+                                <option>대전광역시</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 보기 버튼 -->
+                    <div class="d-flex justify-content-between mb-3">
+                        <button type="button" class="btn btn-secondary btn-sm w-50 me-1">
+                            마감 공고 보기
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm w-50 ms-1">
+                            전체 공고 보기
+                        </button>
+                    </div>
+
+                    <!-- 공고 카드 -->
+                    <div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-danger">공고중</span>
+                                        <span class="badge bg-primary">신혼부부</span>
+                                    </div>
+                                    <button class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                                <h5 class="card-title mt-2">인천광역시 혁신도시 공급분양</h5>
+                                <p class="card-text">
+                                    5/9 (금) 17:30 마감<br />5억 7천만원<br />미추홀구 학익동
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 지도 -->
+            <div id="map" class="col-md-9 col-lg-10 ms-sm-auto px-md-4" style="width: 100%; height: calc(100vh - 56px);"></div>
+        </div>
+    </div>
+
+    <!-- 챗봇 플로팅 버튼 -->
+    <div class="floating-chatbot">
+        <img th:src="@{/images/applyhome_icon_white.png}" />
+        <span class="chatbot-label"></span>
+    </div>
+
+
+
     <!-- 여기 지도 페이지 내용 작성 -->
 <!--    <div id="map" style="width:500px;height:400px;"></div>-->
-    <div id="map" style="height: 500px;"></div>
+<!--    <div id="map" style="height: 500px;"></div>-->
 </th:block>
 
 <th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}|}"></script>
     <script>
         var container = document.getElementById('map');
@@ -26,6 +120,19 @@
         };
 
         var map = new kakao.maps.Map(container, options);
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const map = document.getElementById('map');
+            
+            if (sidebar.style.transform === 'translateX(-100%)') {
+                sidebar.style.transform = 'translateX(0)';
+                map.style.marginLeft = '0';
+            } else {
+                sidebar.style.transform = 'translateX(-100%)';
+                map.style.marginLeft = '0';
+            }
+        }
     </script>
 </th:block>
 </body>
