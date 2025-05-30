@@ -6,6 +6,17 @@ from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
 from typing import Iterator, Optional
 
+import logging
+
+# 로깅 설정
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.handlers = []  # 기존 핸들러 제거
+handler = logging.StreamHandler()  # stdout으로 출력
+formatter = logging.Formatter('%(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 class ElasticsearchDocstore(BaseStore):
     def __init__(self, es: Elasticsearch, index_name: str):
         self.es = es
@@ -34,9 +45,9 @@ class ElasticsearchDocstore(BaseStore):
 
     def mset(self, docs: list[tuple[str, Document]]) -> None:
         for doc_id, doc in docs:
-            print(doc_id)
+            logger.info(doc_id)
             doc_id = doc.metadata.get("doc_id")
-            print(doc_id)
+            logger.info(doc_id)
             body = {
                 "content": doc.page_content,
                 "metadata": doc.metadata
@@ -89,7 +100,7 @@ class CustomElasticsearchStore(ElasticsearchStore):
                 # base = text + apt_code
                 # hash_id = hashlib.sha256(base.encode("utf-8")).hexdigest()
                 ids.append(hash_id)
-                print("========",{hash_id})
-            print(f"=========text==================\n{texts}\n=========meta==================\n{metadatas}\n=============id====\n{ids}")
+                logger.info("========",{hash_id})
+            logger.info(f"=========text==================\n{texts}\n=========meta==================\n{metadatas}\n=============id====\n{ids}")
         # 원래의 add_texts 로직 사용 (ids 포함)
         return super().add_texts(texts=texts, metadatas=metadatas, ids=ids, **kwargs)

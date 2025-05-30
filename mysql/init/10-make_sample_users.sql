@@ -5,13 +5,13 @@ USE app_db;
 -- 현재 날짜 설정 (테스트 데이터 생성 기준일)
 SET @current_date = CURDATE();
 
--- 사용자 데이터 생성 (100명)
--- 먼저 랜덤하게 100명 선택
+-- 사용자 데이터 생성 (500명)
+-- 먼저 랜덤하게 500명 선택
 CREATE TEMPORARY TABLE selected_persons AS
 SELECT resident_registration_number
 FROM Personal_Profiles
 ORDER BY RAND()
-LIMIT 100;
+LIMIT 500;
 
 -- 사용자 데이터 생성
 INSERT INTO Users (
@@ -39,10 +39,10 @@ SELECT
   -- 비밀번호 해시 (현실에서는 실제 암호화 알고리즘 사용 필요)
   CONCAT('$2a$10$', SUBSTRING(MD5(RAND()), 1, 53)) AS user_password_hash,
   sp.resident_registration_number,
-  -- 사용자 유형 (admin 1%, reviewer 9%, personal 90%)
+  -- 사용자 유형 (admin 1%, reviewer 2%, personal 97%)
   CASE 
     WHEN RAND() < 0.01 THEN 'admin'
-    WHEN RAND() < 0.10 THEN 'reviewer'
+    WHEN RAND() < 0.02 THEN 'reviewer'
     ELSE 'personal'
   END AS user_type,
   -- 가입일자 (최근 1년 내)
