@@ -27,5 +27,13 @@ public class MainController {
 		return "map_page";
 	}
 
+	@GetMapping("/loan")
+	public String loan(Model model) {
+		return "loan_page";
+	}
 
+	@GetMapping("/mypage")
+	public String mypage(Model model) {
+		return "mypage";
+	}
 }

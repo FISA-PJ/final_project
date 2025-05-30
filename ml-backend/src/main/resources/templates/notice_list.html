@@ -2,121 +2,224 @@
 <th:block layout:fragment="head">
     <title>공고 목록 - 청약핏</title>
 </th:block>
-<div layout:fragment="content">
-    <div class="container mt-4">
-        <h2>공고 목록</h2>
-        
-        <!-- 검색 폼 -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <form th:action="@{/notice/search/title}" method="get" class="form-inline">
-                    <div class="input-group">
-                        <input type="text" name="keyword" class="form-control" placeholder="제목으로 검색">
-                        <button type="submit" class="btn btn-primary">검색</button>
-                    </div>
-                </form>
+<div layout:fragment="content" class="container my-5">
+    <!-- Recommendations Section -->
+    <div class="page-section" id="recommendations">
+        <!-- Summary Box -->
+        <div class="summary-box">
+            <h3 class="summary-title">
+                🎯 내 정보 요약 & 추천 근거
+            </h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <h4>🎯 내 정보 요약</h4>
+                    <p>29세 / 무주택 / 수도권 거주</p>
+                    <small>자산 3.2억원</small>
+                </div>
+                <div class="summary-item">
+                    <h4>🧠 추천 기준</h4>
+                    <p>총 23건 추천</p>
+                    <small>자산 + 나이 + 거주지 + 무주택 여부 기준</small>
+                </div>
+                <div class="summary-item">
+                    <h4>🏆 가산점 정보</h4>
+                    <p>예상 가점: 34점</p>
+                    <small>무주택 기간, 부양가족 등 반영</small>
+                </div>
+                <div class="summary-item">
+                    <h4>🔍 현재 필터</h4>
+                    <p>서울 / 60㎡ 이상</p>
+                    <small>입주 2028년 이전</small>
+                </div>
+            </div>
+            <div class="summary-actions">
+                <button onclick="resetFilters()">📌 필터 초기화</button>
+                <button onclick="openFilterSettings()">⚙️ 필터 재설정</button>
+                <button onclick="updateMyInfo()">📝 내 정보 수정</button>
             </div>
         </div>
 
-        <!-- 공고 목록 테이블 -->
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>공고번호</th>
-                        <th>제목</th>
-                        <th>게시일</th>
-                        <th>마감일</th>
-                        <th>지역</th>
-                        <th>상태</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:if="${paging != null}" th:each="notice : ${paging}">
-                        <td th:text="${notice.noticeNumber}"></td>
-                        <td>
-                            <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.noticeTitle}"></a>
-                        </td>
-                        <td th:text="${#temporals.format(notice.postDate, 'yyyy-MM-dd')}"></td>
-                        <td th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></td>
-<!--                        <td>-->
-<!--                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>-->
-<!--                            ~-->
-<!--                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>-->
-<!--                        </td>-->
-                        <td>
-                            <span th:text="${notice.location}"></span>
-                            <a href="javascript:void(0)" th:data-location="${notice.location}" class="ms-2 location-link">[상세보기]</a>
-                        </td>
-                        <td>
-                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}"
-                                  class="badge bg-success">접수중</span>
-                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}"
-                                  class="badge bg-secondary">접수마감</span>
-                                  <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).결과발표}"
-                                  class="badge bg-light text-dark">결과발표</span>
-                        </td>
-                    </tr>
-                    <tr th:if="${notices != null}" th:each="notice : ${notices}">
-                        <td th:text="${notice.noticeNumber}"></td>
-                        <td>
-                            <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.noticeTitle}"></a>
-                        </td>
-                        <td th:text="${#temporals.format(notice.postDate, 'yyyy-MM-dd')}"></td>
-                        <td th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></td>
-<!--                        <td>-->
-<!--                            <span th:text="${#temporals.format(notice.applicationStartDate, 'yyyy-MM-dd')}"></span>-->
-<!--                            ~-->
-<!--                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy-MM-dd')}"></span>-->
-<!--                        </td>-->
-                        <td>
-                            <span th:text="${notice.location}"></span>
-                            <a href="javascript:void(0)" th:data-location="${notice.location}" class="ms-2 location-link">[상세보기]</a>
-                        </td>
-                        <td>
-                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}"
-                                  class="badge bg-success">접수중</span>
-                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}"
-                                  class="badge bg-secondary">접수마감</span>
-                            <span th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).결과발표}"
-                                  class="badge bg-light text-dark">결과발표</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 페이징 -->
-        <div th:if="${paging != null}" class="pagination justify-content-center">
-            <ul class="pagination">
-                <li class="page-item" th:classappend="${paging.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/notice/list(page=${paging.number - 1})}">이전</a>
-                </li>
-                <li class="page-item" th:if="${paging.totalPages > 0}" th:each="pageNum : ${#numbers.sequence(0, paging.totalPages - 1)}"
-                    th:classappend="${pageNum == paging.number} ? 'active'">
-                    <a class="page-link" th:href="@{/notice/list(page=${pageNum})}" th:text="${pageNum + 1}"></a>
-                </li>
-                <li class="page-item" th:if="${paging.totalPages == 0}"
-                    th:classappend="${paging.number == 0} ? 'active'">
-                    <a class="page-link" th:href="@{/notice/list(page=0)}" th:text="1"></a>
-                </li>
-                <li class="page-item" th:classappend="${paging.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/notice/list(page=${paging.number + 1})}">다음</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- 지도 팝업 모달 -->
-    <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mapModalLabel">지역 상세 지도</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Filter Section -->
+        <div class="filter-section" id="filterSection">
+            <h3 class="filter-title">
+                🔍 상세 필터
+            </h3>
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="region">지역</label>
+                    <select id="region">
+                        <option value="">전체</option>
+                        <option value="seoul" selected>서울</option>
+                        <option value="gyeonggi">경기</option>
+                        <option value="incheon">인천</option>
+                        <option value="busan">부산</option>
+                        <option value="daegu">대구</option>
+                        <option value="other">기타</option>
+                    </select>
                 </div>
-                <div class="modal-body">
-                    <div id="map" style="width: 100%; height: 500px;"></div>
+                <div class="filter-group">
+                    <label for="district">구/시</label>
+                    <select id="district">
+                        <option value="">전체</option>
+                        <option value="gangnam">강남구</option>
+                        <option value="songpa">송파구</option>
+                        <option value="seocho">서초구</option>
+                        <option value="mapo">마포구</option>
+                        <option value="other">기타</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="area">전용면적</label>
+                    <select id="area">
+                        <option value="">전체</option>
+                        <option value="under60">60㎡ 미만</option>
+                        <option value="60to84" selected>60~84㎡</option>
+                        <option value="85to100">85~100㎡</option>
+                        <option value="over100">100㎡ 초과</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="price">분양가</label>
+                    <select id="price">
+                        <option value="">전체</option>
+                        <option value="under5">5억원 미만</option>
+                        <option value="5to7">5~7억원</option>
+                        <option value="7to10">7~10억원</option>
+                        <option value="over10">10억원 초과</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="moveInDate">입주예정</label>
+                    <select id="moveInDate">
+                        <option value="">전체</option>
+                        <option value="2027" selected>2027년</option>
+                        <option value="2028">2028년</option>
+                        <option value="2029">2029년</option>
+                        <option value="after2030">2030년 이후</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="applicationType">청약유형</label>
+                    <select id="applicationType">
+                        <option value="">전체</option>
+                        <option value="firstTime">생애최초</option>
+                        <option value="newlywed">신혼부부</option>
+                        <option value="general">일반공급</option>
+                        <option value="special">특별공급</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
+                <button class="btn btn-primary" onclick="applyFilters()">필터 적용</button>
+            </div>
+        </div>
+
+        <div class="recommendations">
+            <h2 class="section-title">맞춤 청약 공고</h2>
+            <div class="tab-container">
+                <button class="tab active" onclick="switchTab(this, 'new')">최신 공고</button>
+                <button class="tab" onclick="switchTab(this, 'recommended')">추천 공고</button>
+                <button class="tab" onclick="switchTab(this, 'closing')">마감 임박</button>
+            </div>
+
+            <div class="map-container">
+                <div class="map-sidebar">
+                    <div class="property-list-item" onclick="selectProperty(1, this)">
+                        <div class="property-header">
+                            <div class="property-title">강남 래미안 원베일리</div>
+                            <span class="card-badge hot">HOT</span>
+                        </div>
+                        <div class="property-price">분양가 9억 5천만원</div>
+                        <div class="property-details">
+                            <span>84㎡</span>
+                            <span>강남구</span>
+                            <span>6.15 청약</span>
+                        </div>
+                    </div>
+
+                    <div class="property-list-item" onclick="selectProperty(2, this)">
+                        <div class="property-header">
+                            <div class="property-title">판교 알파돔시티</div>
+                            <span class="card-badge">추천</span>
+                        </div>
+                        <div class="property-price">분양가 7억 2천만원</div>
+                        <div class="property-details">
+                            <span>59㎡</span>
+                            <span>성남시</span>
+                            <span>6.20 청약</span>
+                        </div>
+                    </div>
+
+                    <div class="property-list-item" onclick="selectProperty(3, this)">
+                        <div class="property-header">
+                            <div class="property-title">송파 헬리오시티</div>
+                            <span class="card-badge">추천</span>
+                        </div>
+                        <div class="property-price">분양가 8억 8천만원</div>
+                        <div class="property-details">
+                            <span>74㎡</span>
+                            <span>송파구</span>
+                            <span>6.18 청약</span>
+                        </div>
+                    </div>
+
+                    <div class="property-list-item" onclick="selectProperty(4, this)">
+                        <div class="property-header">
+                            <div class="property-title">마포 래미안 푸르지오</div>
+                            <span class="card-badge">신규</span>
+                        </div>
+                        <div class="property-price">분양가 10억 2천만원</div>
+                        <div class="property-details">
+                            <span>99㎡</span>
+                            <span>마포구</span>
+                            <span>6.25 청약</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-view" id="mapView">
+                    <!-- Map markers -->
+                    <div class="map-marker" style="top: 60%; left: 65%;" onclick="selectProperty(1)">
+                        <span>1</span>
+                    </div>
+                    <div class="map-marker" style="top: 70%; left: 70%;" onclick="selectProperty(2)">
+                        <span>2</span>
+                    </div>
+                    <div class="map-marker" style="top: 55%; left: 60%;" onclick="selectProperty(3)">
+                        <span>3</span>
+                    </div>
+                    <div class="map-marker" style="top: 45%; left: 45%;" onclick="selectProperty(4)">
+                        <span>4</span>
+                    </div>
+
+                    <!-- Property detail panel -->
+                    <div class="property-detail-panel" id="propertyDetail">
+                        <h3 id="detailTitle">강남 래미안 원베일리</h3>
+                        <div class="property-details" style="flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                            <div class="loan-info-row">
+                                <span class="loan-label">분양가</span>
+                                <span class="loan-value" id="detailPrice">9억 5천만원</span>
+                            </div>
+                            <div class="loan-info-row">
+                                <span class="loan-label">평형</span>
+                                <span class="loan-value" id="detailSize">84㎡ (25평)</span>
+                            </div>
+                            <div class="loan-info-row">
+                                <span class="loan-label">청약일정</span>
+                                <span class="loan-value" id="detailDate">2025.06.15</span>
+                            </div>
+                            <div class="loan-info-row">
+                                <span class="loan-label">예상 경쟁률</span>
+                                <span class="loan-value" id="detailCompetition">125:1</span>
+                            </div>
+                            <div class="loan-info-row">
+                                <span class="loan-label">입주예정</span>
+                                <span class="loan-value" id="detailMoveIn">2028년 3월</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">상세정보 보기</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,94 +234,80 @@
     
     <!-- 지도 관련 JavaScript -->
     <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded 이벤트 발생');
-            // 모든 location-link 클래스를 가진 링크에 이벤트 리스너 추가
-            document.querySelectorAll('.location-link').forEach(function(link) {
-                console.log('링크 찾음:', link);
-                link.addEventListener('click', function(e) {
-                    console.log('링크 클릭됨');
-                    e.preventDefault();
-                    const location = this.getAttribute('data-location');
-                    console.log('위치:', location);
-                    if (location) {
-                        showMapPopup(location);
-                    }
-                });
+        // Property selection
+        function selectProperty(id, element) {
+            // Remove active class from all items
+            document.querySelectorAll('.property-list-item').forEach(item => {
+                item.classList.remove('active');
             });
-        });
 
-        function showMapPopup(location) {
-            console.log('showMapPopup 함수 호출됨:', location);
-            
-            // 모달 요소 가져오기
-            const modalElement = document.getElementById('mapModal');
-            if (!modalElement) {
-                console.error('모달 요소를 찾을 수 없습니다.');
-                return;
+            // Add active class to clicked item
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // If called from map marker, find the corresponding list item
+                document.querySelectorAll('.property-list-item')[id - 1].classList.add('active');
             }
-            
-            // Bootstrap 5 Modal 초기화
-            const mapModal = new bootstrap.Modal(modalElement);
-            
-            // 모달이 완전히 표시된 후 지도를 초기화
-            modalElement.addEventListener('shown.bs.modal', function () {
-                console.log('모달 표시됨');
-                
-                // 카카오맵 API가 로드되었는지 확인
-                if (typeof kakao === 'undefined' || !kakao.maps) {
-                    console.error('카카오맵 API가 로드되지 않았습니다.');
-                    return;
-                }
 
-                const mapContainer = document.getElementById('map');
-                if (!mapContainer) {
-                    console.error('지도 컨테이너를 찾을 수 없습니다.');
-                    return;
+            // Show property detail
+            const detailPanel = document.getElementById('propertyDetail');
+            detailPanel.classList.add('active');
+
+            // Update detail content based on property ID
+            const properties = {
+                1: {
+                    title: '강남 래미안 원베일리',
+                    price: '9억 5천만원',
+                    size: '84㎡ (25평)',
+                    date: '2025.06.15',
+                    competition: '125:1',
+                    moveIn: '2028년 3월'
+                },
+                2: {
+                    title: '판교 알파돔시티',
+                    price: '7억 2천만원',
+                    size: '59㎡ (18평)',
+                    date: '2025.06.20',
+                    competition: '89:1',
+                    moveIn: '2028년 6월'
+                },
+                3: {
+                    title: '송파 헬리오시티',
+                    price: '8억 8천만원',
+                    size: '74㎡ (22평)',
+                    date: '2025.06.18',
+                    competition: '156:1',
+                    moveIn: '2028년 5월'
+                },
+                4: {
+                    title: '마포 래미안 푸르지오',
+                    price: '10억 2천만원',
+                    size: '99㎡ (30평)',
+                    date: '2025.06.25',
+                    competition: '98:1',
+                    moveIn: '2028년 8월'
                 }
-                
-                // 지도 초기화
-                const mapOption = {
-                    center: new kakao.maps.LatLng(37.566826, 126.978656), // 기본 중심좌표
-                    level: 3 // 지도의 확대 레벨
-                };
-                
-                const map = new kakao.maps.Map(mapContainer, mapOption);
-                
-                // 주소-좌표 변환 객체 생성
-                const geocoder = new kakao.maps.services.Geocoder();
-                
-                // 주소로 좌표 검색
-                geocoder.addressSearch(location, function(result, status) {
-                    if (status === kakao.maps.services.Status.OK) {
-                        console.log('주소 검색 성공');
-                        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                        
-                        // 결과값으로 받은 위치를 마커로 표시
-                        const marker = new kakao.maps.Marker({
-                            map: map,
-                            position: coords
-                        });
-                        
-                        // 인포윈도우 생성
-                        const infowindow = new kakao.maps.InfoWindow({
-                            content: `<div style="width:150px;text-align:center;padding:6px 0;">${location}</div>`
-                        });
-                        
-                        // 인포윈도우를 마커 위에 표시
-                        infowindow.open(map, marker);
-                        
-                        // 지도의 중심을 결과값으로 받은 위치로 이동
-                        map.setCenter(coords);
-                    } else {
-                        console.error('주소 검색 실패:', status);
-                        alert('주소를 찾을 수 없습니다.');
-                    }
-                });
-            });
-            
-            // 모달 표시
-            mapModal.show();
+            };
+
+            const property = properties[id];
+            document.getElementById('detailTitle').textContent = property.title;
+            document.getElementById('detailPrice').textContent = property.price;
+            document.getElementById('detailSize').textContent = property.size;
+            document.getElementById('detailDate').textContent = property.date;
+            document.getElementById('detailCompetition').textContent = property.competition;
+            document.getElementById('detailMoveIn').textContent = property.moveIn;
+        }
+
+        // Tab switching
+        function switchTab(element, tabName) {
+            // Remove active class from all tabs
+            const tabs = element.parentElement.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Add active class to clicked tab
+            element.classList.add('active');
+
+            console.log('Switching to tab:', tabName);
         }
     </script>
 </th:block>

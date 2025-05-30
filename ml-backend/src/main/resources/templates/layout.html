@@ -1,32 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+        <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 
-<head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/x-icon" th:href="@{/favicon2.ico}">
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
-	<!-- applyhome CSS -->
-	<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+        <th:block layout:fragment="head"></th:block>
+    </head>
 
-	<th:block layout:fragment="head">
-	</th:block>
-</head>
+    <body>
+        <header class="header">
+            <!-- 네비게이션바 -->
+            <nav th:replace="~{navbar :: navbarFragment}"></nav>
+        </header>
 
-<body style="padding-bottom:24px;">
-	<!-- 네비게이션바 -->
-	<nav th:replace="~{navbar :: navbarFragment}"></nav>
-	<!-- 기본 템플릿 안에 삽입될 내용 Start -->
-	<th:block layout:fragment="content"></th:block>
-	<!-- 기본 템플릿 안에 삽입될 내용 End -->
-	<!-- Bootstrap JS -->
-	<script th:src="@{/bootstrap.min.js}"></script>
-	<!-- 자바스크립트 Start -->
-	<th:block layout:fragment="script"></th:block>
-	<!-- 자바스크립트 End -->
-	
-	</body>
+        <div th:replace="~{chatbot :: chatbotFragment}"></div>
+        <div th:replace="~{login_signup :: loginFragment}"></div>
 
+        <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+        <th:block layout:fragment="content"></th:block>
+        <!-- 기본 템플릿 안에 삽입될 내용 End -->
+
+        <footer th:replace="~{footer :: footerFragment}"></footer>
+
+        <!-- 자바스크립트 Start -->
+        <th:block layout:fragment="script"></th:block>
+        <!-- 자바스크립트 End -->
+
+        <script th:replace="~{chatbot :: chatbotScript}"></script>
+        <script th:replace="~{login_signup :: loginScript}"></script>
+    </body>
 </html>

@@ -1,0 +1,46 @@
+<html layout:decorate="~{layout}">
+<th:block layout:fragment="head">
+  <title>마이페이지 - 청약핏</title>
+</th:block>
+<div layout:fragment="content" class="container my-5">
+  <!-- My Page -->
+  <div class="page-section" id="mypage-section">
+    <div class="mypage-container">
+      <div class="mypage-sidebar">
+        <div class="profile-section">
+          <div class="profile-avatar">김</div>
+          <h3>김청약 님</h3>
+          <p>일반회원</p>
+        </div>
+        <ul class="menu-list">
+          <li class="active">위시리스트</li>
+          <li>나의 청약 내역</li>
+          <li>대출 상담 내역</li>
+          <li>알림 설정</li>
+          <li>회원 정보 수정</li>
+        </ul>
+      </div>
+
+      <div class="mypage-content">
+        <h3>나의 위시리스트</h3>
+        <div class="wishlist-grid">
+          <div class="wishlist-item">
+            <button class="wishlist-remove">×</button>
+            <h4>강남 래미안 원베일리</h4>
+            <p>서울시 강남구 | 84㎡</p>
+            <p>청약일: 2025.06.15</p>
+            <p style="color: var(--accent-color); font-weight: bold;">D-10</p>
+          </div>
+
+          <div class="wishlist-item">
+            <button class="wishlist-remove">×</button>
+            <h4>판교 알파돔시티</h4>
+            <p>경기도 성남시 | 59㎡</p>
+            <p>청약일: 2025.06.20</p>
+            <p style="color: var(--accent-color); font-weight: bold;">D-15</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

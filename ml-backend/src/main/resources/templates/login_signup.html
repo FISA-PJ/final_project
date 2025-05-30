@@ -1,0 +1,188 @@
+<div th:fragment="loginFragment" class="modal" id="authModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">로그인</h2>
+        </div>
+        <form id="authForm">
+            <div class="form-group">
+                <label for="username">사용자ID</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group" id="password_confirmGroup" style="display: none;">
+                <label for="passwordConfirm">비밀번호 확인</label>
+                <input type="password" id="passwordConfirm" name="passwordConfirm">
+            </div>
+            <div class="form-group" id="phoneGroup" style="display: none;">
+                <label for="phone">전화번호</label>
+                <div class="input-group phone-input-group">
+                    <input type="text" id="phoneNumber1" name="phoneNumber1" maxlength="3" pattern="\d{2,3}">
+                    <span>-</span>
+                    <input type="text" id="phoneNumber2" name="phoneNumber2" maxlength="4" pattern="\d{3,4}">
+                    <span>-</span>
+                    <input type="text" id="phoneNumber3" name="phoneNumber3" maxlength="4" pattern="\d{4}">
+                </div>
+            </div>
+            <div class="form-group" id="ssnGroup" style="display: none;">
+                <label for="ssn">주민등록번호</label>
+                <div class="input-group ssn-input-group">
+                    <input type="text" id="residentId1" name="residentId1" placeholder="생년월일 6자리" maxlength="6" pattern="\d{6}">
+                    <span>-</span>
+                    <input type="password" id="residentId2" name="residentId2" placeholder="뒷자리 7자리" maxlength="7" pattern="\d{7}">
+                </div>
+            </div>
+            <button type="submit" class="form-submit" id="submitBtn">로그인</button>
+        </form>
+        <div class="form-footer">
+            <p id="toggleText">
+                계정이 없으신가요? <a href="#" onclick="toggleAuthMode()">회원가입</a>
+            </p>
+            <p style="margin-top: 1rem;">
+                <a href="#" onclick="closeModal()">닫기</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script th:fragment="loginScript">
+    // Modal functions
+    function showModal(type) {
+        const modal = document.getElementById('authModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const passwordConfirmGroup = document.getElementById('password_confirmGroup');
+        const phoneGroup = document.getElementById('phoneGroup');
+        const ssnGroup = document.getElementById('ssnGroup');
+        const toggleText = document.getElementById('toggleText');
+        const form = document.getElementById('authForm');
+
+        if (type === 'login') {
+            modalTitle.textContent = '로그인';
+            submitBtn.textContent = '로그인';
+            passwordConfirmGroup.style.display = 'none';
+            phoneGroup.style.display = 'none';
+            ssnGroup.style.display = 'none';
+            toggleText.innerHTML = '계정이 없으신가요? <a href="#" onclick="toggleAuthMode()">회원가입</a>';
+            form.action = '/user/login';
+        } else {
+            modalTitle.textContent = '회원가입';
+            submitBtn.textContent = '회원가입';
+            passwordConfirmGroup.style.display = 'block';
+            phoneGroup.style.display = 'block';
+            ssnGroup.style.display = 'block';
+            toggleText.innerHTML = '이미 계정이 있으신가요? <a href="#" onclick="toggleAuthMode()">로그인</a>';
+            form.action = '/user/signup';
+        }
+
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('authModal').classList.remove('active');
+    }
+
+    function toggleAuthMode() {
+        const modalTitle = document.getElementById('modalTitle');
+        if (modalTitle.textContent === '로그인') {
+            showModal('signup');
+        } else {
+            showModal('login');
+        }
+    }
+
+    // Input formatting functions
+    function formatPhoneInput() {
+        const phone1 = document.getElementById('phoneNumber1');
+        const phone2 = document.getElementById('phoneNumber2');
+        const phone3 = document.getElementById('phoneNumber3');
+
+        phone1.addEventListener('input', function() {
+            if (this.value.length === 3) {
+                phone2.focus();
+            }
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        phone2.addEventListener('input', function() {
+            if (this.value.length === 4) {
+                phone3.focus();
+            }
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        phone3.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+
+    function formatSSNInput() {
+        const ssn1 = document.getElementById('residentId1');
+        const ssn2 = document.getElementById('residentId2');
+
+        ssn1.addEventListener('input', function() {
+            if (this.value.length === 6) {
+                ssn2.focus();
+            }
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        ssn2.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('authModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Form submission
+    document.getElementById('authForm').addEventListener('submit', function(e) {
+        const modalTitle = document.getElementById('modalTitle');
+        
+        if (modalTitle.textContent === '회원가입') {
+            // Validate password match
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+            
+            if (password !== passwordConfirm) {
+                e.preventDefault();
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            // Validate phone number
+            const phone1 = document.getElementById('phoneNumber1').value;
+            const phone2 = document.getElementById('phoneNumber2').value;
+            const phone3 = document.getElementById('phoneNumber3').value;
+
+            if (phone1.length !== 3 || phone2.length !== 4 || phone3.length !== 4) {
+                e.preventDefault();
+                alert('전화번호를 올바르게 입력해주세요.');
+                return;
+            }
+
+            // Validate SSN
+            const ssn1 = document.getElementById('residentId1').value;
+            const ssn2 = document.getElementById('residentId2').value;
+
+            if (ssn1.length !== 6 || ssn2.length !== 7) {
+                e.preventDefault();
+                alert('주민등록번호를 올바르게 입력해주세요.');
+                return;
+            }
+        }
+    });
+
+    // Initialize
+    window.addEventListener('load', function() {
+        formatPhoneInput();
+        formatSSNInput();
+    });
+</script>

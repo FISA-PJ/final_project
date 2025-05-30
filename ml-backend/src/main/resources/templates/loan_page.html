@@ -1,0 +1,233 @@
+<html layout:decorate="~{layout}">
+<th:block layout:fragment="head">
+  <title>대출 상품 목록 - 청약핏</title>
+</th:block>
+<div layout:fragment="content" class="container my-5">
+  <!-- Loan Section -->
+  <div class="page-section" id="loans-section">
+    <!-- Summary Box for Loans -->
+    <div class="summary-box">
+      <h3 class="summary-title">
+        💰 내 대출 정보 요약
+      </h3>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <h4>💳 신용점수</h4>
+          <p>820점 (우수)</p>
+          <small>KB신용정보 기준</small>
+        </div>
+        <div class="summary-item">
+          <h4>💼 소득정보</h4>
+          <p>연소득 7,200만원</p>
+          <small>근로소득 기준</small>
+        </div>
+        <div class="summary-item">
+          <h4>🏦 추천 상품</h4>
+          <p>12개 상품</p>
+          <small>신용도 + 소득 + 나이 기준</small>
+        </div>
+        <div class="summary-item">
+          <h4>🎯 예상 한도</h4>
+          <p>최대 4.5억원</p>
+          <small>DSR 40% 기준</small>
+        </div>
+      </div>
+      <div class="summary-actions">
+        <button onclick="resetLoanFilters()">📌 필터 초기화</button>
+        <button onclick="openLoanCalculator()">🧮 대출 계산기</button>
+        <button onclick="updateIncomeInfo()">📝 소득정보 수정</button>
+      </div>
+    </div>
+
+    <!-- Loan Filter Section -->
+    <div class="filter-section">
+      <h3 class="filter-title">
+        🔍 대출 상품 필터
+      </h3>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label for="loanType">대출종류</label>
+          <select id="loanType">
+            <option value="">전체</option>
+            <option value="mortgage">주택담보대출</option>
+            <option value="jeonse">전세자금대출</option>
+            <option value="policy">정책대출</option>
+            <option value="credit">신용대출</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="bank">은행</label>
+          <select id="bank">
+            <option value="">전체</option>
+            <option value="kb">KB국민은행</option>
+            <option value="sh">신한은행</option>
+            <option value="wr">우리은행</option>
+            <option value="hn">하나은행</option>
+            <option value="other">기타</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="interestRate">금리범위</label>
+          <select id="interestRate">
+            <option value="">전체</option>
+            <option value="under3">3% 미만</option>
+            <option value="3to4">3~4%</option>
+            <option value="4to5">4~5%</option>
+            <option value="over5">5% 이상</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="loanLimit">대출한도</label>
+          <select id="loanLimit">
+            <option value="">전체</option>
+            <option value="under2">2억 미만</option>
+            <option value="2to3">2~3억</option>
+            <option value="3to5">3~5억</option>
+            <option value="over5">5억 이상</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="loanPeriod">대출기간</label>
+          <select id="loanPeriod">
+            <option value="">전체</option>
+            <option value="under10">10년 미만</option>
+            <option value="10to20">10~20년</option>
+            <option value="20to30">20~30년</option>
+            <option value="over30">30년 초과</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="specialBenefit">특별혜택</label>
+          <select id="specialBenefit">
+            <option value="">전체</option>
+            <option value="newlywed">신혼부부</option>
+            <option value="firstTime">생애최초</option>
+            <option value="youngAdult">청년</option>
+            <option value="multiChild">다자녀</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-secondary" onclick="resetLoanFilters()">초기화</button>
+        <button class="btn btn-primary" onclick="applyLoanFilters()">필터 적용</button>
+      </div>
+    </div>
+
+    <div class="recommendations">
+      <h2 class="section-title">맞춤 대출 상품</h2>
+      <div class="tab-container">
+        <button class="tab active" onclick="switchTab(this, 'mortgage')">주택담보대출</button>
+        <button class="tab" onclick="switchTab(this, 'jeonse')">전세자금대출</button>
+        <button class="tab" onclick="switchTab(this, 'policy')">정책대출</button>
+      </div>
+
+      <div class="recommendation-grid">
+        <div class="loan-card">
+          <div class="loan-card-header">
+            <div class="loan-bank-name">KB국민은행</div>
+            <div class="loan-product-name">KB 주택담보대출</div>
+            <span class="loan-highlight">최저금리</span>
+          </div>
+          <div class="loan-card-body">
+            <div class="loan-info-row">
+              <span class="loan-label">대출금리</span>
+              <span class="loan-rate">3.5%</span>
+            </div>
+            <div class="loan-info-row">
+              <span class="loan-label">대출한도</span>
+              <span class="loan-value">최대 5억원</span>
+            </div>
+            <div class="loan-info-row">
+              <span class="loan-label">대출기간</span>
+              <span class="loan-value">최대 30년</span>
+            </div>
+            <div class="loan-benefits">
+              <div class="loan-benefits-title">주요혜택</div>
+              <div class="loan-benefits-list">
+                <span class="benefit-tag">중도상환 수수료 면제</span>
+                <span class="benefit-tag">우대금리 0.3%</span>
+                <span class="benefit-tag">온라인 신청</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="loan-card">
+          <div class="loan-card-header" style="background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);">
+            <div class="loan-bank-name">신한은행</div>
+            <div class="loan-product-name">신한 전세자금대출</div>
+            <span class="loan-highlight">신혼부부 특화</span>
+          </div>
+          <div class="loan-card-body">
+            <div class="loan-info-row">
+              <span class="loan-label">대출금리</span>
+              <span class="loan-rate">3.2%</span>
+            </div>
+            <div class="loan-info-row">
+              <span class="loan-label">대출한도</span>
+              <span class="loan-value">최대 3억원</span>
+            </div>
+            <div class="loan-info-row">
+              <span class="loan-label">대출기간</span>
+              <span class="loan-value">최대 2년(4회연장)</span>
+            </div>
+            <div class="loan-benefits">
+              <div class="loan-benefits-title">주요혜택</div>
+              <div class="loan-benefits-list">
+                <span class="benefit-tag">신혼부부 우대 0.5%</span>
+                <span class="benefit-tag">보증료 지원</span>
+                <span class="benefit-tag">간편 연장</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="loan-card">
+          <div class="loan-card-header" style="background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);">
+            <div class="loan-bank-name">주택도시기금</div>
+            <div class="loan-product-name">디딤돌대출</div>
+            <span class="loan-highlight">정책금융</span>
+          </div>
+          <div class="loan-card-body">
+            <div class="loan-info-row">
+              <span class="loan-label">대출금리</span>
+              <span class="loan-rate">2.15%</span>
+            </div>
+            <div class="loan-info-row">
+              <span class="loan-label">대출한도</span>
+              <span class="loan-value">최대 2.5억원</span>
+            </div>
+            <div class="loan-info-row">
+              <span class="loan-label">대출기간</span>
+              <span class="loan-value">10년/15년/20년/30년</span>
+            </div>
+            <div class="loan-benefits">
+              <div class="loan-benefits-title">주요혜택</div>
+              <div class="loan-benefits-list">
+                <span class="benefit-tag">생애최초 우대</span>
+                <span class="benefit-tag">다자녀 추가우대</span>
+                <span class="benefit-tag">청년 우대</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    // Tab switching
+    function switchTab(element, tabName) {
+    // Remove active class from all tabs
+    const tabs = element.parentElement.querySelectorAll('.tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // Add active class to clicked tab
+    element.classList.add('active');
+
+    console.log('Switching to tab:', tabName);
+    }
+  </script>
+</th:block>
