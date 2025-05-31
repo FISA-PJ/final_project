@@ -607,3 +607,39 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE getuserinfobyrrn(
+    IN input_rrn VARCHAR(13)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    -- 사용자 정보 조회
+    SELECT 
+        pp.personal_name,
+        pp.personal_birth_date,
+        COALESCE(hmi.monthly_avg_income_amount, 0) as monthly_avg_income_amount,
+        COALESCE(hai.real_estate_amount, 0) as real_estate_amount,
+        hse.eligibility_prime_type
+    FROM Users u
+    INNER JOIN Personal_Profiles pp 
+        ON u.resident_registration_number = pp.resident_registration_number
+    LEFT JOIN Household_Info hi 
+        ON pp.resident_registration_number = hi.resident_registration_number
+    LEFT JOIN Household_Monthly_Income_Info hmi 
+        ON hi.household_info_id = hmi.household_info_id
+    LEFT JOIN Household_Asset_Info hai 
+        ON hi.household_info_id = hai.household_info_id
+    LEFT JOIN Housing_Subscription_Eligibility hse 
+        ON pp.resident_registration_number = hse.resident_registration_number
+    WHERE u.resident_registration_number = input_rrn;
+
+END //
+
+DELIMITER ;
