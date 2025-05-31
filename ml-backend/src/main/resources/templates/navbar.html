@@ -8,11 +8,47 @@
 		<li class="nav-item"><a class="nav-link text-white" href="/">홈</a></li>
 		<li class="nav-item"><a class="nav-link text-white" href="/notice/list">맞춤공고</a></li>
 		<li class="nav-item"><a class="nav-link text-white" href="/loan">대출추천</a></li>
-		<li class="nav-item"><a class="nav-link text-white" href="/mypage">마이페이지</a></li>
+		<li class="nav-item">
+			<a class="nav-link text-white" href="#" 
+			   th:onclick="'return checkAuth()'" 
+			   sec:authorize="isAuthenticated()" 
+			   th:href="@{/mypage}">마이페이지</a>
+			<a class="nav-link text-white" href="#" 
+			   th:onclick="'return checkAuth()'" 
+			   sec:authorize="!isAuthenticated()">마이페이지</a>
+		</li>
 	</ul>
 
 	<div class="auth-buttons">
-		<button class="btn btn-outline" onclick="showModal('login')">로그인</button>
+<!--		<li class="nav-item py-2" sec:authorize="isAuthenticated()">-->
+<!--			<span class="navbar-text text-white" th:if="${primeType != null}" th:text="${primeType} "></span>-->
+<!--		</li>-->
+<!--		<li class="nav-item py-2" sec:authorize="isAuthenticated()">-->
+<!--			<span class="navbar-text text-white" th:if="${personalName != null}" th:text="${personalName + '님 환영합니다'}"></span>-->
+<!--		</li>-->
+		<div class="navbar-text" sec:authorize="isAuthenticated()" th:text="${primeType} "></div>
+		<div class="navbar-text" sec:authorize="isAuthenticated()" th:text="${personalName + '님 환영합니다'}"></div>
+		<button class="btn btn-outline" sec:authorize="isAnonymous()" onclick="showModal('login')">로그인</button>
+		<button class="btn btn-outline" sec:authorize="isAuthenticated()" onclick="location.href='/user/logout'">로그아웃</button>
+<!--			<a class="nav-link text-white" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>-->
+<!--			<a class="nav-link text-white" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>-->
+<!--		</li>-->
+<!--		-->
+<!--		-->
+<!--		<button class="btn btn-outline" onclick="showModal('login')">로그인</button>-->
 		<button class="btn btn-primary" onclick="showModal('signup')">회원가입</button>
 	</div>
 </nav>
+
+<script th:inline="javascript">
+function checkAuth() {
+    /*<![CDATA[*/
+    const isAuthenticated = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
+    if (!isAuthenticated) {
+        alert('로그인이 필요한 페이지입니다.');
+        return false;
+    }
+    return true;
+    /*]]>*/
+}
+</script>

@@ -15,10 +15,10 @@ public class UserCreateForm {
 	private String username;
 
 	@NotEmpty(message = "비밀번호는 필수항목입니다.")
-	private String password1;
+	private String password;
 
 	@NotEmpty(message = "비밀번호 확인은 필수항목입니다.")
-	private String password2;
+	private String passwordConfirm;
 
 //	@NotEmpty(message = "주민번호는 필수항목입니다.")
 //	@Size(min = 12, max = 13, message = "주민번호는 12자리 이상 13자리 이하로 입력해야 합니다.")

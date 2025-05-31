@@ -29,9 +29,9 @@ public class NoticeController {
     // 공고 목록 페이지
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Notice> paging = this.noticeService.getList(page);
-        model.addAttribute("paging", paging);
-        model.addAttribute("kakaoApiKey", kakaoApiKey);
+//        Page<Notice> paging = this.noticeService.getList(page);
+//        model.addAttribute("paging", paging);
+//        model.addAttribute("kakaoApiKey", kakaoApiKey);
         return "notice_list";
     }
 
