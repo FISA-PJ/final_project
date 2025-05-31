@@ -510,6 +510,11 @@ body {
     color: #c62828;
 }
 
+.card-badge.over {
+    background: #cccccc;
+    color: #4a494a;
+}
+
 /* Map View Styles */
 .map-container {
     display: flex;

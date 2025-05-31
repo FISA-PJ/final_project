@@ -1,12 +1,10 @@
 package com.mysite.applyhome.user;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +15,17 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+//	private final PasswordEncoder passwordEncoder;
 
 //	@GetMapping("/signup")
 //	public String signup(UserCreateForm userCreateForm) {
 //		return "signup_form";
+//	}
+
+//	@GetMapping("/asdf")
+//	@ResponseBody
+//	public String asdf(){
+//		return passwordEncoder.encode("persona2");
 //	}
 
 	@PostMapping("/signup")

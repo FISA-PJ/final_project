@@ -18,7 +18,7 @@ public class NoticeService {
 
     // 모든 공고 목록 조회 (페이징 처리)
     public Page<Notice> getList(int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("postDate").descending());
+        Pageable pageable = PageRequest.of(page, 100, Sort.by("postDate").descending());
         return this.noticeRepository.findAll(pageable);
     }
 

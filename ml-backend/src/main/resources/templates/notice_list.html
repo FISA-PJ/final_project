@@ -118,104 +118,56 @@
         <div class="recommendations">
             <h2 class="section-title">맞춤 청약 공고</h2>
             <div class="tab-container">
-                <button class="tab active" onclick="switchTab(this, 'new')">최신 공고</button>
-                <button class="tab" onclick="switchTab(this, 'recommended')">추천 공고</button>
-                <button class="tab" onclick="switchTab(this, 'closing')">마감 임박</button>
+                <button class="tab active" onclick="switchTab(this, 'new')">전체 공고</button>
+                <button class="tab" onclick="switchTab(this, 'recommended')">맞춤 공고</button>
+                <button class="tab" onclick="switchTab(this, 'closing')">진행중 공고</button>
             </div>
 
             <div class="map-container">
                 <div class="map-sidebar">
-                    <div class="property-list-item" onclick="selectProperty(1, this)">
-                        <div class="property-header">
-                            <div class="property-title">강남 래미안 원베일리</div>
-                            <span class="card-badge hot">HOT</span>
+                    <div th:each="notice : ${paging.content}" class="property-list-item" th:onclick="'selectProperty(' + ${notice.id} + ', this)'">
+                        <div class="property-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                            <div class="property-title" style="flex: 1; min-width: 0; word-break: break-all;" th:text="${notice.noticeTitle}">공고 제목</div>
+                            <span class="card-badge hot" style="flex-shrink: 0; min-width: 60px; text-align: center;" th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수중}">접수중</span>
+                            <span class="card-badge over" style="flex-shrink: 0; min-width: 60px; text-align: center;" th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).접수마감}">접수마감</span>
+                            <span class="card-badge" style="flex-shrink: 0; min-width: 60px; text-align: center;" th:if="${notice.noticeStatus == T(com.mysite.applyhome.notice.NoticeStatus).결과발표}">결과발표</span>
                         </div>
-                        <div class="property-price">분양가 9억 5천만원</div>
                         <div class="property-details">
-                            <span>84㎡</span>
-                            <span>강남구</span>
-                            <span>6.15 청약</span>
-                        </div>
-                    </div>
-
-                    <div class="property-list-item" onclick="selectProperty(2, this)">
-                        <div class="property-header">
-                            <div class="property-title">판교 알파돔시티</div>
-                            <span class="card-badge">추천</span>
-                        </div>
-                        <div class="property-price">분양가 7억 2천만원</div>
-                        <div class="property-details">
-                            <span>59㎡</span>
-                            <span>성남시</span>
-                            <span>6.20 청약</span>
-                        </div>
-                    </div>
-
-                    <div class="property-list-item" onclick="selectProperty(3, this)">
-                        <div class="property-header">
-                            <div class="property-title">송파 헬리오시티</div>
-                            <span class="card-badge">추천</span>
-                        </div>
-                        <div class="property-price">분양가 8억 8천만원</div>
-                        <div class="property-details">
-                            <span>74㎡</span>
-                            <span>송파구</span>
-                            <span>6.18 청약</span>
-                        </div>
-                    </div>
-
-                    <div class="property-list-item" onclick="selectProperty(4, this)">
-                        <div class="property-header">
-                            <div class="property-title">마포 래미안 푸르지오</div>
-                            <span class="card-badge">신규</span>
-                        </div>
-                        <div class="property-price">분양가 10억 2천만원</div>
-                        <div class="property-details">
-                            <span>99㎡</span>
-                            <span>마포구</span>
-                            <span>6.25 청약</span>
+                            <span th:text="${notice.location}">지역</span>
+                            <span th:text="${#temporals.format(notice.applicationEndDate, 'yyyy.MM.dd') + ' 마감'}">청약마감일</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="map-view" id="mapView">
+                    <div id="map"></div>
                     <!-- Map markers -->
-                    <div class="map-marker" style="top: 60%; left: 65%;" onclick="selectProperty(1)">
-                        <span>1</span>
-                    </div>
-                    <div class="map-marker" style="top: 70%; left: 70%;" onclick="selectProperty(2)">
-                        <span>2</span>
-                    </div>
-                    <div class="map-marker" style="top: 55%; left: 60%;" onclick="selectProperty(3)">
-                        <span>3</span>
-                    </div>
-                    <div class="map-marker" style="top: 45%; left: 45%;" onclick="selectProperty(4)">
-                        <span>4</span>
+                    <div th:each="notice : ${paging.content}" 
+                         class="map-marker" 
+                         th:style="'top: ' + ${notice.id * 10 + 40} + '%; left: ' + ${notice.id * 5 + 40} + '%;'"
+                         th:onclick="'selectProperty(' + ${notice.id} + ')'">
+                        <span th:text="${notice.id}">1</span>
                     </div>
 
                     <!-- Property detail panel -->
                     <div class="property-detail-panel" id="propertyDetail">
-                        <h3 id="detailTitle">강남 래미안 원베일리</h3>
+                        <h3 id="detailTitle"></h3>
                         <div class="property-details" style="flex-direction: column; gap: 1rem; margin-top: 1rem;">
                             <div class="loan-info-row">
-                                <span class="loan-label">분양가</span>
-                                <span class="loan-value" id="detailPrice">9억 5천만원</span>
+                                <span class="loan-label">공고번호</span>
+                                <span class="loan-value" id="detailNoticeNumber"></span>
                             </div>
                             <div class="loan-info-row">
-                                <span class="loan-label">평형</span>
-                                <span class="loan-value" id="detailSize">84㎡ (25평)</span>
+                                <span class="loan-label">지역</span>
+                                <span class="loan-value" id="detailLocation"></span>
                             </div>
                             <div class="loan-info-row">
-                                <span class="loan-label">청약일정</span>
-                                <span class="loan-value" id="detailDate">2025.06.15</span>
+                                <span class="loan-label">청약마감일</span>
+                                <span class="loan-value" id="detailEndDate"></span>
                             </div>
                             <div class="loan-info-row">
-                                <span class="loan-label">예상 경쟁률</span>
-                                <span class="loan-value" id="detailCompetition">125:1</span>
-                            </div>
-                            <div class="loan-info-row">
-                                <span class="loan-label">입주예정</span>
-                                <span class="loan-value" id="detailMoveIn">2028년 3월</span>
+                                <span class="loan-label">상태</span>
+                                <span class="loan-value" id="detailStatus"></span>
                             </div>
                         </div>
                         <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">상세정보 보기</button>
@@ -228,12 +180,161 @@
 
 <th:block layout:fragment="script">
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>-->
     <!-- Kakao Map API -->
-    <script type="text/javascript" th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}|}"></script>
+    <script type="text/javascript" th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}&libraries=services|}"></script>
     
     <!-- 지도 관련 JavaScript -->
     <script th:inline="javascript">
+        // 로그인 상태 확인을 위한 변수
+        var isLoggedIn = /*[[${#authentication.principal != 'anonymousUser'}]]*/ false;
+
+        // 지도 초기화
+        var container = document.getElementById('mapView');
+        var options = {
+            center: new kakao.maps.LatLng(37.5551, 126.9707),
+            level: 10
+        };
+
+        var map = new kakao.maps.Map(container, options);
+        var geocoder = new kakao.maps.services.Geocoder();
+        var markers = [];
+
+        // 공고 데이터를 JavaScript 변수로 가져오기
+        var notices = /*[[${paging.content}]]*/ [];
+
+        // 각 공고의 위치를 지도에 표시
+        function displayNotices(notices) {
+            // 기존 마커 제거
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+
+            notices.forEach(function(notice) {
+                if (notice.location) {
+                    console.log(notice.location);
+                    geocoder.addressSearch(notice.location, function(result, status) {
+                        console.log(status);
+                        if (status === kakao.maps.services.Status.OK) {
+                            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                            
+                            // 마커 생성
+                            var marker = new kakao.maps.Marker({
+                                map: map,
+                                position: coords
+                            });
+
+                            // 인포윈도우 생성
+                            var infowindow = new kakao.maps.InfoWindow({
+                                content: '<div style="padding:5px;font-size:12px;">' + notice.noticeTitle + '</div>'
+                            });
+
+                            // 마커 클릭 이벤트
+                            kakao.maps.event.addListener(marker, 'click', function() {
+                                infowindow.open(map, marker);
+                            });
+
+                            markers.push(marker);
+                        }
+                    });
+                }
+            });
+        }
+
+        // 초기 공고 표시
+        displayNotices(notices);
+
+        // Tab switching
+        function switchTab(element, tabName) {
+            // Remove active class from all tabs
+            const tabs = element.parentElement.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Add active class to clicked tab
+            element.classList.add('active');
+
+            if (tabName === 'recommended') {
+                if (!isLoggedIn) {
+                    alert('로그인이 필요한 기능입니다.');
+                    return;
+                }
+                
+                // 추천 공고 데이터 가져오기
+                fetch('/notice/custom?page=0')
+                    .then(response => response.text())
+                    .then(html => {
+                        // HTML 파싱
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // 새로운 공고 데이터 추출
+                        const newNotices = JSON.parse(doc.querySelector('script').textContent.match(/var notices = (\[.*?\]);/)[1]);
+                        
+                        // 공고 목록 업데이트
+                        const noticeList = document.querySelector('.map-sidebar');
+                        noticeList.innerHTML = '';
+                        
+                        newNotices.forEach(notice => {
+                            const noticeElement = createNoticeElement(notice);
+                            noticeList.appendChild(noticeElement);
+                        });
+                        
+                        // 지도 마커 업데이트
+                        displayNotices(newNotices);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('추천 공고를 불러오는데 실패했습니다.');
+                    });
+            } else if (tabName === 'closing') {
+                // 진행중인 공고만 필터링
+                const ongoingNotices = notices.filter(notice => notice.noticeStatus === '접수중');
+                
+                // 공고 목록 업데이트
+                const noticeList = document.querySelector('.map-sidebar');
+                noticeList.innerHTML = '';
+                
+                ongoingNotices.forEach(notice => {
+                    const noticeElement = createNoticeElement(notice);
+                    noticeList.appendChild(noticeElement);
+                });
+                
+                // 지도 마커 업데이트
+                displayNotices(ongoingNotices);
+            } else if (tabName === 'new') {
+                // 모든 공고 표시
+                const noticeList = document.querySelector('.map-sidebar');
+                noticeList.innerHTML = '';
+                
+                notices.forEach(notice => {
+                    const noticeElement = createNoticeElement(notice);
+                    noticeList.appendChild(noticeElement);
+                });
+                
+                // 지도 마커 업데이트
+                displayNotices(notices);
+            }
+        }
+
+        // 공고 요소 생성 함수
+        function createNoticeElement(notice) {
+            const div = document.createElement('div');
+            div.className = 'property-list-item';
+            div.onclick = () => selectProperty(notice.id, div);
+            
+            div.innerHTML = `
+                <div class="property-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                    <div class="property-title" style="flex: 1; min-width: 0; word-break: break-all;">${notice.noticeTitle}</div>
+                    <span class="card-badge ${notice.noticeStatus === '접수중' ? 'hot' : notice.noticeStatus === '접수마감' ? 'over' : ''}">${notice.noticeStatus}</span>
+                </div>
+                <div class="property-details">
+                    <span>${notice.location}</span>
+                    <span>${new Date(notice.applicationEndDate).toLocaleDateString()} 마감</span>
+                </div>
+            `;
+            
+            return div;
+        }
+
         // Property selection
         function selectProperty(id, element) {
             // Remove active class from all items
@@ -253,61 +354,18 @@
             const detailPanel = document.getElementById('propertyDetail');
             detailPanel.classList.add('active');
 
-            // Update detail content based on property ID
-            const properties = {
-                1: {
-                    title: '강남 래미안 원베일리',
-                    price: '9억 5천만원',
-                    size: '84㎡ (25평)',
-                    date: '2025.06.15',
-                    competition: '125:1',
-                    moveIn: '2028년 3월'
-                },
-                2: {
-                    title: '판교 알파돔시티',
-                    price: '7억 2천만원',
-                    size: '59㎡ (18평)',
-                    date: '2025.06.20',
-                    competition: '89:1',
-                    moveIn: '2028년 6월'
-                },
-                3: {
-                    title: '송파 헬리오시티',
-                    price: '8억 8천만원',
-                    size: '74㎡ (22평)',
-                    date: '2025.06.18',
-                    competition: '156:1',
-                    moveIn: '2028년 5월'
-                },
-                4: {
-                    title: '마포 래미안 푸르지오',
-                    price: '10억 2천만원',
-                    size: '99㎡ (30평)',
-                    date: '2025.06.25',
-                    competition: '98:1',
-                    moveIn: '2028년 8월'
-                }
-            };
+            // Get notice data from the clicked element
+            const noticeElement = element || document.querySelector(`.property-list-item:nth-child(${id})`);
+            const title = noticeElement.querySelector('.property-title').textContent;
+            const location = noticeElement.querySelector('.property-details span:first-child').textContent;
+            const endDate = noticeElement.querySelector('.property-details span:last-child').textContent;
+            const status = noticeElement.querySelector('.card-badge')?.textContent || '접수중';
 
-            const property = properties[id];
-            document.getElementById('detailTitle').textContent = property.title;
-            document.getElementById('detailPrice').textContent = property.price;
-            document.getElementById('detailSize').textContent = property.size;
-            document.getElementById('detailDate').textContent = property.date;
-            document.getElementById('detailCompetition').textContent = property.competition;
-            document.getElementById('detailMoveIn').textContent = property.moveIn;
-        }
-
-        // Tab switching
-        function switchTab(element, tabName) {
-            // Remove active class from all tabs
-            const tabs = element.parentElement.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            // Add active class to clicked tab
-            element.classList.add('active');
-
-            console.log('Switching to tab:', tabName);
+            // Update detail panel
+            document.getElementById('detailTitle').textContent = title;
+            document.getElementById('detailLocation').textContent = location;
+            document.getElementById('detailEndDate').textContent = endDate;
+            document.getElementById('detailStatus').textContent = status;
         }
     </script>
 </th:block>

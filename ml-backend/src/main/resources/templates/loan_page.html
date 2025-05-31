@@ -122,91 +122,32 @@
       </div>
 
       <div class="recommendation-grid">
-        <div class="loan-card">
+        <div th:each="loan : ${mortgageLoans}" class="loan-card">
           <div class="loan-card-header">
-            <div class="loan-bank-name">KB국민은행</div>
-            <div class="loan-product-name">KB 주택담보대출</div>
-            <span class="loan-highlight">최저금리</span>
+            <div class="loan-bank-name" th:text="${loan.bankName}">은행명</div>
+            <div class="loan-product-name" th:text="${loan.name}">상품명</div>
+            <span class="loan-highlight" th:if="${loan.firstHomeOnly}">생애최초</span>
+            <span class="loan-highlight" th:if="${loan.targetGroup != null}" th:text="${loan.targetGroup}">타겟</span>
           </div>
           <div class="loan-card-body">
             <div class="loan-info-row">
               <span class="loan-label">대출금리</span>
-              <span class="loan-rate">3.5%</span>
+              <span class="loan-rate" th:text="${loan.rateMin + '% ~ ' + loan.rateMax + '%'}">금리</span>
             </div>
             <div class="loan-info-row">
               <span class="loan-label">대출한도</span>
-              <span class="loan-value">최대 5억원</span>
+              <span class="loan-value" th:text="${#numbers.formatInteger(loan.loanLimit/100000000, 0, 'COMMA') + '억원'}">한도</span>
             </div>
             <div class="loan-info-row">
               <span class="loan-label">대출기간</span>
-              <span class="loan-value">최대 30년</span>
+              <span class="loan-value" th:text="${loan.loanTerm/12 + '년'}">기간</span>
             </div>
             <div class="loan-benefits">
               <div class="loan-benefits-title">주요혜택</div>
               <div class="loan-benefits-list">
-                <span class="benefit-tag">중도상환 수수료 면제</span>
-                <span class="benefit-tag">우대금리 0.3%</span>
-                <span class="benefit-tag">온라인 신청</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="loan-card">
-          <div class="loan-card-header" style="background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);">
-            <div class="loan-bank-name">신한은행</div>
-            <div class="loan-product-name">신한 전세자금대출</div>
-            <span class="loan-highlight">신혼부부 특화</span>
-          </div>
-          <div class="loan-card-body">
-            <div class="loan-info-row">
-              <span class="loan-label">대출금리</span>
-              <span class="loan-rate">3.2%</span>
-            </div>
-            <div class="loan-info-row">
-              <span class="loan-label">대출한도</span>
-              <span class="loan-value">최대 3억원</span>
-            </div>
-            <div class="loan-info-row">
-              <span class="loan-label">대출기간</span>
-              <span class="loan-value">최대 2년(4회연장)</span>
-            </div>
-            <div class="loan-benefits">
-              <div class="loan-benefits-title">주요혜택</div>
-              <div class="loan-benefits-list">
-                <span class="benefit-tag">신혼부부 우대 0.5%</span>
-                <span class="benefit-tag">보증료 지원</span>
-                <span class="benefit-tag">간편 연장</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="loan-card">
-          <div class="loan-card-header" style="background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);">
-            <div class="loan-bank-name">주택도시기금</div>
-            <div class="loan-product-name">디딤돌대출</div>
-            <span class="loan-highlight">정책금융</span>
-          </div>
-          <div class="loan-card-body">
-            <div class="loan-info-row">
-              <span class="loan-label">대출금리</span>
-              <span class="loan-rate">2.15%</span>
-            </div>
-            <div class="loan-info-row">
-              <span class="loan-label">대출한도</span>
-              <span class="loan-value">최대 2.5억원</span>
-            </div>
-            <div class="loan-info-row">
-              <span class="loan-label">대출기간</span>
-              <span class="loan-value">10년/15년/20년/30년</span>
-            </div>
-            <div class="loan-benefits">
-              <div class="loan-benefits-title">주요혜택</div>
-              <div class="loan-benefits-list">
-                <span class="benefit-tag">생애최초 우대</span>
-                <span class="benefit-tag">다자녀 추가우대</span>
-                <span class="benefit-tag">청년 우대</span>
+                <span class="benefit-tag" th:if="${loan.firstHomeOnly}">생애최초 우대</span>
+                <span class="benefit-tag" th:if="${loan.targetGroup != null}" th:text="${loan.targetGroup + ' 우대'}">타겟 우대</span>
+                <span class="benefit-tag" th:text="${loan.repaymentMethod}">상환방식</span>
               </div>
             </div>
           </div>
@@ -220,14 +161,68 @@
   <script th:inline="javascript">
     // Tab switching
     function switchTab(element, tabName) {
-    // Remove active class from all tabs
-    const tabs = element.parentElement.querySelectorAll('.tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
+      // Remove active class from all tabs
+      const tabs = element.parentElement.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
 
-    // Add active class to clicked tab
-    element.classList.add('active');
+      // Add active class to clicked tab
+      element.classList.add('active');
 
-    console.log('Switching to tab:', tabName);
+      // 대출 상품 데이터 가져오기
+      fetch(`/loan/api/products?loanType=${tabName}`)
+        .then(response => response.json())
+        .then(loans => {
+          const recommendationGrid = document.querySelector('.recommendation-grid');
+          recommendationGrid.innerHTML = '';
+
+          loans.forEach(loan => {
+            const loanCard = createLoanCard(loan);
+            recommendationGrid.appendChild(loanCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('대출 상품을 불러오는데 실패했습니다.');
+        });
+    }
+
+    // 대출 상품 카드 생성 함수
+    function createLoanCard(loan) {
+      const div = document.createElement('div');
+      div.className = 'loan-card';
+      
+      div.innerHTML = `
+        <div class="loan-card-header">
+          <div class="loan-bank-name">${loan.bankName}</div>
+          <div class="loan-product-name">${loan.name}</div>
+          ${loan.firstHomeOnly ? '<span class="loan-highlight">생애최초</span>' : ''}
+          ${loan.targetGroup ? `<span class="loan-highlight">${loan.targetGroup}</span>` : ''}
+        </div>
+        <div class="loan-card-body">
+          <div class="loan-info-row">
+            <span class="loan-label">대출금리</span>
+            <span class="loan-rate">${loan.rateMin}% ~ ${loan.rateMax}%</span>
+          </div>
+          <div class="loan-info-row">
+            <span class="loan-label">대출한도</span>
+            <span class="loan-value">${(loan.loanLimit/100000000).toLocaleString()}억원</span>
+          </div>
+          <div class="loan-info-row">
+            <span class="loan-label">대출기간</span>
+            <span class="loan-value">${loan.loanTerm/12}년</span>
+          </div>
+          <div class="loan-benefits">
+            <div class="loan-benefits-title">주요혜택</div>
+            <div class="loan-benefits-list">
+              ${loan.firstHomeOnly ? '<span class="benefit-tag">생애최초 우대</span>' : ''}
+              ${loan.targetGroup ? `<span class="benefit-tag">${loan.targetGroup} 우대</span>` : ''}
+              <span class="benefit-tag">${loan.repaymentMethod}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      return div;
     }
   </script>
 </th:block>

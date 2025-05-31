@@ -8,9 +8,9 @@
     <div class="mypage-container">
       <div class="mypage-sidebar">
         <div class="profile-section">
-          <div class="profile-avatar">김</div>
-          <h3>김청약 님</h3>
-          <p>일반회원</p>
+          <div class="profile-avatar" th:text="${personalName != null ? personalName.substring(0,1) : '?'}">?</div>
+          <h3 th:text="${personalName + ' 님'}">회원명</h3>
+          <p th:text="${primeType}">회원등급</p>
         </div>
         <ul class="menu-list">
           <li class="active">위시리스트</li>
