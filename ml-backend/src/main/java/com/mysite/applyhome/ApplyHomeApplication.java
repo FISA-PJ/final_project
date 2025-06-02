@@ -10,5 +10,4 @@ public class ApplyHomeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApplyHomeApplication.class, args);
 	}
-
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface HousingSubscriptionEligibilityRepository extends JpaRepository<HousingSubscriptionEligibility, Integer> {
     @Query("SELECT h FROM HousingSubscriptionEligibility h " +
            "WHERE h.personalProfiles.residentRegistrationNumber = :residentRegistrationNumber " +
-           "ORDER BY h.lastAssessmentDate DESC LIMIT 1")
+           "ORDER BY h.lastAssessmentDate DESC, h.eligibilityId DESC LIMIT 1")
     HousingSubscriptionEligibility findTopByPersonalProfiles_ResidentRegistrationNumberOrderByLastAssessmentDateDesc(
         @Param("residentRegistrationNumber") String residentRegistrationNumber);
 } 
