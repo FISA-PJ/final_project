@@ -286,13 +286,13 @@ def collect_lh_notices(list_url, headers, target_date=None) -> List[Dict]:
 
 def extract_notice_data(driver, wrtan_no: str, target_date: datetime.date) -> Optional[Dict]:
     """개별 공고에서 데이터 추출"""
-    logger.debug(f"📄 공고번호 {wrtan_no} 상세내용 추출 시작:")
+    logger.info(f"📄 공고번호 {wrtan_no} 상세내용 추출 시작:")
 
     try:
         # === 기본 페이지 상태 확인 ===
         try:
             current_url = driver.current_url
-            logger.debug(f"현재 페이지 URL: {current_url}")
+            logger.info(f"현재 페이지 URL: {current_url}")
             
             # 페이지 로드 확인
             if "error" in current_url.lower() or "404" in current_url:
@@ -300,23 +300,26 @@ def extract_notice_data(driver, wrtan_no: str, target_date: datetime.date) -> Op
                 return None
                 
         except Exception as e:
-            logger.debug(f"페이지 상태 확인 오류: {e}")
+            logger.info(f"페이지 상태 확인 오류: {e}")
 
-        # === 공고일 추출 ===
-        logger.debug(f"📅 공고일 추출 중...")
+        # === 공고 게시일 추출 ===
+        logger.info(f"🔍 공고 게시일 추출 중...")
         try:
             pub_date_text = driver.find_element(By.XPATH, "//li[strong[text()='공고일']]").text
             pub_date = pub_date_text.replace("공고일", "").strip().replace(".", "")
             if len(pub_date) == 8:
                 formatted_pub_date = f"{pub_date[:4]}-{pub_date[4:6]}-{pub_date[6:8]}"
+                logger.info(f"✓ 공고 게시일 추출 성공: {formatted_pub_date}")
             else:
                 formatted_pub_date = target_date.strftime("%Y-%m-%d")
+                logger.info(f"✓ 공고 게시일 추출 성공: {formatted_pub_date}")
         except Exception as e:
             pub_date = target_date.strftime("%Y%m%d")
             formatted_pub_date = target_date.strftime("%Y-%m-%d")
-            logger.warning(f"공고일 추출 실패 ({wrtan_no}): {e}")
+            logger.warning(f"⚠️ 공고 게시일 추출 실패 ({wrtan_no}): {e}")
         
         # === 공고명 추출 ===
+        logger.info(f"🔍 공고명 추출 중...")
         try:
              # 가능한 셀렉터들
             title_selectors = [
@@ -333,13 +336,13 @@ def extract_notice_data(driver, wrtan_no: str, target_date: datetime.date) -> Op
                     text = title_element.text.strip()
                     if text and len(text) > 10:
                         title = text
-                        logger.info(f"✓ 공고명: {title}")
+                        logger.info(f"✓ 공고명 추출 성공: {title}")
                         break
                 if title:
                     break
         except Exception as e:
             title = f"공고 {wrtan_no}"
-            logger.warning(f"❌ 제목 추출 실패 ({wrtan_no}): {e}")
+            logger.warning(f"❌ 공고명 추출 실패 ({wrtan_no}): {e}")
 
         # 공고 마감일 추출
         application_end_date = extract_application_end_date(driver)
@@ -377,13 +380,13 @@ def extract_notice_data(driver, wrtan_no: str, target_date: datetime.date) -> Op
             'house_types': house_types                                                      # 주택형 정보
         }
         
-        logger.info(f"✅ 공고번호 {wrtan_no} 세부 정보 추출 완료")
+        logger.info(f"✅ 공고번호 {wrtan_no} 공고 세부 정보 추출 완료")
         return notice_data
         
     except Exception as e:
         error_msg = f"❌ 공고번호 {wrtan_no} 공고 세부 정보 추출 실패: {str(e)}"
         logger.error(error_msg)
-        
+
         return None
 
 def extract_application_end_date(driver) -> Optional[str]:
@@ -396,7 +399,7 @@ def extract_application_end_date(driver) -> Optional[str]:
     Returns:
         Optional[str]: 공고 마감일 정보 (예: "2024-03-15"). 실패 시 None 반환
     """
-    logger.info("🔍 공고 마감일 검색 중...")
+    logger.info("🔍 공고 마감일 추출 중...")
     
     try:
         # bbsV_data 클래스 내에서 마감일 정보 찾기
@@ -414,21 +417,21 @@ def extract_application_end_date(driver) -> Optional[str]:
                         year, month, day = date_match.groups()
                         formatted_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
                         if validate_date(formatted_date):
-                            logger.info(f"✓ 마감일 추출 성공: {formatted_date}")
+                            logger.info(f"✓ 공고 마감일 추출 성공: {formatted_date}")
                             return formatted_date
                         else:
-                            logger.warning(f"⚠️ 유효하지 않은 날짜: {formatted_date}")
+                            logger.warning(f"⚠️ 공고 마감일 - 유효하지 않은 날짜: {formatted_date}")
                     else:
-                        logger.warning(f"⚠️ 날짜 형식 매칭 실패: {text}")
+                        logger.warning(f"⚠️ 공고 마감일 - 날짜 형식 매칭 실패: {text}")
             except Exception as e:
-                logger.debug(f"항목 처리 중 오류: {e}")
+                logger.warning(f"⚠️ 공고 마감일 - 항목 처리 중 오류: {e}")
                 continue
 
-        logger.warning("⚠️ 공고 마감일을 찾을 수 없습니다")
+        logger.warning("⚠️ 공고 마감일을 찾을 수 없습니다 -> None 반환")
         return None
 
     except Exception as e:
-        logger.error(f"❌ 마감일 추출 중 오류 발생: {str(e)}")
+        logger.error(f"❌ 공고 마감일 추출 중 오류 발생: {str(e)} -> None 반환")
         return None
 
 def extract_move_in_schedule(driver) -> Optional[str]:
@@ -534,7 +537,7 @@ def extract_address_from_content(driver) -> Optional[str]:
 
 def extract_supply_type(driver) -> Optional[str]:
     """공급일정 표에서 공급유형 구분 정보 추출"""
-    logger.info("🔍 공급유형 구분 테이블 검색 시작...")
+    logger.info("🔍 공급유형 구분 정보 테이블 검색 시작...")
     
     try:
         # 1. 먼저 공급일정 섹션의 테이블 찾기
@@ -581,12 +584,12 @@ def extract_supply_type(driver) -> Optional[str]:
                 logger.warning(f"⚠️ 테이블 #{idx+1} 처리 중 오류: {table_error}")
                 continue
         
-        logger.warning("⚠️ 공급유형을 찾을 수 없습니다")
-        return None
+        logger.warning("⚠️ 공급유형을 찾을 수 없습니다 -> 빈 딕셔너리 반환")
+        return {}  # 빈 딕셔너리 반환
 
     except Exception as e:
-        logger.error(f"❌ 공급유형 추출 중 오류 발생: {str(e)}")
-        return None
+        logger.error(f"❌ 공급유형 추출 중 오류 발생: {str(e)} -> 빈 딕셔너리 반환")
+        return {}  # 빈 딕셔너리 반환
 
 def extract_supply_schedule(driver) -> Optional[dict]:
     """공급일정 정보 추출"""
@@ -642,7 +645,7 @@ def extract_supply_schedule(driver) -> Optional[dict]:
         
         # === 테이블에서 검색 (2차 시도) ===
         if not all(key in schedule_data for key in ['document_start_date', 'contract_start_date', '당첨자 발표일자']):
-            logger.info("📋 테이블에서 공급일정 검색 시도...")
+            logger.info("🔍 테이블에서 공급일정 검색 시도...")
             
             tables = driver.find_elements(By.CSS_SELECTOR, "table.tbl_st")
             for table in tables:
@@ -690,12 +693,12 @@ def extract_supply_schedule(driver) -> Optional[dict]:
             logger.info(f"✅ 공급일정 추출 완료 ({len(schedule_data)}개 항목)")
             return schedule_data
         else:
-            logger.warning("⚠️ 공급일정 정보를 찾을 수 없습니다")
-            return None
+            logger.warning("⚠️ 공급일정 정보를 찾을 수 없습니다 -> 빈 딕셔너리 반환")
+            return {}  # 빈 딕셔너리 반환
         
     except Exception as e:
-        logger.error(f"❌ 공급일정 추출 중 오류 발생: {str(e)}")
-        return None
+        logger.error(f"❌ 공급일정 추출 중 오류 발생: {str(e)} -> 빈 딕셔너리 반환")
+        return {}  # 빈 딕셔너리 반환
 
 def extract_house_types(driver) -> List[Dict]:
     """주택형 정보 추출 (주택형, 전용면적, 세대수, 평균분양가)"""
@@ -815,7 +818,7 @@ def extract_house_types(driver) -> List[Dict]:
         
     except Exception as e:
         logger.error(f"❌ 주택형 정보 추출 중 오류 발생: {str(e)}")
-        return []
+        return {}  # 빈 딕셔너리 반환
 
 def classify_notices_by_completeness(notices_data: List[Dict], csv_file_path: str) -> Tuple[List[Dict], List[Dict]]:
     """
@@ -862,9 +865,17 @@ def classify_notices_by_completeness(notices_data: List[Dict], csv_file_path: st
     
     # 필드 값 검증 로직 강화
     def is_valid_field(value):
+        # 빈 값 처리
         if value is None:
             return False
+        # 빈 문자열 처리
         if isinstance(value, str) and (value.strip() == '' or value.lower() == '없음'):
+            return False
+        # 빈 리스트 처리
+        if isinstance(value, list) and not value:
+            return False
+        # 빈 딕셔너리 처리
+        if isinstance(value, dict) and not value:
             return False
         return True
 
