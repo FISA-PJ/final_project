@@ -46,20 +46,10 @@
       </h3>
       <div class="filter-grid">
         <div class="filter-group">
-          <label for="loanType">대출종류</label>
-          <select id="loanType">
-            <option value="">전체</option>
-            <option value="mortgage">주택담보대출</option>
-            <option value="jeonse">전세자금대출</option>
-            <option value="policy">정책대출</option>
-            <option value="credit">신용대출</option>
-          </select>
-        </div>
-        <div class="filter-group">
           <label for="bank">은행</label>
           <select id="bank">
             <option value="">전체</option>
-            <option value="kb">KB국민은행</option>
+            <option value="kb">국민은행</option>
             <option value="sh">신한은행</option>
             <option value="wr">우리은행</option>
             <option value="hn">하나은행</option>
@@ -94,16 +84,6 @@
             <option value="10to20">10~20년</option>
             <option value="20to30">20~30년</option>
             <option value="over30">30년 초과</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="specialBenefit">특별혜택</label>
-          <select id="specialBenefit">
-            <option value="">전체</option>
-            <option value="newlywed">신혼부부</option>
-            <option value="firstTime">생애최초</option>
-            <option value="youngAdult">청년</option>
-            <option value="multiChild">다자녀</option>
           </select>
         </div>
       </div>
@@ -183,6 +163,45 @@
         .catch(error => {
           console.error('Error:', error);
           alert('대출 상품을 불러오는데 실패했습니다.');
+        });
+    }
+
+    // 대출 상품 필터 초기화
+    function resetLoanFilters() {
+      document.getElementById('bank').value = '';
+      document.getElementById('interestRate').value = '';
+      document.getElementById('loanLimit').value = '';
+      document.getElementById('loanPeriod').value = '';
+      
+      // 필터 초기화 후 데이터 다시 로드
+      applyLoanFilters();
+    }
+
+    // 대출 상품 필터 적용
+    function applyLoanFilters() {
+      const filters = {
+        bank: document.getElementById('bank').value === '전체' ? '' : document.getElementById('bank').value,
+        interestRate: document.getElementById('interestRate').value === '전체' ? '' : document.getElementById('interestRate').value,
+        loanLimit: document.getElementById('loanLimit').value === '전체' ? '' : document.getElementById('loanLimit').value,
+        loanPeriod: document.getElementById('loanPeriod').value === '전체' ? '' : document.getElementById('loanPeriod').value
+      };
+      
+      // 필터링된 데이터 가져오기
+      fetch(`/loan/api/filter?${new URLSearchParams(filters)}`)
+        .then(response => response.json())
+        .then(data => {
+          // 대출 상품 목록 업데이트
+          const recommendationGrid = document.querySelector('.recommendation-grid');
+          recommendationGrid.innerHTML = '';
+          
+          data.content.forEach(loan => {
+            const loanCard = createLoanCard(loan);
+            recommendationGrid.appendChild(loanCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('필터링된 대출 상품을 불러오는데 실패했습니다.');
         });
     }
 

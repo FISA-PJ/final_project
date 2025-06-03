@@ -105,7 +105,10 @@
         </div>
 
         <div class="recommendations">
-            <h2 class="section-title">맞춤 청약 공고</h2>
+            <h2 class="section-title">
+                <span th:if="${keyword != null}">'[[${keyword}]]' 검색 결과</span>
+                <span th:unless="${keyword != null}">맞춤 청약 공고</span>
+            </h2>
             <div class="tab-container">
                 <button class="tab active" onclick="switchTab(this, 'new')">전체 공고</button>
                 <button class="tab" onclick="switchTab(this, 'recommended')">맞춤 공고</button>
@@ -188,6 +191,7 @@
         var map = new kakao.maps.Map(container, options);
         var geocoder = new kakao.maps.services.Geocoder();
         var markers = [];
+        var markerPositions = {}; // 마커 위치 정보를 저장할 객체
 
         // 공고 데이터를 JavaScript 변수로 가져오기
         var notices = /*[[${paging.content}]]*/ [];
@@ -197,12 +201,11 @@
             // 기존 마커 제거
             markers.forEach(marker => marker.setMap(null));
             markers = [];
+            markerPositions = {}; // 위치 정보 초기화
 
             notices.forEach(function(notice) {
                 if (notice.location) {
-                    console.log(notice.location);
                     geocoder.addressSearch(notice.location, function(result, status) {
-                        console.log(status);
                         if (status === kakao.maps.services.Status.OK) {
                             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
                             
@@ -223,10 +226,55 @@
                             });
 
                             markers.push(marker);
+                            
+                            // 공고 ID를 키로 하여 위치 정보 저장
+                            markerPositions[notice.id] = coords;
                         }
                     });
                 }
             });
+        }
+
+        // 공고 클릭 시 해당 위치로 지도 이동
+        function selectProperty(id, element) {
+            // // Remove active class from all items
+            // document.querySelectorAll('.property-list-item').forEach(item => {
+            //     item.classList.remove('active');
+            // });
+
+            // // Add active class to clicked item
+            // if (element) {
+            //     element.classList.add('active');
+            // }
+
+            // // Show property detail
+            // const detailPanel = document.getElementById('propertyDetail');
+            // detailPanel.classList.add('active');
+
+            // // Get notice data from the clicked element
+            // const noticeElement = element || document.querySelector(`.property-list-item:nth-child(${id})`);
+            // const title = noticeElement.querySelector('.property-title').textContent;
+            // const location = noticeElement.querySelector('.property-details span:first-child').textContent;
+            // const endDate = noticeElement.querySelector('.property-details span:last-child').textContent;
+            // const status = noticeElement.querySelector('.card-badge')?.textContent || '접수중';
+
+            // // Update detail panel
+            // document.getElementById('detailTitle').textContent = title;
+            // document.getElementById('detailLocation').textContent = location;
+            // document.getElementById('detailEndDate').textContent = endDate;
+            // document.getElementById('detailStatus').textContent = status;
+
+            // 해당 공고의 위치로 지도 이동
+            if (markerPositions[id]) {
+                map.panTo(markerPositions[id]);
+                map.setLevel(3);
+                // 해당 마커의 인포윈도우 열기
+                markers.forEach(marker => {
+                    if (marker.getPosition().equals(markerPositions[id])) {
+                        infowindow.open(map, marker);
+                    }
+                });
+            }
         }
 
         // 초기 공고 표시
@@ -334,39 +382,6 @@
             return div;
         }
 
-        // Property selection
-        function selectProperty(id, element) {
-            // Remove active class from all items
-            document.querySelectorAll('.property-list-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Add active class to clicked item
-            if (element) {
-                element.classList.add('active');
-            } else {
-                // If called from map marker, find the corresponding list item
-                document.querySelectorAll('.property-list-item')[id - 1].classList.add('active');
-            }
-
-            // Show property detail
-            const detailPanel = document.getElementById('propertyDetail');
-            detailPanel.classList.add('active');
-
-            // Get notice data from the clicked element
-            const noticeElement = element || document.querySelector(`.property-list-item:nth-child(${id})`);
-            const title = noticeElement.querySelector('.property-title').textContent;
-            const location = noticeElement.querySelector('.property-details span:first-child').textContent;
-            const endDate = noticeElement.querySelector('.property-details span:last-child').textContent;
-            const status = noticeElement.querySelector('.card-badge')?.textContent || '접수중';
-
-            // Update detail panel
-            document.getElementById('detailTitle').textContent = title;
-            document.getElementById('detailLocation').textContent = location;
-            document.getElementById('detailEndDate').textContent = endDate;
-            document.getElementById('detailStatus').textContent = status;
-        }
-
         // 필터 초기화 함수
         function resetFilters() {
             document.getElementById('region').value = '';
@@ -434,6 +449,18 @@
             
             displayNotices(notices);
         }
+
+        // 페이지 로드 시 검색어가 있으면 recommendations 섹션으로 스크롤
+        document.addEventListener('DOMContentLoaded', function() {
+            const keyword = /*[[${keyword}]]*/ null;
+            if (keyword) {
+                const recommendationsSection = document.querySelector('.recommendations');
+                if (recommendationsSection) {
+                    recommendationsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
     </script>
 </th:block>
+</html> 
 </html> 

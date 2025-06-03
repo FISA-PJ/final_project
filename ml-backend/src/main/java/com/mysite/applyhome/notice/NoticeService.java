@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Subquery;
 import jakarta.persistence.criteria.Root;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final SupplyTypeRepository supplyTypeRepository;
@@ -189,5 +191,9 @@ public class NoticeService {
         }
 
         return noticeRepository.findAll(spec, pageable);
+    }
+
+    public Page<Notice> searchNotices(String keyword, Pageable pageable) {
+        return noticeRepository.findByNoticeTitleContaining(keyword, pageable);
     }
 }

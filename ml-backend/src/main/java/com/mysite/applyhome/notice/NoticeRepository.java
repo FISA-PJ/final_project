@@ -35,4 +35,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long>, JpaSpecif
     
     // ID 목록으로 공고 검색 (페이징 처리)
     Page<Notice> findByIdIn(List<Long> ids, Pageable pageable);
+
+    @Query("SELECT n FROM Notice n WHERE n.noticeTitle LIKE %:keyword%")
+    Page<Notice> findByNoticeTitleContaining(@Param("keyword") String keyword, Pageable pageable);
 }

@@ -8,13 +8,15 @@
         <h1>나에게 딱 맞는 청약과 대출을 찾아보세요</h1>
         <p>AI 기반 맞춤형 추천으로 당신의 주거 계획을 완성하세요</p>
         <div class="search-container">
-            <input type="text" class="search-box" placeholder="지역, 아파트명, 청약 조건을 검색해보세요">
-            <button class="search-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <path d="m21 21-4.35-4.35"/>
-                </svg>
-            </button>
+            <form action="/notice/list" method="get" class="search-form">
+                <input type="text" name="keyword" class="search-box" placeholder="지역, 아파트명, 청약 조건을 검색해보세요">
+                <button type="submit" class="search-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -27,7 +29,7 @@
                 <div class="service-icon">🏠</div>
                 <h3>맞춤형 청약 공고</h3>
                 <p>당신의 조건과 선호도를 분석하여 최적의 청약 공고를 추천해드립니다. 놓치지 마세요!</p>
-                <a href="#" class="service-link">
+                <a href="/notice/list" class="service-link">
                     지금 확인하기
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -39,7 +41,7 @@
                 <div class="service-icon">💰</div>
                 <h3>맞춤 대출 상품</h3>
                 <p>청약 당첨 후 필요한 대출 상품을 한눈에 비교하고 최적의 조건을 찾아보세요.</p>
-                <a href="#" class="service-link">
+                <a href="/loan/list" class="service-link">
                     대출 상품 보기
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>

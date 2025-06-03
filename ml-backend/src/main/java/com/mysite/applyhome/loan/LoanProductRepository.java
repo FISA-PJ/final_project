@@ -1,12 +1,13 @@
 package com.mysite.applyhome.loan;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface LoanProductRepository extends JpaRepository<LoanProduct, Long> {
+public interface LoanProductRepository extends JpaRepository<LoanProduct, Long>, JpaSpecificationExecutor<LoanProduct> {
     List<LoanProduct> findByLoanType(String loanType);
     
     @Query("SELECT l FROM LoanProduct l WHERE l.loanType = :loanType AND " +
