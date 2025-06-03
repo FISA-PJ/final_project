@@ -120,7 +120,7 @@
             <div class="tab-container">
                 <button class="tab active" onclick="switchTab(this, 'new')">전체 공고</button>
                 <button class="tab" onclick="switchTab(this, 'recommended')">맞춤 공고</button>
-                <button class="tab" onclick="switchTab(this, 'closing')">진행중 공고</button>
+                <button class="tab" onclick="switchTab(this, 'ongoing')">진행중 공고</button>
             </div>
 
             <div class="map-container">
@@ -255,37 +255,47 @@
             if (tabName === 'recommended') {
                 if (!isLoggedIn) {
                     alert('로그인이 필요한 기능입니다.');
+                    // 이전 탭으로 돌아가기
+                    const previousTab = document.querySelector('.tab.active');
+                    if (previousTab) {
+                        previousTab.classList.remove('active');
+                    }
+                    document.querySelector('.tab[onclick*="new"]').classList.add('active');
                     return;
                 }
                 
                 // 추천 공고 데이터 가져오기
-                fetch('/notice/custom?page=0')
-                    .then(response => response.text())
-                    .then(html => {
-                        // HTML 파싱
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        
-                        // 새로운 공고 데이터 추출
-                        const newNotices = JSON.parse(doc.querySelector('script').textContent.match(/var notices = (\[.*?\]);/)[1]);
-                        
+                fetch('/notice/api/custom?page=0')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('로그인이 필요합니다.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
                         // 공고 목록 업데이트
                         const noticeList = document.querySelector('.map-sidebar');
                         noticeList.innerHTML = '';
                         
-                        newNotices.forEach(notice => {
+                        data.content.forEach(notice => {
                             const noticeElement = createNoticeElement(notice);
                             noticeList.appendChild(noticeElement);
                         });
                         
                         // 지도 마커 업데이트
-                        displayNotices(newNotices);
+                        displayNotices(data.content);
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('추천 공고를 불러오는데 실패했습니다.');
+                        alert(error.message || '추천 공고를 불러오는데 실패했습니다.');
+                        // 에러 발생 시 전체 공고 탭으로 돌아가기
+                        const previousTab = document.querySelector('.tab.active');
+                        if (previousTab) {
+                            previousTab.classList.remove('active');
+                        }
+                        document.querySelector('.tab[onclick*="new"]').classList.add('active');
                     });
-            } else if (tabName === 'closing') {
+            } else if (tabName === 'ongoing') {
                 // 진행중인 공고만 필터링
                 const ongoingNotices = notices.filter(notice => notice.noticeStatus === '접수중');
                 

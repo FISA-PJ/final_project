@@ -26,8 +26,9 @@
 <!--		<li class="nav-item py-2" sec:authorize="isAuthenticated()">-->
 <!--			<span class="navbar-text text-white" th:if="${personalName != null}" th:text="${personalName + '님 환영합니다'}"></span>-->
 <!--		</li>-->
-		<div class="navbar-text" sec:authorize="isAuthenticated()" th:text="${primeType} "></div>
-		<div class="navbar-text" sec:authorize="isAuthenticated()" th:text="${personalName + '님 환영합니다'}"></div>
+		<!-- <div class="navbar-text" sec:authorize="isAuthenticated()" th:text="${primeType} "></div> -->
+		<div class="navbar-text" sec:authorize="isAuthenticated()" th:text="${personalName + '님 환영합니다'}" 
+             style="margin: auto 0px;"></div>
 		<button class="btn btn-outline" sec:authorize="isAnonymous()" onclick="showModal('login')">로그인</button>
 		<button class="btn btn-outline" sec:authorize="isAuthenticated()" onclick="location.href='/user/logout'">로그아웃</button>
 <!--			<a class="nav-link text-white" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>-->
