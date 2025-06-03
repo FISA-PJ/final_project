@@ -45,11 +45,11 @@ public class PersonalProfiles {
     @Column(name = "marriage_status", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private boolean marriageStatus;
 
-    public String getName() {
-        return name;
-    }
+    // public String getName() {
+    //     return name;
+    // }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    // public void setName(String name) {
+    //     this.name = name;
+    // }
 }

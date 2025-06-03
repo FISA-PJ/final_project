@@ -5,8 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.Root;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -74,5 +78,116 @@ public class NoticeService {
         }
         
         return noticeRepository.findByIdIn(noticeIds, pageable);
+    }
+
+    public Page<Notice> getFilteredNotices(int page, String region, String area, String price, String moveInDate) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Specification<Notice> spec = Specification.where(null);
+
+        // 지역 필터링
+        if (region != null && !region.isEmpty() && !region.equals("전체")) {
+            spec = spec.and((root, query, cb) -> cb.like(root.get("location"), "%" + region + "%"));
+        }
+
+        // 전용면적 필터링
+        if (area != null && !area.isEmpty() && !area.equals("전체")) {
+            spec = spec.and((root, query, cb) -> {
+                Subquery<Long> subquery = query.subquery(Long.class);
+                Root<HouseType> houseTypeRoot = subquery.from(HouseType.class);
+                
+                switch (area) {
+                    case "under60":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.lessThan(houseTypeRoot.get("exclusiveArea"), new BigDecimal("60.00"))
+                               ));
+                        break;
+                    case "60to84":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.greaterThanOrEqualTo(houseTypeRoot.get("exclusiveArea"), new BigDecimal("60.00")),
+                                   cb.lessThan(houseTypeRoot.get("exclusiveArea"), new BigDecimal("85.00"))
+                               ));
+                        break;
+                    case "85to100":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.greaterThanOrEqualTo(houseTypeRoot.get("exclusiveArea"), new BigDecimal("85.00")),
+                                   cb.lessThan(houseTypeRoot.get("exclusiveArea"), new BigDecimal("100.00"))
+                               ));
+                        break;
+                    case "over100":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.greaterThanOrEqualTo(houseTypeRoot.get("exclusiveArea"), new BigDecimal("100.00"))
+                               ));
+                        break;
+                }
+                return cb.exists(subquery);
+            });
+        }
+
+        // 분양가 필터링
+        if (price != null && !price.isEmpty() && !price.equals("전체")) {
+            spec = spec.and((root, query, cb) -> {
+                Subquery<Long> subquery = query.subquery(Long.class);
+                Root<HouseType> houseTypeRoot = subquery.from(HouseType.class);
+                
+                switch (price) {
+                    case "under5":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.lessThan(houseTypeRoot.get("avgPrice"), new BigDecimal("500000000"))
+                               ));
+                        break;
+                    case "5to7":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.greaterThanOrEqualTo(houseTypeRoot.get("avgPrice"), new BigDecimal("500000000")),
+                                   cb.lessThan(houseTypeRoot.get("avgPrice"), new BigDecimal("700000000"))
+                               ));
+                        break;
+                    case "7to10":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.greaterThanOrEqualTo(houseTypeRoot.get("avgPrice"), new BigDecimal("700000000")),
+                                   cb.lessThan(houseTypeRoot.get("avgPrice"), new BigDecimal("1000000000"))
+                               ));
+                        break;
+                    case "over10":
+                        subquery.select(houseTypeRoot.get("noticeId"))
+                               .where(cb.and(
+                                   cb.equal(houseTypeRoot.get("noticeId"), root.get("id")),
+                                   cb.greaterThanOrEqualTo(houseTypeRoot.get("avgPrice"), new BigDecimal("1000000000"))
+                               ));
+                        break;
+                }
+                return cb.exists(subquery);
+            });
+        }
+
+        // 입주예정 필터링
+        if (moveInDate != null && !moveInDate.isEmpty() && !moveInDate.equals("전체")) {
+            spec = spec.and((root, query, cb) -> {
+                if (moveInDate.equals("2028년 이후")) {
+                    return cb.and(
+                        cb.not(cb.like(root.get("moveInDate"), "%2025%")),
+                        cb.not(cb.like(root.get("moveInDate"), "%2026%")),
+                        cb.not(cb.like(root.get("moveInDate"), "%2027%"))
+                    );
+                } else {
+                    return cb.like(root.get("moveInDate"), "%" + moveInDate + "%");
+                }
+            });
+        }
+
+        return noticeRepository.findAll(spec, pageable);
     }
 }

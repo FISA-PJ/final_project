@@ -116,4 +116,17 @@ public class NoticeController {
         String primeType = eligibilityService.getEligibilityPrimeType(userDetails.getUser());
         return noticeService.getNoticesByPrimeType(primeType, page);
     }
+
+    // 필터링된 공고 데이터를 JSON으로 반환
+    @GetMapping("/api/filter")
+    @ResponseBody
+    public Page<Notice> getFilteredNotices(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "region", required = false) String region,
+            @RequestParam(value = "area", required = false) String area,
+            @RequestParam(value = "price", required = false) String price,
+            @RequestParam(value = "moveInDate", required = false) String moveInDate) {
+        
+        return noticeService.getFilteredNotices(page, region, area, price, moveInDate);
+    }
 } 

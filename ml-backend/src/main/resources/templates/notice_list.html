@@ -47,40 +47,39 @@
             <div class="filter-grid">
                 <div class="filter-group">
                     <label for="region">지역</label>
-                    <select id="region">
+                    <select id="region" class="form-select">
                         <option value="">전체</option>
-                        <option value="seoul" selected>서울</option>
-                        <option value="gyeonggi">경기</option>
-                        <option value="incheon">인천</option>
-                        <option value="busan">부산</option>
-                        <option value="daegu">대구</option>
-                        <option value="other">기타</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="district">구/시</label>
-                    <select id="district">
-                        <option value="">전체</option>
-                        <option value="gangnam">강남구</option>
-                        <option value="songpa">송파구</option>
-                        <option value="seocho">서초구</option>
-                        <option value="mapo">마포구</option>
-                        <option value="other">기타</option>
+                        <option value="서울특별시">서울특별시</option>
+                        <option value="부산광역시">부산광역시</option>
+                        <option value="대구광역시">대구광역시</option>
+                        <option value="광주광역시">광주광역시</option>
+                        <option value="대전광역시">대전광역시</option>
+                        <option value="울산광역시">울산광역시</option>
+                        <option value="세종특별자치시">세종특별자치시</option>
+                        <option value="경기도">경기도</option>
+                        <option value="강원특별자치도">강원특별자치도</option>
+                        <option value="충청북도">충청북도</option>
+                        <option value="충청남도">충청남도</option>
+                        <option value="전북특별자치도">전북특별자치도</option>
+                        <option value="전라남도">전라남도</option>
+                        <option value="경상북도">경상북도</option>
+                        <option value="경상남도">경상남도</option>
+                        <option value="제주특별자치도">제주특별자치도</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="area">전용면적</label>
-                    <select id="area">
+                    <select id="area" class="form-select">
                         <option value="">전체</option>
                         <option value="under60">60㎡ 미만</option>
-                        <option value="60to84" selected>60~84㎡</option>
+                        <option value="60to84">60~84㎡</option>
                         <option value="85to100">85~100㎡</option>
                         <option value="over100">100㎡ 초과</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="price">분양가</label>
-                    <select id="price">
+                    <select id="price" class="form-select">
                         <option value="">전체</option>
                         <option value="under5">5억원 미만</option>
                         <option value="5to7">5~7억원</option>
@@ -90,22 +89,12 @@
                 </div>
                 <div class="filter-group">
                     <label for="moveInDate">입주예정</label>
-                    <select id="moveInDate">
+                    <select id="moveInDate" class="form-select">
                         <option value="">전체</option>
-                        <option value="2027" selected>2027년</option>
-                        <option value="2028">2028년</option>
-                        <option value="2029">2029년</option>
-                        <option value="after2030">2030년 이후</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="applicationType">청약유형</label>
-                    <select id="applicationType">
-                        <option value="">전체</option>
-                        <option value="firstTime">생애최초</option>
-                        <option value="newlywed">신혼부부</option>
-                        <option value="general">일반공급</option>
-                        <option value="special">특별공급</option>
+                        <option value="2025">2025년</option>
+                        <option value="2026">2026년</option>
+                        <option value="2027">2027년</option>
+                        <option value="2028">2028년 이후</option>
                     </select>
                 </div>
             </div>
@@ -376,6 +365,74 @@
             document.getElementById('detailLocation').textContent = location;
             document.getElementById('detailEndDate').textContent = endDate;
             document.getElementById('detailStatus').textContent = status;
+        }
+
+        // 필터 초기화 함수
+        function resetFilters() {
+            document.getElementById('region').value = '';
+            document.getElementById('area').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('moveInDate').value = '';
+            
+            // 필터 초기화 후 현재 탭의 데이터 다시 로드
+            const activeTab = document.querySelector('.tab.active');
+            if (activeTab) {
+                const tabName = activeTab.getAttribute('onclick').match(/'([^']+)'/)[1];
+                switchTab(activeTab, tabName);
+            }
+        }
+
+        // 필터 적용 함수
+        function applyFilters() {
+            const filters = {
+                region: document.getElementById('region').value,
+                area: document.getElementById('area').value,
+                price: document.getElementById('price').value,
+                moveInDate: document.getElementById('moveInDate').value
+            };
+
+            // 전체 공고 탭으로 이동
+            const newTab = document.querySelector('.tab[onclick*="new"]');
+            if (newTab) {
+                // 현재 활성화된 탭의 active 클래스 제거
+                document.querySelector('.tab.active').classList.remove('active');
+                // 전체 공고 탭 활성화
+                newTab.classList.add('active');
+            }
+            
+            // 필터링된 데이터 가져오기
+            fetch(`/notice/api/filter?${new URLSearchParams(filters)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 공고 목록 업데이트
+                    const noticeList = document.querySelector('.map-sidebar');
+                    noticeList.innerHTML = '';
+                    
+                    data.content.forEach(notice => {
+                        const noticeElement = createNoticeElement(notice);
+                        noticeList.appendChild(noticeElement);
+                    });
+                    
+                    // 지도 마커 업데이트
+                    displayNotices(data.content);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('필터링된 공고를 불러오는데 실패했습니다.');
+                });
+        }
+
+        // 필터링된 공고 표시 함수
+        function displayFilteredNotices(notices) {
+            const noticeList = document.querySelector('.map-sidebar');
+            noticeList.innerHTML = '';
+            
+            notices.forEach(notice => {
+                const noticeElement = createNoticeElement(notice);
+                noticeList.appendChild(noticeElement);
+            });
+            
+            displayNotices(notices);
         }
     </script>
 </th:block>
