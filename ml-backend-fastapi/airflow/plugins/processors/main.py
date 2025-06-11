@@ -38,7 +38,7 @@ else:
     os.chdir(target_dir)
 
 # Elasticsearch 연결
-UPSTAGE_API_KEY = "up_N5cnJ1P7ZgPsxXrNbjWTLp6AdXitC"
+UPSTAGE_API_KEY = ''
 preprocessor = Parser2Markdown(UPSTAGE_API_KEY)
 
 embeddings = BgeM3Embedding()
