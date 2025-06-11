@@ -11,7 +11,10 @@ GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
 
 -- 애플리케이션 사용자 생성 및 권한 설정
 CREATE USER IF NOT EXISTS 'app_user'@'%' IDENTIFIED WITH caching_sha2_password BY 'app_user_password';
+-- 여러 데이터베이스에 개별적으로 권한 부여
 GRANT ALL PRIVILEGES ON `app_db`.* TO 'app_user'@'%';
+GRANT ALL PRIVILEGES ON `housing_loan`.* TO 'app_user'@'%';
+GRANT ALL PRIVILEGES ON `notice_db`.* TO 'app_user'@'%';
 
 -- 읽기 전용 사용자 생성 (보고용)
 CREATE USER IF NOT EXISTS 'report_user'@'%' IDENTIFIED WITH caching_sha2_password BY 'report_password';

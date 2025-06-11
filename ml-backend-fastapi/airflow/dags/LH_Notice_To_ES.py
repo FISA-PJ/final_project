@@ -24,7 +24,7 @@ local_tz = pendulum.timezone("Asia/Seoul")
 default_args = {
     'owner': 'airflow',
     'depends_on_past': True,
-    'start_date': datetime(2025, 1, 1, tzinfo=local_tz),
+    'start_date': datetime(2025, 5, 14, tzinfo=local_tz),
     'retries': 3,
     'retry_delay': timedelta(seconds=10), # 재시도 간격
     'execution_timeout':timedelta(hours=72), # 실행 시간 제한

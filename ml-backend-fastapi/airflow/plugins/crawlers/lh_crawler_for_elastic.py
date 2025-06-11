@@ -80,7 +80,7 @@ class CommonConfig:
             
             # 디렉토리 생성
             os.makedirs(directory, exist_ok=True)
-            logger.debug(f"디렉토리 생성: {directory}")
+            logger.info(f"디렉토리 생성: {directory}")
             
         except PermissionError:
             logger.error(f"권한 오류: {directory}")
