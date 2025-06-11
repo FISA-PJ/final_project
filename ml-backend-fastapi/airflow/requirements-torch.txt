@@ -1,8 +1,30 @@
 # AI/ML 관련
-torch
-transformers
-langchain
-openparse
+torch==2.7.0
+transformers==4.40.2
+langchain==0.3.25 # langchain 라이브러리의 parent_document_retriever.py는 커스터마이징함.
+langchain-anthropic==0.3.13
+langchain-community==0.3.24
+langchain-core==0.3.59
+langchain-elasticsearch==0.3.2
+langchain-experimental==0.3.4
+langchain-openai==0.3.16
+langchain-pymupdf4llm==0.4.0
+langchain-text-splitters==0.3.8
+langchain-upstage==0.6.0
+langgraph==0.3.34
+openparse==0.7.0
+huggingface-hub==0.30.2
+safetensors==0.5.3
+tokenizers==0.19.1
+openai==1.77.0
+tiktoken==0.9.0
+anthropic==0.51.0
 
 # 머신러닝 및 데이터 사이언스
-scikit-learn
+numpy==2.2.5
+pandas==2.2.3
+scipy==1.15.2
+joblib==1.5.0
+nltk==3.9.1
+networkx==3.4.2
+sympy==1.14.0
